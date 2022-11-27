@@ -183,7 +183,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Heloufir\FilamentWorkflowManager\FilamentWorkflowManagerServiceProvider::class,
 
-
         /*
          * Package Service Providers...
          */

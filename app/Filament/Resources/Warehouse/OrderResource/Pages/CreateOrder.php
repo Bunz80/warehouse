@@ -119,9 +119,9 @@ class CreateOrder extends CreateRecord
 
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
-                                    ->options(['%', 'Currency'])
-                                    ->columnSpan(3)
-                                    ->default('%'),
+                                    //->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
+                                    ->options(['%', '€', '$', '£', '¥'])
+                                    ->columnSpan(3),
                                 TextInput::make('discount_price')
                                     ->label('Discount Value')
                                     ->columnSpan(3)
