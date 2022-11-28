@@ -43,7 +43,7 @@ class CompanySeeder extends Seeder
             <li> Con l’accettazione del presente ordine, si rinuncia espressamente al beneficio di cui D.Lgs 231/2002 riservandosi la facoltà di procedere, in caso di inadempimento, con specifica messa in mora.</li>
             <li> E’ tassativamente escluso il pagamento mediante cessione del credito (art. 1260 C.C.) nonché con procura irrevocabile (art. 1723 C.C.).</li>
             </ul>
-            <hr />
+            <hr style="margin:5px;" />
             <p style="font-size:12px; text-align: justify;">
             Società soggetta a direzione e coordinamento della Mediterranea Marittima S.p.A. <b>Sede Legale e Uffici:</b> Via Alcide De Gasperi, 55 - 80133 Napoli Tel. 081.5801223 - Fax 081.5512770 - Capitale Sociale € 6\'000\'000.00 int. vers. Codice Fiscale, Partita IVA e numero iscrizione Registro delle Imprese di Napoli 05984260637 R.E.A. 473782 - <b>Call Center:</b> Tel. 081.3334411 - info@medmarnavi.it - www.medmarnavi.it</p>
             ',

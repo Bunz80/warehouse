@@ -167,6 +167,14 @@ class OrderResource extends Resource
                     ]),
 
                     Card::make([
+                        Placeholder::make('Total Order')
+                            ->content(new HtmlString('
+                                Created at: 1 second ago <br >
+                                Last modified at: 1 second ago
+                            ')),
+                    ]),
+
+                    Card::make([
 
                         Select::make('status')
                             ->label('Status')

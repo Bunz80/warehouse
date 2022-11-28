@@ -2,15 +2,15 @@
 
 namespace App\Models\Warehouse;
 
-use Heloufir\FilamentWorkflowManager\Core\HasWorkflow;
-use Heloufir\FilamentWorkflowManager\Core\InteractsWithWorkflows;
+// use Heloufir\FilamentWorkflowManager\Core\InteractsWithWorkflows;
+// use Heloufir\FilamentWorkflowManager\Core\HasWorkflow;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model implements HasWorkflow
+class Order extends Model // implements HasWorkflow
 {
     use HasFactory;
-    use InteractsWithWorkflows;
+    // use InteractsWithWorkflows;
 
     protected $fillable = [
         'company_id',
