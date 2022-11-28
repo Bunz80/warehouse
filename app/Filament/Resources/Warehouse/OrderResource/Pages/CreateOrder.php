@@ -159,9 +159,7 @@ class CreateOrder extends CreateRecord
                 ->icon('heroicon-o-shopping-bag')
                 ->schema([
                     Card::make([
-
                         // Placeholder::make('')->content(new HtmlString('')),
-
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')
