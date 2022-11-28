@@ -2,29 +2,29 @@
 
 namespace App\Filament\Resources\Warehouse;
 
-use Carbon\Carbon;
-use Filament\Tables;
+use App\Filament\Resources\Warehouse\OrderResource\Pages;
 use App\Models\Category;
 use App\Models\Customer;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
 use App\Models\Warehouse\Order;
-use Filament\Resources\Resource;
 use App\Models\Warehouse\Product;
-use Illuminate\Support\HtmlString;
+use Carbon\Carbon;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\MarkdownEditor;
-use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
 {
@@ -56,7 +56,7 @@ class OrderResource extends Resource
                             ->label('Supplier')
                             ->disabled(),
                     ])->columns(2),
-                    
+
                     //Details Order
                     Card::make([
                         Select::make('product')
@@ -137,7 +137,7 @@ class OrderResource extends Resource
                                 ->searchable(),
                             Textarea::make('payment_note')->label('Payment Note'),
                         ]),
-                            
+
                         Group::make([
                             Select::make('trasport_method')
                                 ->label('Trasport Method')
@@ -151,7 +151,7 @@ class OrderResource extends Resource
                     ])->columns(2),
 
                 ])->columnSpan(2),
-                
+
                 // Sidebar Info Order cost and action order
                 Group::make([
                     Card::make([
@@ -174,17 +174,17 @@ class OrderResource extends Resource
                             ->columnSpan(2),
 
                         Placeholder::make('Action')->content(new HtmlString('<hr />'))->columnSpan(2),
-                        
+
                         TextInput::make('email')->columnSpan(2),
 
                         Placeholder::make('Send order by email')
                             ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>Send Mail</span></button>'))
                             ->columnSpan(2),
-                        
+
                         Placeholder::make('Download Document')
                             ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>Download</span></button>'))
                             ->columnSpan(2),
-                        
+
                         Placeholder::make('View Document')
                             ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>View Document</span></button>'))
                             ->columnSpan(2),

@@ -31,6 +31,9 @@ class Company extends Model
         'default_currency',
         'default_payment',
 
+        'page_header',
+        'page_footer',
+
         'is_activated',
     ];
 

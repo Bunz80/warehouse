@@ -77,6 +77,25 @@ class CompanyResource extends Resource
                         ->label('Payment - default value'),
                 ])
                 ->columns(6),
+
+                Card::make([
+                    Forms\Components\MarkdownEditor::make('page_header')
+                        ->toolbarButtons([
+                            'bold',
+                            'bulletList',
+                            'orderedList',
+                            'edit',
+                            'preview',
+                        ]),
+                    Forms\Components\MarkdownEditor::make('page_footer')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'orderedList',
+                                'edit',
+                                'preview',
+                            ]),
+                ]),
             ]);
     }
 

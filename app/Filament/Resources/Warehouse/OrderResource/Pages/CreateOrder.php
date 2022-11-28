@@ -2,25 +2,25 @@
 
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
-use Carbon\Carbon;
-use App\Models\Company;
+use App\Filament\Resources\Warehouse\OrderResource;
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\Warehouse\Product;
-use Illuminate\Support\HtmlString;
+use Carbon\Carbon;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Forms\Components\MarkdownEditor;
-use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Illuminate\Support\HtmlString;
 
 class CreateOrder extends CreateRecord
 {
@@ -167,13 +167,13 @@ class CreateOrder extends CreateRecord
                                 ->searchable(),
                             Textarea::make('payment_note')->label('Payment Note'),
                         ]),
-                            
+
                         Group::make([
                             Select::make('trasport_method')
                                 ->label('Trasport Method')
                                 ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id'))
-                                // ->searchable()
-                                ,
+                            // ->searchable()
+                            ,
                             Textarea::make('Trasport_note')->label('Trasport Note'),
                         ]),
 
