@@ -2,24 +2,25 @@
 
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
-use App\Filament\Resources\Warehouse\OrderResource;
-use App\Models\Category;
+use Carbon\Carbon;
 use App\Models\Company;
+use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Warehouse\Product;
-use Carbon\Carbon;
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
-use Illuminate\Support\HtmlString;
 
 class CreateOrder extends CreateRecord
 {
@@ -159,25 +160,26 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
 
-                        Placeholder::make('')->content(new HtmlString('')),
+                        // Placeholder::make('')->content(new HtmlString('')),
 
-                        Select::make('payment_method')
-                            ->label('Payment Method')
-                            ->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
-                            ->searchable(),
+                        Group::make([
+                            Select::make('payment_method')
+                                ->label('Payment Method')
+                                ->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
+                                ->searchable(),
+                            Textarea::make('payment_note')->label('Payment Note'),
+                        ]),
+                            
+                        Group::make([
+                            Select::make('trasport_method')
+                                ->label('Trasport Method')
+                                ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id'))
+                                // ->searchable()
+                                ,
+                            Textarea::make('Trasport_note')->label('Trasport Note'),
+                        ]),
 
-                        Textarea::make('payment_note')->label('Payment Note'),
-
-                        Placeholder::make('')->content(new HtmlString('<hr />')),
-
-                        Select::make('trasport_method')
-                            ->label('Trasport Method')
-                            ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id'))
-                            ->searchable(),
-
-                        Textarea::make('Trasport_note')->label('Trasport Note'),
-
-                        Placeholder::make('')->content(new HtmlString('<hr />')),
+                        Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
 
                         Textarea::make('notes')->label('Order notes'),
 
@@ -187,7 +189,7 @@ class CreateOrder extends CreateRecord
                             ->default('New')
                             ->searchable(),
 
-                    ]),
+                    ])->columns(2),
                 ]),
 
             Step::make('Summary'),
