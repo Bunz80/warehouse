@@ -25,6 +25,7 @@ return new class extends Migration
             // Info Order
             $table->year('year')->nullable();
             $table->integer('number')->nullable();
+            $table->decimal('tax')->nullable();
             $table->date('order_at')->nullable();
             $table->string('status')->default('new');
             // Discount

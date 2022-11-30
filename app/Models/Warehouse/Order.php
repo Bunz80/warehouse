@@ -19,6 +19,7 @@ class Order extends Model // implements HasWorkflow
         'code',
         'year',
         'number',
+        'tax',
         'status',
         'currency',
         'total_price',
