@@ -78,7 +78,8 @@ class CompanyResource extends Resource
                 ])
                 ->columns(6),
 
-                Card::make([
+                Section::make('Letterhead (Html)')
+                ->schema([
                     Forms\Components\MarkdownEditor::make('page_header')
                         ->toolbarButtons([
                             'bold',
@@ -95,7 +96,11 @@ class CompanyResource extends Resource
                                 'edit',
                                 'preview',
                             ]),
-                ]),
+                ])
+                ->compact()
+                ->collapsed()
+                ->collapsible(),
+
             ]);
     }
 
