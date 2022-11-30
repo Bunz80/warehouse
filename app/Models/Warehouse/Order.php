@@ -30,5 +30,6 @@ class Order extends Model // implements HasWorkflow
         'payment_method',
         'payment_note',
         'notes',
+        'report'
     ];
 }

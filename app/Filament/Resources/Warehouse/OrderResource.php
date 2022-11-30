@@ -148,6 +148,8 @@ class OrderResource extends Resource
                         Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
 
                         Textarea::make('notes')->label('Order notes')->columnSpan(2),
+
+                        Textarea::make('report')->label('Order report')->columnSpan(2),
                     ])->columns(2),
 
                 ])->columnSpan(2),

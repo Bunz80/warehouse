@@ -47,6 +47,7 @@ return new class extends Migration
             $table->text('payment_note')->nullable();
 
             $table->text('notes')->nullable();
+            $table->text('report')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
