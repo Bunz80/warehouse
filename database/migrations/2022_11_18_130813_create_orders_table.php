@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id')->unsigned();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            // Info Order
+            // Info Order 
             $table->year('year')->nullable();
             $table->integer('number')->nullable();
             $table->decimal('tax')->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('currency')->default('€');
             $table->decimal('total_price', 12, 2)->nullable();
             // Consegna -> address id
+            $table->integer('delivery_id')->nullable();
             $table->string('delivery_method')->nullable();
             $table->text('delivery_note')->nullable();
             // Trasporto
