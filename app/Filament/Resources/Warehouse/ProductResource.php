@@ -30,7 +30,6 @@ class ProductResource extends Resource
                     Forms\Components\Select::make('supplier_id')
                         ->label('Supplier or move product to supplier')
                         ->options(Supplier::all()->pluck('name', 'id'))
-                        // ->default(fn (Closure $get) => ! $get('supplier_id'))
                         ->default(2)
                         ->searchable()
                         ->columnSpan(6)

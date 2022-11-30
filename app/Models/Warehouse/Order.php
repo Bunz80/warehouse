@@ -19,7 +19,7 @@ class Order extends Model // implements HasWorkflow
         'code',
         'year',
         'number',
-        
+
         'tax',
         'status',
         'currency',
@@ -28,14 +28,14 @@ class Order extends Model // implements HasWorkflow
         'delivery_id',
         'delivery_method',
         'delivery_note',
-        
+
         'trasport_method',
         'trasport_note',
-        
+
         'payment_method',
         'payment_note',
-        
+
         'notes',
-        'report'
+        'report',
     ];
 }

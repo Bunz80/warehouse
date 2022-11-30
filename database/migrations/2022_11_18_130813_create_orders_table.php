@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id')->unsigned();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            // Info Order 
+            // Info Order
             $table->year('year')->nullable();
             $table->integer('number')->nullable();
             $table->decimal('tax')->nullable();

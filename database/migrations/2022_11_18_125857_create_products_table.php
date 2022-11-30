@@ -19,14 +19,13 @@ return new class extends Migration
             $table->text('name');
             $table->string('brand')->nullable();
             $table->text('description')->nullable();
+            $table->text('category', 100)->nullable();
 
             $table->string('code')->nullable();
             $table->decimal('tax', 12, 2)->nullable();
             $table->string('unit')->nullable();
             $table->string('currency')->nullable()->default('€');
             $table->decimal('price', 12, 2)->nullable();
-
-            $table->text('category', 100)->nullable();
 
             $table->unsignedBigInteger('supplier_id')->unsigned()->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');

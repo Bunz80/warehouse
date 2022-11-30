@@ -159,11 +159,11 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Total Order')
                                 ->content(new HtmlString('
-                            <table border="1" class="filament-tables-table w-full table-auto">
-                            <tr><td>Sub Total</td><td style="float:right">20.17 €</td></tr>
-                            <tr><td>Vat</td><td style="float:right">4.43 €</td></tr>
+                            <table border="1" class="overflow-auto md:overflow-scroll filament-tables-table w-full table-auto" style="position: fixed;top: 20px;" >
+                            <tr><td>Sub Total</td><td style="float:right">0.00 €</td></tr>
+                            <tr><td>Vat</td><td style="float:right">0.00 €</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">24.60 €</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">00.00 €</td></tr>
                             </table>
                         ')),
                     ]),
@@ -208,7 +208,18 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')
+                TextColumn::make('year')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('number')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('company_id')
+                    ->label('Company')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('supplier_id')
+                    ->label('Supplier')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('order_at')
@@ -239,7 +250,7 @@ class OrderResource extends Resource
             ->filters([
                 SelectFilter::make('Company')->options([
                     // @todo
-                    //Customer::where('is_my_company', true)->pluck('name', 'name')
+                    // Customer::where('is_my_company', true)->pluck('name', 'name')
                 ]),
                 SelectFilter::make('status')
                     ->options([

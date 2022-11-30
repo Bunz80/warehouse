@@ -3,28 +3,27 @@
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
 use App\Filament\Resources\Warehouse\OrderResource;
-
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
+use Closure;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
 use Illuminate\Support\HtmlString;
-use Closure;
 
 class CreateOrder extends CreateRecord
 {
@@ -34,9 +33,10 @@ class CreateOrder extends CreateRecord
 
     public $arr;
 
-    function __construct() {
+    public function __construct()
+    {
         $this->arr = [];
-    } 
+    }
 
     protected function getSteps(): array
     {
@@ -53,26 +53,26 @@ class CreateOrder extends CreateRecord
                         ->required()
                         ->columnSpan(2)
                         ->reactive()
-                        ->afterStateUpdated(function(Closure $set, Closure $get){
-                            if ($get("company_id")) {
-                                $company = Company::where("id", $get("company_id"));
+                        ->afterStateUpdated(function (Closure $set, Closure $get) {
+                            if ($get('company_id')) {
+                                $company = Company::where('id', $get('company_id'));
                                 if ($company) {
                                     $tax = $company->pluck('default_tax_rate')[0];
                                     $currency = $company->pluck('default_currency')[0];
-                                    $set("Tax", $tax);
-                                    $set("currency", $currency);
+                                    $set('Tax', $tax);
+                                    $set('currency', $currency);
                                 }
-    
-                                $year = date('Y', strtotime($get("order_at")));
-                                $order = Order::whereRaw("company_id = ".$get("company_id")." and year = ".$year)->orderBy("number", "desc");
+
+                                $year = date('Y', strtotime($get('order_at')));
+                                $order = Order::whereRaw('company_id = '.$get('company_id').' and year = '.$year)->orderBy('number', 'desc');
                                 if ($order) {
                                     $num = $order->pluck('number');
                                     if (count($num) > 0) {
-                                        $set("number", $num[0] + 1);
+                                        $set('number', $num[0] + 1);
                                     } else {
-                                        $set("number", 1);
+                                        $set('number', 1);
                                     }
-                                } 
+                                }
                             }
                         }),
                     Select::make('supplier_id')
@@ -94,8 +94,9 @@ class CreateOrder extends CreateRecord
                         ->default(1),
                     Hidden::make('year')
                         ->label('Year')
-                        ->default(function(){
-                            $year = Carbon::now()->format("Y");
+                        ->default(function () {
+                            $year = Carbon::now()->format('Y');
+
                             return $year;
                         }),
                     DatePicker::make('order_at')
@@ -103,18 +104,18 @@ class CreateOrder extends CreateRecord
                         ->default(Carbon::now())
                         ->displayFormat('d/m/Y')
                         ->reactive()
-                        ->afterStateUpdated(function(Closure $set, Closure $get){
-                            $year = date('Y', strtotime($get("order_at")));
-                            $set("year", $year);
-                            $companyId = $get("company_id");
+                        ->afterStateUpdated(function (Closure $set, Closure $get) {
+                            $year = date('Y', strtotime($get('order_at')));
+                            $set('year', $year);
+                            $companyId = $get('company_id');
                             if ($companyId) {
-                                $order = Order::whereRaw("company_id = ".$companyId." and year = ".$year)->orderBy("number", "desc");
+                                $order = Order::whereRaw('company_id = '.$companyId.' and year = '.$year)->orderBy('number', 'desc');
                                 if ($order) {
                                     $num = $order->pluck('number');
                                     if (count($num) > 0) {
-                                        $set("number", $num[0] + 1);
+                                        $set('number', $num[0] + 1);
                                     } else {
-                                        $set("number", 1);
+                                        $set('number', 1);
                                     }
                                 }
                             }
@@ -133,19 +134,19 @@ class CreateOrder extends CreateRecord
                             ->options(Product::all()->pluck('name', 'id'))
                             ->searchable()
                             ->reactive()
-                            ->afterStateUpdated(function(Closure $set, Closure $get){
-                                if ($get("product")) {
-                                    $item = Product::where("id", $get("product"));
-                                    array_push($this->arr, 
+                            ->afterStateUpdated(function (Closure $set, Closure $get) {
+                                if ($get('product')) {
+                                    $item = Product::where('id', $get('product'));
+                                    array_push($this->arr,
                                         [
-                                            'name' => $item->pluck('name')[0], 
+                                            'name' => $item->pluck('name')[0],
                                             'description' => $item->pluck('description')[0],
                                             'code' => $item->pluck('code')[0],
                                             'vat' => $item->pluck('tax')[0],
                                             'unit' => $item->pluck('unit')[0],
                                             'qty' => 1,
                                             'price_unit' => $item->pluck('price')[0],
-                                            'discount_currency' => $item->pluck('currency')[0]
+                                            'discount_currency' => $item->pluck('currency')[0],
                                         ]
                                     );
                                 }
@@ -204,7 +205,8 @@ class CreateOrder extends CreateRecord
                                 Placeholder::make('Total Price Item')
                                     ->label('Total Price Item: ')
                                     ->content(function (Closure $get) {
-                                        $sum = (float)$get('price_unit') * (int)$get('qty');
+                                        $sum = (float) $get('price_unit') * (int) $get('qty');
+
                                         return new HtmlString('<b>€ '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
@@ -225,26 +227,27 @@ class CreateOrder extends CreateRecord
                                 $items = $get('Product list');
                                 $priceSum = 0;
                                 $vatSum = 0;
-                                foreach($items as $item){
+                                foreach ($items as $item) {
                                     $i = 0;
                                     $price = 0;
                                     $vat = 0;
                                     $qty = 0;
-                                    foreach ($item as $value){
+                                    foreach ($item as $value) {
                                         if ($i == 6) {
-                                           $price = $value; 
-                                        };
+                                            $price = $value;
+                                        }
                                         if ($i == 5) {
-                                            $qty = $value; 
-                                        };
+                                            $qty = $value;
+                                        }
                                         if ($i == 3) {
-                                            $vat = $value; 
-                                        };
+                                            $vat = $value;
+                                        }
                                         $i++;
                                     }
                                     $priceSum += $price * $qty;
                                     $vatSum += $vat;
                                 }
+
                                 return new HtmlString('
                                     <table border="1" class="filament-tables-table w-full table-auto">
                                     <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' €</td></tr>
@@ -299,7 +302,7 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
                         Textarea::make('report')->label('Order report'),
-                    ])->columns(4)
+                    ])->columns(4),
                 ]),
         ];
     }
