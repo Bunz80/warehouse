@@ -54,24 +54,26 @@ class CreateOrder extends CreateRecord
                         ->columnSpan(2)
                         ->reactive()
                         ->afterStateUpdated(function(Closure $set, Closure $get){
-                            $company = Company::where("id", $get("company_id"));
-                            if ($company) {
-                                $tax = $company->pluck('default_tax_rate')[0];
-                                $currency = $company->pluck('default_currency')[0];
-                                $set("Tax", $tax);
-                                $set("currency", $currency);
-                            }
-
-                            $year = date('Y', strtotime($get("order_at")));
-                            $order = Order::whereRaw("company_id = ".$get("company_id")." and year = ".$year)->orderBy("number", "desc");
-                            if ($order) {
-                                $num = $order->pluck('number');
-                                if (count($num) > 0) {
-                                    $set("number", $num[0] + 1);
-                                } else {
-                                    $set("number", 1);
+                            if ($get("company_id")) {
+                                $company = Company::where("id", $get("company_id"));
+                                if ($company) {
+                                    $tax = $company->pluck('default_tax_rate')[0];
+                                    $currency = $company->pluck('default_currency')[0];
+                                    $set("Tax", $tax);
+                                    $set("currency", $currency);
                                 }
-                            } 
+    
+                                $year = date('Y', strtotime($get("order_at")));
+                                $order = Order::whereRaw("company_id = ".$get("company_id")." and year = ".$year)->orderBy("number", "desc");
+                                if ($order) {
+                                    $num = $order->pluck('number');
+                                    if (count($num) > 0) {
+                                        $set("number", $num[0] + 1);
+                                    } else {
+                                        $set("number", 1);
+                                    }
+                                } 
+                            }
                         }),
                     Select::make('supplier_id')
                         ->label('Supplier')
