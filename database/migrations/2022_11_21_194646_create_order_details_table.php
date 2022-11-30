@@ -20,11 +20,20 @@ return new class extends Migration
             $table->foreign('order_id')->references('id')->on('orders');
 
             $table->text('name');
+            $table->text('brand');
+            $table->text('code');
             $table->text('description')->nullable();
+
             $table->decimal('tax', 12, 2)->nullable();
+            $table->decimal('quantity', 5, 2)->nullable()->default(1);
             $table->string('unit')->nullable();
+            $table->string('currency')->nullable()->default('€');
+
+            $table->string('discount_currency')->nullable()->default('€');
+            $table->decimal('discount_price', 12, 2)->nullable();
+
             $table->decimal('price', 12, 2)->nullable();
-            $table->text('category', 100)->nullable();
+
             $table->timestamps();
         });
     }

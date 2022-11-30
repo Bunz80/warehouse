@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Warehouse;
 
-use App\Models\Customer;
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductFactory extends Factory
 {
-    protected $model = Customer::class;
-
     /**
      * Define the model's default state.
      *
@@ -19,30 +17,19 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $items = ['pz', 'Kg', 'mt', ''];
-
-        $customerable = $this->customerable();
-
         return [
             'name' => fake()->name(),
             'description' => fake()->paragraph(),
             'brand' => fake()->name(),
-            'category' => fake()->word(),
+            'category' => fake()->words(5),
 
-            'unit' => $items[array_rand($items)],
+            'code' => fake()->word(),
+            'unit' => fake()->randomElement(['pz', 'Kg', 'Mt', 'Lt']),
             'tax' => rand(1, 30),
-            'currency' => rand(1, 1000),
+            'currency' => fake()->randomElement(['€', '$', '£', '¥']),
             'price' => rand(1, 1000),
 
-            'productable_id' => $customerable::factory(),
-            'productable_type' => $customerable,
+            'supplier_id' => Supplier::inRandomOrder()->first()->id,
         ];
-    }
-
-    public function customerable()
-    {
-        return $this->faker->randomElement([
-            Customer::class,
-        ]);
     }
 }

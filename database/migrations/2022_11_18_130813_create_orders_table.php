@@ -16,9 +16,6 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            // $table->unsignedBigInteger('user_id')->unsigned();
-            // $table->foreign('user_id')->references('id')->on('users');
-
             $table->unsignedBigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies');
 
@@ -47,7 +44,6 @@ return new class extends Migration
             $table->text('payment_note')->nullable();
 
             $table->text('notes')->nullable();
-            $table->text('report')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

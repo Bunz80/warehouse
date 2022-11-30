@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Warehouse;
 
+use App\Models\Warehouse\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,22 @@ class OrderDetailFactory extends Factory
     public function definition()
     {
         return [
-            //
+
+            'name' => fake()->name(),
+            'description' => fake()->paragraph(),
+            'brand' => fake()->name(),
+            'code' => fake()->word(),
+
+            'currency' => fake()->randomElement(['€', '$', '£', '¥']),
+            'tax' => rand(5, 30),
+            'unit' => fake()->randomElement(['pz', 'Kg', 'Mt', 'Lt']),
+            'quantity' => rand(1, 20),
+            'price' => rand(1, 1000),
+
+            'discount_currency' => fake()->randomElement(['%', '€', '$', '£', '¥']),
+            'discount_price' => rand(1, 1000),
+
+            'order_id' => Order::inRandomOrder()->first()->id,
         ];
     }
 }
