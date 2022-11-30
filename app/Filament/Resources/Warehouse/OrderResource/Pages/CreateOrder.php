@@ -172,6 +172,7 @@ class CreateOrder extends CreateRecord
                                 TextInput::make('vat')
                                     ->columnSpan(2)
                                     ->required()
+                                    ->numeric()
                                     ->label('Vat %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
