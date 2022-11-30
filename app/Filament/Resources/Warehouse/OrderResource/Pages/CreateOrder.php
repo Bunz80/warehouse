@@ -11,6 +11,7 @@ use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\View;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -147,6 +148,7 @@ class CreateOrder extends CreateRecord
                                             'qty' => 1,
                                             'price_unit' => $item->pluck('price')[0],
                                             'discount_currency' => $item->pluck('currency')[0],
+                                            'discount_price' => 0
                                         ]
                                     );
                                 }
@@ -195,17 +197,34 @@ class CreateOrder extends CreateRecord
 
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
-                                    //->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
-                                    ->options(['%', '€', '$', '£', '¥'])
-                                    ->columnSpan(3),
+                                    ->options(['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'])
+                                    ->reactive()
+                                    ->columnSpan(3)
+                                    ->afterStateUpdated(function (Closure $set, Closure $get) {
+                                        if (!$get('discount_currency')) {
+                                            $set('discount_price', 0);
+                                        }
+                                    }),
                                 TextInput::make('discount_price')
                                     ->label('Discount Value')
+                                    ->numeric()
                                     ->columnSpan(3)
-                                    ->numeric(),
+                                    ->disabled(function(Closure $get) {
+                                        return $get('discount_currency') ? false : true;
+                                    }),
                                 Placeholder::make('Total Price Item')
                                     ->label('Total Price Item: ')
                                     ->content(function (Closure $get) {
-                                        $sum = (float) $get('price_unit') * (int) $get('qty');
+                                        $unit = $get('price_unit');
+                                        if ($get('discount_currency') && $get('discount_price')) {
+                                            if ($get('discount_currency') == "%") {
+                                                $unit = $unit * (1 - $get('discount_price')/100);
+                                            } else {
+                                                $unit = $unit - $get('discount_price');
+                                            }
+                                        }
+                                        $unit = $unit * (1 + $get('vat') / 100);
+                                        $sum =  $unit * $get('qty');
 
                                         return new HtmlString('<b>€ '.$sum.'</b>');
                                     })
@@ -221,42 +240,72 @@ class CreateOrder extends CreateRecord
                             ->reactive(),
                     ])->columnSpan(3),
 
-                    Card::make([
-                        Placeholder::make('Total Order')
-                            ->content(function (Closure $get) {
-                                $items = $get('Product list');
-                                $priceSum = 0;
-                                $vatSum = 0;
-                                foreach ($items as $item) {
-                                    $i = 0;
-                                    $price = 0;
-                                    $vat = 0;
-                                    $qty = 0;
-                                    foreach ($item as $value) {
-                                        if ($i == 6) {
-                                            $price = $value;
-                                        }
-                                        if ($i == 5) {
-                                            $qty = $value;
-                                        }
-                                        if ($i == 3) {
-                                            $vat = $value;
-                                        }
-                                        $i++;
-                                    }
-                                    $priceSum += $price * $qty;
-                                    $vatSum += $vat;
-                                }
+                   
+                Placeholder::make('')
+                    ->content(function (Closure $get) {
+                        $items = $get('Product list');
+                        $priceSum = 0;
+                        $vatSum = 0;
+                        foreach ($items as $item) {
+                            $i = 0;
+                            $price = 0;
+                            $vat = 0;
+                            $qty = 0;
+                            $discount_currency = "";
+                            $discount_price = 0;
 
-                                return new HtmlString('
-                                    <table border="1" class="filament-tables-table w-full table-auto">
-                                    <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' €</td></tr>
-                                    <tr><td>Vat</td><td style="float:right">'.$vatSum.' €</td></tr>
-                                    <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                                    <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' €</td></tr>
-                                    </table>');
-                            }),
-                    ])->columnSpan(1),
+                            foreach ($item as $value) {
+                                if ($i == 8) {
+                                    $discount_price = $value;
+                                }
+                                if ($i == 7) {
+                                    $discount_currency = $value;
+                                }
+                                if ($i == 6) {
+                                    $price = $value;
+                                }
+                                if ($i == 5) {
+                                    $qty = $value;
+                                }
+                                if ($i == 3) {
+                                    $vat = $value;
+                                }
+                                $i++;
+                            }
+
+                            $unit = $price;
+                            if ($discount_currency && $discount_price) {
+                                if ($discount_currency == "%") {
+                                    $unit = $unit * (1 - $discount_price/100);
+                                } else {
+                                    $unit = $unit - $discount_price;
+                                }
+                            }
+                            $priceSum += $unit * $qty;
+                            $vatSum += $unit * ($vat / 100) * $qty;
+                        }
+
+                        return new HtmlString('
+                            <style>
+                                #total {
+                                    width: 100%;
+                                }
+                                @media (min-width: 1024px) {
+                                    #total {
+                                        position: fixed;
+                                        width: 215px !important;
+                                    }
+                                }
+                            </style>
+                            <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
+                            <div style="margin-bottom: 20px"><b>Total Order</b></div>
+                            <table border="1" class="filament-tables-table table-auto w-full">
+                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' €</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' €</td></tr>
+                            <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' €</td></tr>
+                            </table></div>');
+                    })->columnSpan(1),
 
                 ])->columns(4),
 
