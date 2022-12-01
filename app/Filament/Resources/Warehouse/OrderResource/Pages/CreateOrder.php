@@ -2,28 +2,29 @@
 
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
-use App\Filament\Resources\Warehouse\OrderResource;
-use App\Models\Category;
+use Closure;
+use Carbon\Carbon;
 use App\Models\Company;
+use App\Models\Contact;
+use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
-use Carbon\Carbon;
-use Closure;
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
-use Illuminate\Support\HtmlString;
 
 class CreateOrder extends CreateRecord
 {
@@ -371,7 +372,34 @@ class CreateOrder extends CreateRecord
                 ->icon('heroicon-o-shopping-bag')
                 ->schema([
                     Card::make([
-                        // Placeholder::make('')->content(new HtmlString('')),
+                        
+                        Select::make('Address')
+                            ->label('Address')
+                            // ->options(Address::where('collection_name', 'Warehouse-Address')->pluck('name', 'id'))
+                            // ->createOptionForm([
+                            //     Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Address'),
+                            //     Forms\Components\TextInput::make('name'),
+                            //     Forms\Components\TextInput::make('address'),
+                            //     Forms\Components\TextInput::make('street_number'),
+                            //     Forms\Components\TextInput::make('zip'),
+                            //     Forms\Components\TextInput::make('city'),
+                            //     Forms\Components\TextInput::make('province'),
+                            //     Forms\Components\TextInput::make('state'),
+                            // ])
+                            ->searchable(),
+                        Select::make('Contact')
+                            ->label('Contact')
+                            ->multiple()
+                            // ->options(Contact::where('collection_name', 'Warehouse-Contact')->pluck('name', 'id'))
+                            // ->createOptionForm([
+                            //     //Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Contact'),
+                            //     Forms\Components\Select::make('collection_name')->options(['phone', 'email', 'web', 'social', 'fax']),
+                            //     Forms\Components\TextInput::make('name'),
+                            //     Forms\Components\TextInput::make('address')->columnSpan(2),
+                            // ])
+                            ->searchable(),
+                        
+
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')

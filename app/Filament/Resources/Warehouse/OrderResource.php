@@ -53,10 +53,10 @@ class OrderResource extends Resource
                             ->label('Order\'s date')
                             ->default(Carbon::now())
                             ->displayFormat('d/m/Y'),
-                        TextInput::make('company_id')
+                        TextInput::make('company.name')
                             ->label('Company')
                             ->disabled(),
-                        TextInput::make('supplier_id')
+                        TextInput::make('supplier.name')
                             ->label('Supplier')
                             ->disabled(),
                     ])->columns(2),
@@ -134,6 +134,34 @@ class OrderResource extends Resource
 
                     // Info Payment & Trasport
                     Card::make([
+                        Group::make([
+                            Select::make('Address')
+                                ->label('Address')
+                                ->options(Address::where('collection_name', 'Warehouse-Address')->pluck('name', 'id'))
+                                ->createOptionForm([
+                                    Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Address'),
+                                    Forms\Components\TextInput::make('name'),
+                                    Forms\Components\TextInput::make('address'),
+                                    Forms\Components\TextInput::make('street_number'),
+                                    Forms\Components\TextInput::make('zip'),
+                                    Forms\Components\TextInput::make('city'),
+                                    Forms\Components\TextInput::make('province'),
+                                    Forms\Components\TextInput::make('state'),
+                                ])
+                                ->searchable(),
+                            Select::make('Contact')
+                                ->label('Contact')
+                                ->multiple()
+                                ->options(Contact::where('collection_name', 'Warehouse-Contact')->pluck('name', 'id'))
+                                ->createOptionForm([
+                                    Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Contact'),
+                                    Forms\Components\Select::make('collection_name')->options(['phone', 'email', 'web', 'social', 'fax']),
+                                    Forms\Components\TextInput::make('name'),
+                                    Forms\Components\TextInput::make('address')->columnSpan(2),
+                                ])
+                                ->searchable(),
+                        ]),
+
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')
