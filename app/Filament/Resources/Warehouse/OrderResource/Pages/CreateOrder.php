@@ -261,7 +261,10 @@ class CreateOrder extends CreateRecord
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
                                     ->options(function(Closure $get){
-                                        return ['%' => '%', $get("Total_price_item") => $get("Total_price_item")];
+                                        if ($get("Total_price_item")) {
+                                            return ['%' => '%', $get("Total_price_item") => $get("Total_price_item")];
+                                        }
+                                        return ['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'];
                                     })
                                     ->reactive()
                                     ->columnSpan(3)
