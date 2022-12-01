@@ -34,6 +34,10 @@ class OrderResource extends Resource
 
     protected static ?string $navigationGroup = 'Warehouse';
 
+    protected static ?string $modelLabel = 'Ordine';
+
+    protected static ?string $pluralModelLabel = 'Ordini';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -214,7 +218,7 @@ class OrderResource extends Resource
                 TextColumn::make('number')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('company_id')
+                TextColumn::make('company.name')
                     ->label('Company')
                     ->sortable()
                     ->searchable(),

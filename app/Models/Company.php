@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Warehouse\Order;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
@@ -38,6 +39,11 @@ class Company extends Model
 
         'is_activated',
     ];
+    
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
     public function addresses()
     {
