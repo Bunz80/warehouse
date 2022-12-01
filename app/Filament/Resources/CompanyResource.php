@@ -210,14 +210,10 @@ class CompanyResource extends Resource
     public static function getGlobalSearchResultActions(Model $record): array
     {
         return [
-            Action::make('edit')
-                ->iconButton()
-                ->icon('heroicon-s-pencil')
-                ->url(static::getUrl('edit', ['record' => $record])),
-            Action::make('pippo')
-                ->link()
-                ->icon('heroicon-s-pencil')
-                ->url('https://medmar.it'),
+            // Action::make('edit')
+            //     ->iconButton()
+            //     ->icon('heroicon-s-pencil')
+            //     ->url(static::getUrl('edit', ['record' => $record])),
         ];
     }
 }
