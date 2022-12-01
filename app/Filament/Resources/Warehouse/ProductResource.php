@@ -6,7 +6,6 @@ use App\Filament\Resources\Warehouse\ProductResource\Pages;
 use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Warehouse\Product;
-use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Resources\Form;
