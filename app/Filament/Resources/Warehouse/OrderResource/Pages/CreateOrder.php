@@ -220,7 +220,6 @@ class CreateOrder extends CreateRecord
                                         'preview',
                                     ])
                                     ->reactive()
-                                    ->required()
                                     ->columnSpan(12),
                                 TextInput::make('code')
                                     ->columnSpan(3)
