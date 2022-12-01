@@ -11,7 +11,6 @@ use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\View;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -132,22 +131,11 @@ class CreateOrder extends CreateRecord
                             ->reactive()
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
                                 $arr = [];
-                                
+
                                 $pros = $get('Product list');
 
                                 foreach ($pros as $pro) {
                                     $i = 0;
-
-                                    $name;
-                                    $description;
-                                    $code;
-                                    $vat;
-                                    $unit;
-                                    $qty;
-                                    $price;
-                                    $discount_currency;
-                                    $discount_price;
-                                    $Total_price_item;
 
                                     foreach ($pro as $value) {
                                         if ($i == 9) {
@@ -194,7 +182,7 @@ class CreateOrder extends CreateRecord
                                             'price_unit' => $price,
                                             'discount_currency' => $discount_currency,
                                             'discount_price' => $discount_price,
-                                            'Total_price_item' => $Total_price_item
+                                            'Total_price_item' => $Total_price_item,
                                         ]
                                     );
                                 }
@@ -211,7 +199,7 @@ class CreateOrder extends CreateRecord
                                             'price_unit' => $item->pluck('price')[0],
                                             'discount_currency' => $item->pluck('currency')[0],
                                             'discount_price' => 0,
-                                            'Total_price_item' => $get("currency") ? $get("currency") : "$"
+                                            'Total_price_item' => $get('currency') ? $get('currency') : '$',
                                         ]
                                     );
                                     $set('Product list', $arr);
@@ -241,8 +229,8 @@ class CreateOrder extends CreateRecord
                                     ->columnSpan(2)
                                     ->required()
                                     ->numeric()
-                                    ->default(function(Closure $get){
-                                        return $get("../../Tax");
+                                    ->default(function (Closure $get) {
+                                        return $get('../../Tax');
                                     })
                                     ->label('Vat %'),
                                 TextInput::make('unit')
@@ -263,16 +251,17 @@ class CreateOrder extends CreateRecord
 
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
-                                    ->options(function(Closure $get){
-                                        if ($get("Total_price_item")) {
-                                            return ['%' => '%', $get("Total_price_item") => $get("Total_price_item")];
+                                    ->options(function (Closure $get) {
+                                        if ($get('Total_price_item')) {
+                                            return ['%' => '%', $get('Total_price_item') => $get('Total_price_item')];
                                         }
+
                                         return ['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'];
                                     })
                                     ->reactive()
                                     ->columnSpan(3)
                                     ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                        if (!$get('discount_currency')) {
+                                        if (! $get('discount_currency')) {
                                             $set('discount_price', 0);
                                         }
                                     }),
@@ -280,7 +269,7 @@ class CreateOrder extends CreateRecord
                                     ->label('Discount Value')
                                     ->numeric()
                                     ->columnSpan(3)
-                                    ->disabled(function(Closure $get) {
+                                    ->disabled(function (Closure $get) {
                                         return $get('discount_currency') ? false : true;
                                     }),
                                 Placeholder::make('Total_price_item')
@@ -288,16 +277,16 @@ class CreateOrder extends CreateRecord
                                     ->content(function (Closure $get) {
                                         $unit = $get('price_unit');
                                         if ($get('discount_currency') && $get('discount_price')) {
-                                            if ($get('discount_currency') == "%") {
-                                                $unit = $unit * (1 - $get('discount_price')/100);
+                                            if ($get('discount_currency') == '%') {
+                                                $unit = $unit * (1 - $get('discount_price') / 100);
                                             } else {
                                                 $unit = $unit - $get('discount_price');
                                             }
                                         }
                                         $unit = $unit * (1 + $get('vat') / 100);
-                                        $sum =  $unit * $get('qty');
+                                        $sum = $unit * $get('qty');
 
-                                        return new HtmlString('<b>'.$get("Total_price_item").' '.$sum.'</b>');
+                                        return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
 
@@ -311,52 +300,51 @@ class CreateOrder extends CreateRecord
                             ->reactive(),
                     ])->columnSpan(3),
 
-                   
-                Placeholder::make('Total Order')
-                    ->content(function (Closure $get) {
-                        $items = $get('Product list');
-                        $priceSum = 0;
-                        $vatSum = 0;
-                        foreach ($items as $item) {
-                            $i = 0;
-                            $price = 0;
-                            $vat = 0;
-                            $qty = 0;
-                            $discount_currency = "";
-                            $discount_price = 0;
+                    Placeholder::make('Total Order')
+                        ->content(function (Closure $get) {
+                            $items = $get('Product list');
+                            $priceSum = 0;
+                            $vatSum = 0;
+                            foreach ($items as $item) {
+                                $i = 0;
+                                $price = 0;
+                                $vat = 0;
+                                $qty = 0;
+                                $discount_currency = '';
+                                $discount_price = 0;
 
-                            foreach ($item as $value) {
-                                if ($i == 8) {
-                                    $discount_price = $value;
+                                foreach ($item as $value) {
+                                    if ($i == 8) {
+                                        $discount_price = $value;
+                                    }
+                                    if ($i == 7) {
+                                        $discount_currency = $value;
+                                    }
+                                    if ($i == 6) {
+                                        $price = $value;
+                                    }
+                                    if ($i == 5) {
+                                        $qty = $value;
+                                    }
+                                    if ($i == 3) {
+                                        $vat = $value;
+                                    }
+                                    $i++;
                                 }
-                                if ($i == 7) {
-                                    $discount_currency = $value;
+
+                                $unit = $price;
+                                if ($discount_currency && $discount_price) {
+                                    if ($discount_currency == '%') {
+                                        $unit = $unit * (1 - $discount_price / 100);
+                                    } else {
+                                        $unit = $unit - $discount_price;
+                                    }
                                 }
-                                if ($i == 6) {
-                                    $price = $value;
-                                }
-                                if ($i == 5) {
-                                    $qty = $value;
-                                }
-                                if ($i == 3) {
-                                    $vat = $value;
-                                }
-                                $i++;
+                                $priceSum += $unit * $qty;
+                                $vatSum += $unit * ($vat / 100) * $qty;
                             }
 
-                            $unit = $price;
-                            if ($discount_currency && $discount_price) {
-                                if ($discount_currency == "%") {
-                                    $unit = $unit * (1 - $discount_price/100);
-                                } else {
-                                    $unit = $unit - $discount_price;
-                                }
-                            }
-                            $priceSum += $unit * $qty;
-                            $vatSum += $unit * ($vat / 100) * $qty;
-                        }
-
-                        return new HtmlString('
+                            return new HtmlString('
                             <style>
                                 #total {
                                     width: 100%;
@@ -370,12 +358,12 @@ class CreateOrder extends CreateRecord
                             </style>
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' '.$get("currency").'</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' '.$get("currency").'</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' '.$get('currency').'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' '.$get("currency").'</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' '.$get('currency').'</td></tr>
                             </table></div>');
-                    })->columnSpan(1),
+                        })->columnSpan(1),
 
                 ])->columns(4),
 
@@ -411,7 +399,6 @@ class CreateOrder extends CreateRecord
                             ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
                             ->default('New')
                             ->searchable(),
-
                     ])->columns(2),
                 ]),
 
