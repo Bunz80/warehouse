@@ -182,7 +182,7 @@ class CompanyResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            'name', 'vat', 'pec', 'addresses.address', 'contacts.name',
+            'name', 'vat', 'addresses.address', 'contacts.name',
         ];
     }
 
@@ -200,7 +200,7 @@ class CompanyResource extends Resource
         return $details;
     }
 
-    //
+    // Query Relazioni
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['addresses', 'contacts']);

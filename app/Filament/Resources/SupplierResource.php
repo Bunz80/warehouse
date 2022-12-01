@@ -15,6 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class SupplierResource extends Resource
 {
@@ -124,6 +126,52 @@ class SupplierResource extends Resource
             'index' => Pages\ListSuppliers::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
             'edit' => Pages\EditSupplier::route('/{record}/edit'),
+        ];
+    }
+
+    // GLOBAL SEARCH
+    // Titolo Record
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->name.' ('.$record->vat.')';
+    }
+
+    // Attributi ricercabili
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name', 'vat', 'addresses.address', 'contacts.name',
+        ];
+    }
+
+    // Sottotitolo con dettagli
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        $details = [
+            'Partita IVA' => $record->vat,
+        ];
+
+        if ($record->contacts->count() > 0) {
+            $details['Contatti'] = $record->contacts->implode('name', ', ');
+        }
+
+        return $details;
+    }
+
+    // Query Relazioni
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['addresses', 'contacts']);
+    }
+
+    // Aggiungi Azioni, Icone, Ecc
+    public static function getGlobalSearchResultActions(Model $record): array
+    {
+        return [
+            // Action::make('edit')
+            //     ->iconButton()
+            //     ->icon('heroicon-s-pencil')
+            //     ->url(static::getUrl('edit', ['record' => $record])),
         ];
     }
 }
