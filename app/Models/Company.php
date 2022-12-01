@@ -33,6 +33,8 @@ class Company extends Model
 
         'page_header',
         'page_footer',
+        'page_warehouse_terms',
+        'page_warehouse_info',
 
         'is_activated',
     ];
