@@ -214,8 +214,8 @@ class CreateOrder extends CreateRecord
                                             'Total_price_item' => $get("currency") ? $get("currency") : "$"
                                         ]
                                     );
+                                    $set('Product list', $arr);
                                 }
-                                $set('Product list', $arr);
                             }),
 
                         Repeater::make('Product list')
@@ -309,7 +309,7 @@ class CreateOrder extends CreateRecord
                     ])->columnSpan(3),
 
                    
-                Placeholder::make('')
+                Placeholder::make('Total Order')
                     ->content(function (Closure $get) {
                         $items = $get('Product list');
                         $priceSum = 0;
@@ -366,7 +366,6 @@ class CreateOrder extends CreateRecord
                                 }
                             </style>
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
-                            <div style="margin-bottom: 20px"><b>Total Order</b></div>
                             <table border="1" class="filament-tables-table table-auto w-full">
                             <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' '.$get("currency").'</td></tr>
                             <tr><td>Vat</td><td style="float:right">'.$vatSum.' '.$get("currency").'</td></tr>
