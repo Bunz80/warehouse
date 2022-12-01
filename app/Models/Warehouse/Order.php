@@ -5,8 +5,9 @@ namespace App\Models\Warehouse;
 // use Heloufir\FilamentWorkflowManager\Core\InteractsWithWorkflows;
 // use Heloufir\FilamentWorkflowManager\Core\HasWorkflow;
 use App\Models\Company;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model // implements HasWorkflow
 {
@@ -43,5 +44,10 @@ class Order extends Model // implements HasWorkflow
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }

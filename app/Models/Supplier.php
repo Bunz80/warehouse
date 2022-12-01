@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,11 @@ class Supplier extends Model
 
         'is_activated',
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
     public function addresses()
     {

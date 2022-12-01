@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Company;
-use App\Models\Category;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Section;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers;
+use App\Models\Category;
+use App\Models\Company;
+use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\GlobalSearch\Actions\Action;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class CompanyResource extends Resource
 {
@@ -175,15 +175,17 @@ class CompanyResource extends Resource
     // Titolo Record
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return $record->name . ' (' . $record->vat. ')';
+        return $record->name.' ('.$record->vat.')';
     }
+
     // Attributi ricercabili
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            'name', 'vat', 'pec', 'addresses.address', 'contacts.name'
+            'name', 'vat', 'pec', 'addresses.address', 'contacts.name',
         ];
     }
+
     // Sottotitolo con dettagli
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -191,17 +193,19 @@ class CompanyResource extends Resource
             'Partita IVA' => $record->vat,
         ];
 
-        if($record->contacts->count() > 0){
-            $details ['Contatti'] = $record->contacts->implode('name', ', ');
+        if ($record->contacts->count() > 0) {
+            $details['Contatti'] = $record->contacts->implode('name', ', ');
         }
 
         return $details;
     }
-    // 
+
+    //
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['addresses', 'contacts']);
     }
+
     // Aggiungi Azioni, Icone, Ecc
     public static function getGlobalSearchResultActions(Model $record): array
     {
@@ -216,5 +220,4 @@ class CompanyResource extends Resource
                 ->url('https://medmar.it'),
         ];
     }
-
 }

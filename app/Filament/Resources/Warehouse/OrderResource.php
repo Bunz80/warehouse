@@ -222,7 +222,7 @@ class OrderResource extends Resource
                     ->label('Company')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('supplier_id')
+                TextColumn::make('supplier.name')
                     ->label('Supplier')
                     ->sortable()
                     ->searchable(),
