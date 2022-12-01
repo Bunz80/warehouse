@@ -34,6 +34,8 @@ return new class extends Migration
 
             $table->text('page_header')->nullable();
             $table->text('page_footer')->nullable();
+            $table->text('page_warehouse_terms')->nullable();
+            $table->text('page_warehouse_info')->nullable();
 
             $table->boolean('is_activated')->nullable()->default(true);
 

@@ -97,6 +97,22 @@ class CompanyResource extends Resource
                                 'edit',
                                 'preview',
                             ]),
+                    Forms\Components\MarkdownEditor::make('page_warehouse_terms')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'orderedList',
+                                'edit',
+                                'preview',
+                            ]),
+                    Forms\Components\MarkdownEditor::make('page_warehouse_info')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'orderedList',
+                                'edit',
+                                'preview',
+                            ]),
                 ])
                 ->compact()
                 ->collapsed()
