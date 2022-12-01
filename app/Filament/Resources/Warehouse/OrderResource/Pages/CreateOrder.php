@@ -32,13 +32,6 @@ class CreateOrder extends CreateRecord
 
     protected static string $resource = OrderResource::class;
 
-    public $arr;
-
-    public function __construct()
-    {
-        $this->arr = [];
-    }
-
     protected function getSteps(): array
     {
         return [
@@ -55,24 +48,14 @@ class CreateOrder extends CreateRecord
                         ->columnSpan(2)
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, Closure $get) {
-                            if ($get('company_id')) {
-                                $company = Company::where('id', $get('company_id'));
-                                if ($company) {
-                                    $tax = $company->pluck('default_tax_rate')[0];
-                                    $currency = $company->pluck('default_currency')[0];
-                                    $set('Tax', $tax);
-                                    $set('currency', $currency);
-                                }
-
-                                $year = date('Y', strtotime($get('order_at')));
-                                $order = Order::whereRaw('company_id = '.$get('company_id').' and year = '.$year)->orderBy('number', 'desc');
-                                if ($order) {
-                                    $num = $order->pluck('number');
-                                    if (count($num) > 0) {
-                                        $set('number', $num[0] + 1);
-                                    } else {
-                                        $set('number', 1);
-                                    }
+                            $year = date('Y', strtotime($get('order_at')));
+                            $order = Order::whereRaw('company_id = '.$get('company_id').' and year = '.$year)->orderBy('number', 'desc');
+                            if ($order) {
+                                $num = $order->pluck('number');
+                                if (count($num) > 0) {
+                                    $set('number', $num[0] + 1);
+                                } else {
+                                    $set('number', 1);
                                 }
                             }
                         }),
@@ -81,7 +64,19 @@ class CreateOrder extends CreateRecord
                         ->options(Supplier::all()->pluck('name', 'id'))
                         ->searchable()
                         ->required()
-                        ->columnSpan(2),
+                        ->columnSpan(2)
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, Closure $get) {
+                            if ($get('supplier_id')) {
+                                $supplier = Supplier::where('id', $get('supplier_id'));
+                                if ($supplier) {
+                                    $tax = $supplier->pluck('vat')[0];
+                                    $currency = $supplier->pluck('vat')[0];
+                                    $set('Tax', $tax);
+                                    $set('currency', $currency);
+                                }
+                            }
+                        }),
                 ])->columns(4),
 
                 Card::make([
@@ -136,9 +131,76 @@ class CreateOrder extends CreateRecord
                             ->searchable()
                             ->reactive()
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
+                                $arr = [];
+                                
+                                $pros = $get('Product list');
+
+                                foreach ($pros as $pro) {
+                                    $i = 0;
+
+                                    $name;
+                                    $description;
+                                    $code;
+                                    $vat;
+                                    $unit;
+                                    $qty;
+                                    $price;
+                                    $discount_currency;
+                                    $discount_price;
+                                    $Total_price_item;
+
+                                    foreach ($pro as $value) {
+                                        if ($i == 9) {
+                                            $Total_price_item = $value;
+                                        }
+                                        if ($i == 8) {
+                                            $discount_price = $value;
+                                        }
+                                        if ($i == 7) {
+                                            $discount_currency = $value;
+                                        }
+                                        if ($i == 6) {
+                                            $price = $value;
+                                        }
+                                        if ($i == 5) {
+                                            $qty = $value;
+                                        }
+                                        if ($i == 4) {
+                                            $unit = $value;
+                                        }
+                                        if ($i == 3) {
+                                            $vat = $value;
+                                        }
+                                        if ($i == 2) {
+                                            $code = $value;
+                                        }
+                                        if ($i == 1) {
+                                            $description = $value;
+                                        }
+                                        if ($i == 0) {
+                                            $name = $value;
+                                        }
+                                        $i++;
+                                    }
+
+                                    array_push($arr,
+                                        [
+                                            'name' => $name,
+                                            'description' => $description,
+                                            'code' => $code,
+                                            'vat' => $vat,
+                                            'unit' => $unit,
+                                            'qty' => $qty,
+                                            'price_unit' => $price,
+                                            'discount_currency' => $discount_currency,
+                                            'discount_price' => $discount_price,
+                                            'Total_price_item' => $Total_price_item
+                                        ]
+                                    );
+                                }
                                 if ($get('product')) {
                                     $item = Product::where('id', $get('product'));
-                                    array_push($this->arr,
+                                    array_push($arr,
                                         [
                                             'name' => $item->pluck('name')[0],
                                             'description' => $item->pluck('description')[0],
@@ -149,11 +211,11 @@ class CreateOrder extends CreateRecord
                                             'price_unit' => $item->pluck('price')[0],
                                             'discount_currency' => $item->pluck('currency')[0],
                                             'discount_price' => 0,
-                                            'Total_price_item' => $get("currency")
+                                            'Total_price_item' => $get("currency") ? $get("currency") : "$"
                                         ]
                                     );
                                 }
-                                $set('Product list', $this->arr);
+                                $set('Product list', $arr);
                             }),
 
                         Repeater::make('Product list')
