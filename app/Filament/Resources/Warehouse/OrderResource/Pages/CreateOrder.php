@@ -241,6 +241,9 @@ class CreateOrder extends CreateRecord
                                     ->columnSpan(2)
                                     ->required()
                                     ->numeric()
+                                    ->default(function(Closure $get){
+                                        return $get("../../Tax");
+                                    })
                                     ->label('Vat %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
