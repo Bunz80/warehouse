@@ -148,7 +148,8 @@ class CreateOrder extends CreateRecord
                                             'qty' => 1,
                                             'price_unit' => $item->pluck('price')[0],
                                             'discount_currency' => $item->pluck('currency')[0],
-                                            'discount_price' => 0
+                                            'discount_price' => 0,
+                                            'Total_price_item' => $get("currency")
                                         ]
                                     );
                                 }
@@ -197,7 +198,9 @@ class CreateOrder extends CreateRecord
 
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
-                                    ->options(['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'])
+                                    ->options(function(Closure $get){
+                                        return ['%' => '%', $get("Total_price_item") => $get("Total_price_item")];
+                                    })
                                     ->reactive()
                                     ->columnSpan(3)
                                     ->afterStateUpdated(function (Closure $set, Closure $get) {
@@ -212,7 +215,7 @@ class CreateOrder extends CreateRecord
                                     ->disabled(function(Closure $get) {
                                         return $get('discount_currency') ? false : true;
                                     }),
-                                Placeholder::make('Total Price Item')
+                                Placeholder::make('Total_price_item')
                                     ->label('Total Price Item: ')
                                     ->content(function (Closure $get) {
                                         $unit = $get('price_unit');
@@ -226,7 +229,7 @@ class CreateOrder extends CreateRecord
                                         $unit = $unit * (1 + $get('vat') / 100);
                                         $sum =  $unit * $get('qty');
 
-                                        return new HtmlString('<b>€ '.$sum.'</b>');
+                                        return new HtmlString('<b>'.$get("Total_price_item").' '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
 
@@ -300,10 +303,10 @@ class CreateOrder extends CreateRecord
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <div style="margin-bottom: 20px"><b>Total Order</b></div>
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' €</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' €</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' '.$get("currency").'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' '.$get("currency").'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' €</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' '.$get("currency").'</td></tr>
                             </table></div>');
                     })->columnSpan(1),
 
