@@ -63,7 +63,7 @@ class OrderResource extends Resource
                         Select::make('supplier_id')
                             ->label('Supplier')
                             ->disabled()
-                            ->options(Supplier::all()->pluck('name', 'id')),
+                            ->options(Supplier::where('is_activated', true)->pluck('name', 'id')),
                     ])->columns(2),
 
                     //Details Order
@@ -236,7 +236,8 @@ class OrderResource extends Resource
                 TextColumn::make('order_at')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('price')
+                TextColumn::make('total_order')
+                    ->label('Price')
                     ->sortable()
                     ->searchable(),
                 IconColumn::make('status')

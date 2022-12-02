@@ -140,7 +140,13 @@ class ProductResource extends Resource
     // Titolo Record
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return $record->name.' ('.$record->brand.') '.$record->price.' '.$record->currency;
+        $b = '';
+        
+        if($record->brand != ''){
+            $b = ' ('.$record->brand.') ';
+        }
+        
+        return $record->name . $b . $record->price .' '. $record->currency;
     }
 
     // Attributi ricercabili
