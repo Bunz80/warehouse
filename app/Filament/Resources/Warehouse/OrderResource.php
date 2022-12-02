@@ -63,6 +63,7 @@ class OrderResource extends Resource
                     ])->columns(2),
 
                     //Details Order
+                    /*
                     Card::make([
                         Select::make('product')
                             ->label('Search and Add Product')
@@ -132,6 +133,7 @@ class OrderResource extends Resource
                             ->createItemButtonLabel('Add Item')
                             ->columns(12),
                     ]),
+                    */
 
                     // Info Payment & Trasport
                     Card::make([
@@ -164,12 +166,12 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Total Order')
                                 ->content(new HtmlString('
-                            <table border="1" class="overflow-auto md:overflow-scroll filament-tables-table w-full table-auto" style="position: fixed;top: 20px;" >
-                            <tr><td>Sub Total</td><td style="float:right">0.00 €</td></tr>
-                            <tr><td>Vat</td><td style="float:right">0.00 €</td></tr>
-                            <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">00.00 €</td></tr>
-                            </table>
+                                <table border="1" class="filament-tables-table table-auto w-full">
+                                <tbody><tr><td>Sub Total</td><td style="float:right">993 €</td></tr>
+                                <tr><td>Vat</td><td style="float:right">19.86 €</td></tr>
+                                <tr><td colspan="2"><hr style="margin:10px"></td></tr>
+                                <tr><td><b>Total</b></td><td style="float:right">1012.86 €</td></tr>
+                                </tbody></table>
                         ')),
                     ]),
 
