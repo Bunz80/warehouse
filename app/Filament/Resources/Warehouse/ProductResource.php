@@ -12,8 +12,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductResource extends Resource
 {
@@ -150,20 +150,6 @@ class ProductResource extends Resource
             'name', 'brand', 'description', 'category', 'price', 'currency', 'supplier.name',
         ];
     }
-
-    // Sottotitolo con dettagli
-    // public static function getGlobalSearchResultDetails(Model $record): array
-    // {
-    //     $details = [
-    //         'Partita IVA' => $record->vat,
-    //     ];
-
-    //     if ($record->contacts->count() > 0) {
-    //         $details['Contatti'] = $record->contacts->implode('name', ', ');
-    //     }
-
-    //     return $details;
-    // }
 
     // Query Relazioni
     public static function getGlobalSearchEloquentQuery(): Builder

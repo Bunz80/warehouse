@@ -33,7 +33,9 @@ return new class extends Migration
             $table->decimal('discount_price', 12, 2)->nullable();
             // Valuta e prezzo totale
             $table->string('currency')->default('€');
-            $table->decimal('total_price', 12, 2)->nullable();
+            $table->decimal('total_taxes', 12, 2)->nullable();
+            $table->decimal('total_prices', 12, 2)->nullable();
+            $table->decimal('total', 12, 2)->nullable();
             // Consegna -> address id
             $table->integer('delivery_id')->nullable();
             $table->string('delivery_method')->nullable();

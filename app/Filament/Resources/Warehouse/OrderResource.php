@@ -4,10 +4,10 @@ namespace App\Filament\Resources\Warehouse;
 
 use App\Filament\Resources\Warehouse\OrderResource\Pages;
 use App\Models\Category;
-use App\Models\Customer;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
+use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
@@ -23,6 +23,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\HtmlString;
 
@@ -229,6 +230,9 @@ class OrderResource extends Resource
                 TextColumn::make('order_at')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('price')
+                    ->sortable()
+                    ->searchable(),
                 IconColumn::make('status')
                     ->options([
                         'heroicon-o-x-circle' => 'New',
@@ -252,10 +256,8 @@ class OrderResource extends Resource
                 */
             ])
             ->filters([
-                SelectFilter::make('Company')->options([
-                    // @todo
-                    // Customer::where('is_my_company', true)->pluck('name', 'name')
-                ]),
+                SelectFilter::make('Company')->relationship('company', 'name'),
+
                 SelectFilter::make('status')
                     ->options([
                         'New' => 'New',
@@ -266,6 +268,11 @@ class OrderResource extends Resource
                         'Draft' => 'Draft',
                     ]),
 
+                Filter::make('created_at')
+                ->form([
+                    Forms\Components\DatePicker::make('created_at')->displayFormat('d/m/Y')->label('Data Inizio'),
+                    Forms\Components\DatePicker::make('created_at')->displayFormat('d/m/Y')->label('Data Fine')->default(now()),
+                ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
