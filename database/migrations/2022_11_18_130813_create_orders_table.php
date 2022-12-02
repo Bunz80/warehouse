@@ -36,8 +36,12 @@ return new class extends Migration
             $table->decimal('total_taxes', 12, 2)->nullable();
             $table->decimal('total_prices', 12, 2)->nullable();
             $table->decimal('total_order', 12, 2)->nullable();
-            // Consegna -> address id
-            $table->integer('delivery_id')->nullable();
+            // Consegna -> address & contact
+            // $table->unsignedBigInteger('contact_id')->nullable()->unsigned();
+            // $table->foreign('contact_id')->references('id')->on('contacts');
+
+            // $table->unsignedBigInteger('delivery_id')->nullable()->unsigned();
+            // $table->foreign('delivery_id')->references('id')->on('addresses');
             $table->string('delivery_method')->nullable();
             $table->text('delivery_note')->nullable();
             // Trasporto
