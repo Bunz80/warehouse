@@ -16,6 +16,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "nesbot/carbon": "^2.63",
         "pxlrbt/filament-spotlight": "^0.3.6"
     },
     "require-dev": {
