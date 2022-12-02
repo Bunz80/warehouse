@@ -2,30 +2,32 @@
 
 namespace App\Filament\Resources\Warehouse;
 
-use App\Filament\Resources\Warehouse\OrderResource\Pages;
-use App\Models\Category;
-use App\Models\Warehouse\Order;
-use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use App\Models\Company;
+use App\Models\Category;
+use App\Models\Supplier;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use App\Models\Warehouse\Order;
+use Filament\Resources\Resource;
+use App\Models\Warehouse\Product;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Card;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\Warehouse\OrderResource\Pages;
 
 class OrderResource extends Resource
 {
@@ -54,12 +56,14 @@ class OrderResource extends Resource
                             ->label('Order\'s date')
                             ->default(Carbon::now())
                             ->displayFormat('d/m/Y'),
-                        TextInput::make('company_id')
+                        Select::make('company_id')
                             ->label('Company')
-                            ->disabled(),
-                        TextInput::make('supplier_id')
+                            ->disabled()
+                            ->options(Company::all()->pluck('name', 'id')),
+                        Select::make('supplier_id')
                             ->label('Supplier')
-                            ->disabled(),
+                            ->disabled()
+                            ->options(Supplier::all()->pluck('name', 'id')),
                     ])->columns(2),
 
                     //Details Order
