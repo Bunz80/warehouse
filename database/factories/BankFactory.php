@@ -20,7 +20,7 @@ class BankFactory extends Factory
     public function definition()
     {
         $type = fake()->randomElement(['App\Models\Company', 'App\Models\Supplier', 'App\Models\Customer']);
-        
+
         if ($type == 'App\Models\Company') {
             $type_id = Company::inRandomOrder()->first()->id;
         }
