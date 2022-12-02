@@ -113,6 +113,7 @@ class SupplierResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\OrdersRelationManager::class,
             RelationManagers\ProductsRelationManager::class,
             RelationManagers\AddressesRelationManager::class,
             RelationManagers\ContactsRelationManager::class,

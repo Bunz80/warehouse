@@ -19,13 +19,13 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             // registry
             CategorySeeder::class,
-            BankSeeder::class,
             CompanySeeder::class,
             SupplierSeeder::class,
             CustomerSeeder::class,
             // Contacts & Addresses
             AddressSeeder::class,
             ContactSeeder::class,
+            BankSeeder::class,
             // warehouse
             ProductSeeder::class,
             OrderSeeder::class,

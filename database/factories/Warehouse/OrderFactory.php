@@ -28,7 +28,9 @@ class OrderFactory extends Factory
             'discount_currency' => fake()->randomElement(['%', '€']),
             'discount_price' => rand(1, 50),
             'currency' => fake()->randomElement(['€', '$', '£', '¥']),
-            'total_price' => rand(100, 1000),
+            'total_taxes' => fake()->randomFloat(2),
+            'total_prices' => fake()->randomFloat(2),
+            'total_order' => fake()->randomFloat(2),
 
             'delivery_method' => fake()->word(),
             'delivery_note' => fake()->paragraph(),
