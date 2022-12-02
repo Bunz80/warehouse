@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Warehouse;
 
 use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Warehouse\Order;
@@ -16,7 +17,6 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -24,6 +24,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Forms\Components\TextInput;
 use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
