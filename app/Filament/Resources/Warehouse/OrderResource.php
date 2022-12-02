@@ -2,30 +2,30 @@
 
 namespace App\Filament\Resources\Warehouse;
 
-use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use Carbon\Carbon;
+use Filament\Tables;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\Customer;
-use App\Models\Warehouse\Order;
-use App\Models\Warehouse\Product;
-use Carbon\Carbon;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Resources\Form;
-use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables;
+use App\Models\Warehouse\Order;
+use Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use App\Models\Warehouse\Product;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
-use Forms\Components\TextInput;
-use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\Warehouse\OrderResource\Pages;
 
 class OrderResource extends Resource
 {
