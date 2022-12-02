@@ -12,6 +12,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
@@ -81,7 +83,7 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('supplier_id')
+                Tables\Columns\TextColumn::make('supplier.name')
                     ->label('Supplier')
                     ->sortable()
                     ->searchable(),
@@ -102,7 +104,16 @@ class ProductResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ReplicateAction::make()
+                ->afterReplicaSaved(
+                    function (Model $replica, $record): void {
+                        $replica->update([
+                            'name' => $replica->name.' (copia)',
+                        ]);
+                    }
+                ),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -122,6 +133,52 @@ class ProductResource extends Resource
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
+        ];
+    }
+
+    // GLOBAL SEARCH
+    // Titolo Record
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->name.' ('.$record->brand.') '.$record->price.' '.$record->currency;
+    }
+
+    // Attributi ricercabili
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name', 'brand', 'description', 'category', 'price', 'currency', 'supplier.name',
+        ];
+    }
+
+    // Sottotitolo con dettagli
+    // public static function getGlobalSearchResultDetails(Model $record): array
+    // {
+    //     $details = [
+    //         'Partita IVA' => $record->vat,
+    //     ];
+
+    //     if ($record->contacts->count() > 0) {
+    //         $details['Contatti'] = $record->contacts->implode('name', ', ');
+    //     }
+
+    //     return $details;
+    // }
+
+    // Query Relazioni
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['supplier']);
+    }
+
+    // Aggiungi Azioni, Icone, Ecc
+    public static function getGlobalSearchResultActions(Model $record): array
+    {
+        return [
+            // Action::make('edit')
+            //     ->iconButton()
+            //     ->icon('heroicon-s-pencil')
+            //     ->url(static::getUrl('edit', ['record' => $record])),
         ];
     }
 }

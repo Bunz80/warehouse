@@ -44,11 +44,6 @@ class Order extends Model // implements HasWorkflow
         'report',
     ];
 
-    public function orderDetail()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
-
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -57,5 +52,10 @@ class Order extends Model // implements HasWorkflow
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

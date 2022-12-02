@@ -36,11 +36,6 @@ class Supplier extends Model
         'is_activated',
     ];
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
     public function addresses()
     {
         return $this->morphMany(Address::class, 'addressable');
@@ -59,5 +54,10 @@ class Supplier extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

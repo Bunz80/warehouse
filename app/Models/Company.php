@@ -40,11 +40,6 @@ class Company extends Model
         'is_activated',
     ];
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
     public function addresses()
     {
         return $this->morphMany(Address::class, 'addressable');
@@ -58,5 +53,10 @@ class Company extends Model
     public function banks()
     {
         return $this->morphMany(Bank::class, 'bankable');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

@@ -374,64 +374,18 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
 
-                        Select::make('Address')
-                            ->label('Address')
-                            // ->options(Address::where('collection_name', 'Warehouse-Address')->pluck('name', 'id'))
-                            // ->createOptionForm([
-                            //     Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Address'),
-                            //     Forms\Components\TextInput::make('name'),
-                            //     Forms\Components\TextInput::make('address'),
-                            //     Forms\Components\TextInput::make('street_number'),
-                            //     Forms\Components\TextInput::make('zip'),
-                            //     Forms\Components\TextInput::make('city'),
-                            //     Forms\Components\TextInput::make('province'),
-                            //     Forms\Components\TextInput::make('state'),
-                            // ])
-                            ->searchable(),
-                        Select::make('Contact')
-                            ->label('Contact')
-                            ->multiple()
-                            // ->options(Contact::where('collection_name', 'Warehouse-Contact')->pluck('name', 'id'))
-                            // ->createOptionForm([
-                            //     //Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Contact'),
-                            //     Forms\Components\Select::make('collection_name')->options(['phone', 'email', 'web', 'social', 'fax']),
-                            //     Forms\Components\TextInput::make('name'),
-                            //     Forms\Components\TextInput::make('address')->columnSpan(2),
-                            // ])
-                            ->searchable(),
-
-                        Group::make([
-                            Select::make('address')
-                                    ->label('Address')
-                                    ->options(function (Closure $get) {
-                                        if ($get('company_id')) {
-                                            $addressField = Address::where('addressable_id', $get('company_id'));
-                                            if ($addressField) {
-                                                $arr = [];
-                                                for ($i = 0; $i < count($addressField->pluck('name')); $i++) {
-                                                    $address = $addressField->pluck('name')[$i].' '.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i];
-                                                    if ($address) {
-                                                        $arr = array_merge($arr, [$address => $address]);
-                                                    }
-                                                }
-
-                                                return $arr;
-                                            }
-                                        }
-                                    })
-                                    ->searchable(),
-
-                            Select::make('contact')
-                                ->label('Contact')
+                        //Group::make([
+                        Select::make('address')
+                                ->label('Address')
                                 ->options(function (Closure $get) {
                                     if ($get('company_id')) {
-                                        $contactField = Contact::where('contactable_id', $get('company_id'));
-                                        if ($contactField) {
+                                        $addressField = Address::where('addressable_id', $get('company_id'));
+                                        if ($addressField) {
                                             $arr = [];
-                                            for ($i = 0; $i < count($contactField->pluck('name')); $i++) {
-                                                $contact = $contactField->pluck('name')[$i].' '.$contactField->pluck('address')[$i];
-                                                if ($contact) {
-                                                    $arr = array_merge($arr, [$contact => $contact]);
+                                            for ($i = 0; $i < count($addressField->pluck('name')); $i++) {
+                                                $address = $addressField->pluck('name')[$i].' '.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i];
+                                                if ($address) {
+                                                    $arr = array_merge($arr, [$address => $address]);
                                                 }
                                             }
 
@@ -440,7 +394,28 @@ class CreateOrder extends CreateRecord
                                     }
                                 })
                                 ->searchable(),
-                        ]),
+
+                        Select::make('contact')
+                            ->label('Contact')
+                            ->options(function (Closure $get) {
+                                if ($get('company_id')) {
+                                    $contactField = Contact::where('contactable_id', $get('company_id'));
+                                    if ($contactField) {
+                                        $arr = [];
+                                        for ($i = 0; $i < count($contactField->pluck('name')); $i++) {
+                                            $contact = $contactField->pluck('name')[$i].' '.$contactField->pluck('address')[$i];
+                                            if ($contact) {
+                                                $arr = array_merge($arr, [$contact => $contact]);
+                                            }
+                                        }
+
+                                        return $arr;
+                                    }
+                                }
+                            })
+                            ->searchable(),
+                        //]),
+
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')
@@ -458,14 +433,13 @@ class CreateOrder extends CreateRecord
                             Textarea::make('Trasport_note')->label('Trasport Note'),
                         ]),
 
-                        // Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
-
                         Textarea::make('notes')->label('Order notes'),
 
                         Select::make('status')
                             ->label('Status')
-                            ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
-                            ->default('New')
+                            // ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
+                            ->options(['Create', 'Draft'])
+                            ->default('Create')
                             ->searchable(),
                     ])->columns(2),
                 ]),

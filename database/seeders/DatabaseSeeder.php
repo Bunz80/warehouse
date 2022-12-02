@@ -23,10 +23,13 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             SupplierSeeder::class,
             CustomerSeeder::class,
+            // Contacts & Addresses
+            AddressSeeder::class,
+            ContactSeeder::class,
             // warehouse
             ProductSeeder::class,
-            // OrderSeeder::class,
-            // OrderDetailSeeder::class,
+            OrderSeeder::class,
+            OrderDetailSeeder::class,
         ]);
     }
 }
