@@ -2,30 +2,29 @@
 
 namespace App\Filament\Resources\Warehouse;
 
-use Carbon\Carbon;
-use Filament\Tables;
-use App\Models\Address;
+use App\Filament\Resources\Warehouse\OrderResource\Pages;
 use App\Models\Category;
 use App\Models\Customer;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
 use App\Models\Warehouse\Order;
-use Forms\Components\TextInput;
-use Filament\Resources\Resource;
 use App\Models\Warehouse\Product;
-use Illuminate\Support\HtmlString;
+use Carbon\Carbon;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\MarkdownEditor;
-use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
 {
@@ -54,10 +53,10 @@ class OrderResource extends Resource
                             ->label('Order\'s date')
                             ->default(Carbon::now())
                             ->displayFormat('d/m/Y'),
-                        TextInput::make('company.name')
+                        TextInput::make('company_id')
                             ->label('Company')
                             ->disabled(),
-                        TextInput::make('supplier.name')
+                        TextInput::make('supplier_id')
                             ->label('Supplier')
                             ->disabled(),
                     ])->columns(2),
@@ -135,34 +134,6 @@ class OrderResource extends Resource
 
                     // Info Payment & Trasport
                     Card::make([
-                        Group::make([
-                            Select::make('Address')
-                                ->label('Address')
-                                ->options(Address::where('collection_name', 'Warehouse-Address')->pluck('name', 'id'))
-                                ->createOptionForm([
-                                    Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Address'),
-                                    Forms\Components\TextInput::make('name'),
-                                    Forms\Components\TextInput::make('address'),
-                                    Forms\Components\TextInput::make('street_number'),
-                                    Forms\Components\TextInput::make('zip'),
-                                    Forms\Components\TextInput::make('city'),
-                                    Forms\Components\TextInput::make('province'),
-                                    Forms\Components\TextInput::make('state'),
-                                ])
-                                ->searchable(),
-                            Select::make('Contact')
-                                ->label('Contact')
-                                ->multiple()
-                                ->options(Contact::where('collection_name', 'Warehouse-Contact')->pluck('name', 'id'))
-                                ->createOptionForm([
-                                    Forms\Components\TextInput::make('collection_name')->hidden()->default('Warehouse-Contact'),
-                                    Forms\Components\Select::make('collection_name')->options(['phone', 'email', 'web', 'social', 'fax']),
-                                    Forms\Components\TextInput::make('name'),
-                                    Forms\Components\TextInput::make('address')->columnSpan(2),
-                                ])
-                                ->searchable(),
-                        ]),
-
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')
