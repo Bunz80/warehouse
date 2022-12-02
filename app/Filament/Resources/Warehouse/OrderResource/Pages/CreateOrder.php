@@ -6,6 +6,8 @@ use App\Filament\Resources\Warehouse\OrderResource;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Supplier;
+use App\Models\Address;
+use App\Models\Contact;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
@@ -372,6 +374,45 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
                         // Placeholder::make('')->content(new HtmlString('')),
+                        Group::make([
+                            Select::make('address')
+                                    ->label('Address')
+                                    ->options(function(Closure $get){
+                                        if ($get("company_id")) {
+                                            $addressField = Address::where("addressable_id", $get("company_id"));
+                                            if ($addressField) {
+                                                $arr = [];
+                                                for ($i = 0; $i < count($addressField->pluck('name')); $i++) { 
+                                                    $address = $addressField->pluck('name')[$i].' '.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i];
+                                                    if ($address) {
+                                                        $arr = array_merge($arr, [$address => $address]);
+                                                    }
+                                                }
+                                                return $arr;
+                                            }
+                                        }
+                                    })
+                                    ->searchable(),
+
+                            Select::make('contact')
+                                ->label('Contact')
+                                ->options(function(Closure $get){
+                                    if ($get("company_id")) {
+                                        $contactField = Contact::where("contactable_id", $get("company_id"));
+                                        if ($contactField) {
+                                            $arr = [];
+                                            for ($i = 0; $i < count($contactField->pluck('name')); $i++) {
+                                                $contact = $contactField->pluck('name')[$i].' '.$contactField->pluck('address')[$i];
+                                                if ($contact) {
+                                                    $arr = array_merge($arr, [$contact => $contact]);
+                                                }
+                                            }
+                                            return $arr;
+                                        }
+                                    }
+                                })
+                                ->searchable(),
+                        ]),
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')
