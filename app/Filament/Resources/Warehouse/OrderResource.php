@@ -251,11 +251,6 @@ class OrderResource extends Resource
                         'warning' => 'Reviewing',
                         'success' => 'Published',
                     ]),
-                /*
-                TextColumn::make('status')
-                    ->sortable()
-                    ->searchable(),
-                */
             ])
             ->filters([
                 SelectFilter::make('Company')->relationship('company', 'name'),
@@ -287,7 +282,8 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // RelationManagers\OrderDetailsRelationManager::class,
+            // RelationManagers\AddressesRelationManager::class,
         ];
     }
 
