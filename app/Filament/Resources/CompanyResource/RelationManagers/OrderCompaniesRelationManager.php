@@ -30,7 +30,7 @@ class OrderCompaniesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
+                TextColumn::make('id')->sortable(),
                 TextColumn::make('year')->sortable()->searchable(),
                 TextColumn::make('number')->label('Num')->sortable()->searchable(),
                 // TextColumn::make('company.name')->label('Company')->sortable()->searchable(),
