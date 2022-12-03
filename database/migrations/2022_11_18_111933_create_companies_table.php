@@ -40,6 +40,7 @@ return new class extends Migration
             $table->boolean('is_activated')->nullable()->default(true);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

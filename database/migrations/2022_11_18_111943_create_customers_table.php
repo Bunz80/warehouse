@@ -39,6 +39,7 @@ return new class extends Migration
             $table->boolean('is_person')->nullable()->default(false);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

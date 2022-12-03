@@ -36,14 +36,20 @@ return new class extends Migration
             $table->decimal('total_taxes', 12, 2)->nullable();
             $table->decimal('total_prices', 12, 2)->nullable();
             $table->decimal('total_order', 12, 2)->nullable();
-            // Consegna -> address & contact
-            // $table->unsignedBigInteger('contact_id')->nullable()->unsigned();
-            // $table->foreign('contact_id')->references('id')->on('contacts');
-
-            // $table->unsignedBigInteger('delivery_id')->nullable()->unsigned();
-            // $table->foreign('delivery_id')->references('id')->on('addresses');
+            
+            // Delivery -> address - contact - method - notes
+            $table->unsignedBigInteger('delivery_address_id')->nullable()->unsigned();
+            $table->foreign('delivery_address_id')->references('id')->on('addresses');
+            
+            $table->unsignedBigInteger('delivery_contact_id')->nullable()->unsigned();
+            $table->foreign('delivery_contact_id')->references('id')->on('contacts');
+            
+            $table->text('address')->nullable();
+            $table->text('contact')->nullable();
+            
             $table->string('delivery_method')->nullable();
             $table->text('delivery_note')->nullable();
+            
             // Trasporto
             $table->string('trasport_method')->nullable();
             $table->text('trasport_note')->nullable();
@@ -53,8 +59,7 @@ return new class extends Migration
 
             $table->text('notes')->nullable();
             $table->text('report')->nullable();
-            $table->text('address')->nullable();
-            $table->text('contact')->nullable();
+            
             $table->timestamps();
             $table->softDeletes();
         });

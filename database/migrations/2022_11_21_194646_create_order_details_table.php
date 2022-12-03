@@ -35,6 +35,7 @@ return new class extends Migration
             $table->decimal('price', 12, 2)->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
