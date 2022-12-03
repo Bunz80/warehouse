@@ -2,32 +2,34 @@
 
 namespace App\Filament\Resources\Warehouse;
 
+use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use App\Models\Category;
+use App\Models\Company;
+use App\Models\Supplier;
+use App\Models\Address;
+use App\Models\Contact;
+use App\Models\Warehouse\Order;
+use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Tables;
-use App\Models\Company;
-use App\Models\Category;
-use App\Models\Supplier;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use App\Models\Warehouse\Order;
-use Filament\Resources\Resource;
-use App\Models\Warehouse\Product;
-use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Card;
-use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\MarkdownEditor;
-use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
 {
@@ -67,77 +69,75 @@ class OrderResource extends Resource
                     ])->columns(2),
 
                     //Details Order
-                    /*
-                    Card::make([
-                        Select::make('product')
-                            ->label('Search and Add Product')
-                            ->options(Product::all()->pluck('name', 'id'))
-                            ->searchable(),
+                    // Card::make([
+                    //     Select::make('product')
+                    //         ->label('Search and Add Product')
+                    //         ->options(Product::all()->pluck('name', 'id'))
+                    //         ->searchable(),
 
-                        Repeater::make('Product list')
-                            ->schema([
-                                TextInput::make('name')
-                                    ->columnSpan(12)
-                                    ->default('Name')
-                                    ->label('Product Name'),
-                                MarkdownEditor::make('description')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'bulletList',
-                                        'orderedList',
-                                        'edit',
-                                        'preview',
-                                    ])
-                                    ->default('Product test')
-                                    ->reactive()
-                                    ->required()
-                                    ->columnSpan(12),
-                                TextInput::make('code')
-                                    ->columnSpan(3)
-                                    ->label('Supplier Code'),
-                                TextInput::make('vat')
-                                ->columnSpan(2)
-                                    ->default('22.00')
-                                    ->required()
-                                    ->label('Vat %'),
-                                TextInput::make('unit')
-                                ->columnSpan(2)
-                                    ->default('Pz')
-                                    ->label('Unit'),
-                                TextInput::make('qty')
-                                    ->columnSpan(2)
-                                    ->default('1')
-                                    ->required()
-                                    ->label('Quantity'),
-                                TextInput::make('price_unit')
-                                    ->columnSpan(3)
-                                    ->default('10')
-                                    ->numeric()
-                                    ->required()
-                                    ->label('Price'),
+                    //     Repeater::make('Product list')
+                    //         ->schema([
+                    //             TextInput::make('name')
+                    //                 ->columnSpan(12)
+                    //                 ->default('Name')
+                    //                 ->label('Product Name'),
+                    //             MarkdownEditor::make('description')
+                    //                 ->toolbarButtons([
+                    //                     'bold',
+                    //                     'bulletList',
+                    //                     'orderedList',
+                    //                     'edit',
+                    //                     'preview',
+                    //                 ])
+                    //                 ->default('Product test')
+                    //                 ->reactive()
+                    //                 ->required()
+                    //                 ->columnSpan(12),
+                    //             TextInput::make('code')
+                    //                 ->columnSpan(3)
+                    //                 ->label('Supplier Code'),
+                    //             TextInput::make('vat')
+                    //             ->columnSpan(2)
+                    //                 ->default('22.00')
+                    //                 ->required()
+                    //                 ->label('Vat %'),
+                    //             TextInput::make('unit')
+                    //             ->columnSpan(2)
+                    //                 ->default('Pz')
+                    //                 ->label('Unit'),
+                    //             TextInput::make('qty')
+                    //                 ->columnSpan(2)
+                    //                 ->default('1')
+                    //                 ->required()
+                    //                 ->label('Quantity'),
+                    //             TextInput::make('price_unit')
+                    //                 ->columnSpan(3)
+                    //                 ->default('10')
+                    //                 ->numeric()
+                    //                 ->required()
+                    //                 ->label('Price'),
 
-                                Select::make('discount_currency')
-                                    ->label('Discount Currency')
-                                    //->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
-                                    ->options(['%', '€', '$', '£', '¥'])
-                                    ->columnSpan(3),
-                                TextInput::make('discount_price')
-                                    ->label('Discount Value')
-                                    ->columnSpan(3)
-                                    ->numeric(),
-                                Placeholder::make('Total Price Item')
-                                    ->label('Total Price Item: ')
-                                    ->content(new HtmlString('<b>€ 100.00</b>'))->columnSpan(6),
+                    //             Select::make('discount_currency')
+                    //                 ->label('Discount Currency')
+                    //                 //->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
+                    //                 ->options(['%', '€', '$', '£', '¥'])
+                    //                 ->columnSpan(3),
+                    //             TextInput::make('discount_price')
+                    //                 ->label('Discount Value')
+                    //                 ->columnSpan(3)
+                    //                 ->numeric(),
+                    //             Placeholder::make('Total Price Item')
+                    //                 ->label('Total Price Item: ')
+                    //                 ->content(new HtmlString('<b>€ 100.00</b>'))->columnSpan(6),
 
-                            ])
-                            ->collapsible()
-                            ->cloneable()
-                            ->orderable()
-                            ->defaultItems(1)
-                            ->createItemButtonLabel('Add Item')
-                            ->columns(12),
-                    ]),
-                    */
+                    //         ])
+                    //         ->collapsible()
+                    //         ->cloneable()
+                    //         ->orderable()
+                    //         ->defaultItems(1)
+                    //         ->createItemButtonLabel('Add Item')
+                    //         ->columns(12),
+                    // ]),
 
                     // Info Payment & Trasport
                     Card::make([
@@ -219,6 +219,8 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->sortable(),
                 TextColumn::make('year')
                     ->sortable()
                     ->searchable(),
@@ -231,6 +233,10 @@ class OrderResource extends Resource
                     ->searchable(),
                 TextColumn::make('supplier.name')
                     ->label('Supplier')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('address.name')
+                    ->label('Delivery')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('order_at')

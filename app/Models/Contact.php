@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Contact;
 use App\Models\Warehouse\Order;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
@@ -21,12 +20,12 @@ class Contact extends Model
     {
         return $this->morphTo();
     }
-    
+
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
-    
+
     public function contacts()
     {
         return $this->hasMany(Contact::class);

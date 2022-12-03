@@ -3,9 +3,9 @@
 namespace Database\Factories\Warehouse;
 
 use App\Models\Address;
+use App\Models\Category;
 use App\Models\Company;
 use App\Models\Contact;
-use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,6 +26,7 @@ class OrderFactory extends Factory
             'year' => '2022',
             'number' => fake()->randomDigit(),
             'order_at' => fake()->date(),
+            'close_at' => fake()->date(),
             'status' => fake()->randomElement(['New', 'Close', 'Open', 'Draft']),
             'discount_currency' => fake()->randomElement(['%', '€']),
             'discount_price' => rand(1, 50),
@@ -33,9 +34,9 @@ class OrderFactory extends Factory
             'total_taxes' => fake()->randomFloat(2),
             'total_prices' => fake()->randomFloat(2),
             'total_order' => fake()->randomFloat(2),
-            
-            'delivery_address_id' => Address::inRandomOrder()->first()->id,
-            'delivery_contact_id' => Contact::inRandomOrder()->first()->id,
+
+            'address_id' => Address::inRandomOrder()->first()->id,
+            'contact_id' => Contact::inRandomOrder()->first()->id,
             'delivery_method' => Category::where('collection_name', 'Warehouse-Delivery')->pluck('name', 'id'),
             'delivery_note' => fake()->paragraph(),
 

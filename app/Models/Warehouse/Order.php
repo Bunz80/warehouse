@@ -8,8 +8,8 @@ use App\Models\Address;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Supplier;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model // implements HasWorkflow
 {
@@ -29,7 +29,8 @@ class Order extends Model // implements HasWorkflow
         'currency',
         'total_price',
 
-        'delivery_id',
+        'delivery_contact_id',
+        'delivery_address_id',
         'delivery_method',
         'delivery_note',
 

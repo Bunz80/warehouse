@@ -25,8 +25,8 @@ return new class extends Migration
             // Info Order
             $table->year('year')->nullable();
             $table->integer('number')->nullable();
-            $table->decimal('tax')->nullable();
             $table->date('order_at')->nullable();
+            $table->date('close_at')->nullable();
             $table->string('status')->default('new');
             // Discount
             $table->string('discount_currency')->nullable();
@@ -36,20 +36,20 @@ return new class extends Migration
             $table->decimal('total_taxes', 12, 2)->nullable();
             $table->decimal('total_prices', 12, 2)->nullable();
             $table->decimal('total_order', 12, 2)->nullable();
-            
+
             // Delivery -> address - contact - method - notes
-            $table->unsignedBigInteger('delivery_address_id')->nullable()->unsigned();
-            $table->foreign('delivery_address_id')->references('id')->on('addresses');
-            
-            $table->unsignedBigInteger('delivery_contact_id')->nullable()->unsigned();
-            $table->foreign('delivery_contact_id')->references('id')->on('contacts');
-            
+            $table->unsignedBigInteger('address_id')->nullable()->unsigned();
+            $table->foreign('address_id')->references('id')->on('addresses');
             $table->text('address')->nullable();
+
+            $table->unsignedBigInteger('contact_id')->nullable()->unsigned();
+            $table->foreign('contact_id')->references('id')->on('contacts');
             $table->text('contact')->nullable();
-            
+
+
             $table->string('delivery_method')->nullable();
             $table->text('delivery_note')->nullable();
-            
+
             // Trasporto
             $table->string('trasport_method')->nullable();
             $table->text('trasport_note')->nullable();
@@ -59,7 +59,7 @@ return new class extends Migration
 
             $table->text('notes')->nullable();
             $table->text('report')->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

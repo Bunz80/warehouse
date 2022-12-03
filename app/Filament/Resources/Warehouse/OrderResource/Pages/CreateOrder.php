@@ -2,31 +2,31 @@
 
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
-use Closure;
-use Carbon\Carbon;
+use App\Filament\Resources\Warehouse\OrderResource;
 use App\Models\Address;
+use App\Models\Category;
 use App\Models\Company;
 use App\Models\Contact;
-use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
-use Illuminate\Support\HtmlString;
+use Carbon\Carbon;
+use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Forms\Components\MarkdownEditor;
-use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Illuminate\Support\HtmlString;
 
 class CreateOrder extends CreateRecord
 {
@@ -231,7 +231,7 @@ class CreateOrder extends CreateRecord
                                     ->compact()
                                     ->collapsed()
                                     ->collapsible(),
-                                
+
                                 TextInput::make('code')
                                     ->columnSpan(3)
                                     ->label('Supplier Code'),
@@ -383,47 +383,57 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
 
-                        Select::make('delivery_address_id')->searchable(),
-                        Select::make('delivery_contact_id')->searchable(),
-
-                        Select::make('address')
-                                ->label('Address')
-                                ->options(function (Closure $get) {
-                                    if ($get('company_id')) {
-                                        $addressField = Address::where('addressable_id', $get('company_id'));
-                                        if ($addressField) {
-                                            $arr = [];
-                                            for ($i = 0; $i < count($addressField->pluck('name')); $i++) {
-                                                $address = $addressField->pluck('name')[$i].' '.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i];
-                                                if ($address) {
-                                                    $arr = array_merge($arr, [$address => $address]);
-                                                }
-                                            }
-                                            return $arr;
-                                        }
-                                    }
-                                })
-                                ->searchable(),
-                                                
-                        Select::make('contact')
-                            ->label('Contact')
-                            ->options(function (Closure $get) {
-                                if ($get('company_id')) {
-                                    $contactField = Contact::where('contactable_id', $get('company_id'));
-                                    if ($contactField) {
-                                        $arr = [];
-                                        for ($i = 0; $i < count($contactField->pluck('name')); $i++) {
-                                            $contact = $contactField->pluck('name')[$i].' '.$contactField->pluck('address')[$i];
-                                            if ($contact) {
-                                                $arr = array_merge($arr, [$contact => $contact]);
-                                            }
-                                        }
-                                        return $arr;
-                                    }
-                                }
-                            })
+                        Select::make('address_id')
+                            ->label('Delivery Address')
+                            ->options(Address::where('addressable_type', 'App\Models\Company')
+                                ->where('collection_name', 'Warehouse-Address')
+                                ->orderBy('name', 'ASC')
+                                ->pluck('name', 'id'))
                             ->searchable(),
-                        
+                        Select::make('contact_id')
+                            ->label('Delivery Contact')
+                            ->options(Contact::where('contactable_type', 'App\Models\Company')
+                                ->orderBy('name', 'ASC')
+                                ->pluck('name', 'id'))
+                            ->searchable(),
+
+                        // Select::make('address')
+                        //         ->label('Address')
+                        //         ->options(function (Closure $get) {
+                        //             if ($get('company_id')) {
+                        //                 $addressField = Address::where('addressable_id', $get('company_id'));
+                        //                 if ($addressField) {
+                        //                     $arr = [];
+                        //                     for ($i = 0; $i < count($addressField->pluck('name')); $i++) {
+                        //                         $address = $addressField->pluck('name')[$i].' '.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i];
+                        //                         if ($address) {
+                        //                             $arr = array_merge($arr, [$address => $address]);
+                        //                         }
+                        //                     }
+                        //                     return $arr;
+                        //                 }
+                        //             }
+                        //         })
+                        //         ->searchable(),
+
+                        // Select::make('contact')
+                        //     ->label('Contact')
+                        //     ->options(function (Closure $get) {
+                        //         if ($get('company_id')) {
+                        //             $contactField = Contact::where('contactable_id', $get('company_id'));
+                        //             if ($contactField) {
+                        //                 $arr = [];
+                        //                 for ($i = 0; $i < count($contactField->pluck('name')); $i++) {
+                        //                     $contact = $contactField->pluck('name')[$i].' '.$contactField->pluck('address')[$i];
+                        //                     if ($contact) {
+                        //                         $arr = array_merge($arr, [$contact => $contact]);
+                        //                     }
+                        //                 }
+                        //                 return $arr;
+                        //             }
+                        //         }
+                        //     })
+                        //     ->searchable(),
 
                         Group::make([
                             Select::make('payment_method')
