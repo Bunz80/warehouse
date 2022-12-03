@@ -2,8 +2,10 @@
 
 namespace Database\Factories\Warehouse;
 
-use App\Models\Category;
+use App\Models\Address;
 use App\Models\Company;
+use App\Models\Contact;
+use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -31,8 +33,10 @@ class OrderFactory extends Factory
             'total_taxes' => fake()->randomFloat(2),
             'total_prices' => fake()->randomFloat(2),
             'total_order' => fake()->randomFloat(2),
-
-            'delivery_method' => fake()->word(),
+            
+            'delivery_address_id' => Address::inRandomOrder()->first()->id,
+            'delivery_contact_id' => Contact::inRandomOrder()->first()->id,
+            'delivery_method' => Category::where('collection_name', 'Warehouse-Delivery')->pluck('name', 'id'),
             'delivery_note' => fake()->paragraph(),
 
             'trasport_method' => Category::where('collection_name', 'Warehouse-Trasport')->pluck('name', 'id'),
