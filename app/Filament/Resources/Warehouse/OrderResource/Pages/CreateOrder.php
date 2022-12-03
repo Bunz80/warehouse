@@ -383,7 +383,9 @@ class CreateOrder extends CreateRecord
                 ->schema([
                     Card::make([
 
-                        //Group::make([
+                        Select::make('delivery_address_id')->searchable(),
+                        Select::make('delivery_contact_id')->searchable(),
+
                         Select::make('address')
                                 ->label('Address')
                                 ->options(function (Closure $get) {
@@ -397,13 +399,12 @@ class CreateOrder extends CreateRecord
                                                     $arr = array_merge($arr, [$address => $address]);
                                                 }
                                             }
-
                                             return $arr;
                                         }
                                     }
                                 })
                                 ->searchable(),
-
+                                                
                         Select::make('contact')
                             ->label('Contact')
                             ->options(function (Closure $get) {
@@ -417,13 +418,12 @@ class CreateOrder extends CreateRecord
                                                 $arr = array_merge($arr, [$contact => $contact]);
                                             }
                                         }
-
                                         return $arr;
                                     }
                                 }
                             })
                             ->searchable(),
-                        //]),
+                        
 
                         Group::make([
                             Select::make('payment_method')
