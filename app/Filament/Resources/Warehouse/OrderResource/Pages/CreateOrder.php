@@ -2,30 +2,31 @@
 
 namespace App\Filament\Resources\Warehouse\OrderResource\Pages;
 
-use App\Filament\Resources\Warehouse\OrderResource;
+use Closure;
+use Carbon\Carbon;
 use App\Models\Address;
-use App\Models\Category;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
-use Carbon\Carbon;
-use Closure;
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
-use Illuminate\Support\HtmlString;
 
 class CreateOrder extends CreateRecord
 {
@@ -213,16 +214,24 @@ class CreateOrder extends CreateRecord
                                 TextInput::make('name')
                                     ->columnSpan(12)
                                     ->label('Product Name'),
-                                MarkdownEditor::make('description')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'bulletList',
-                                        'orderedList',
-                                        'edit',
-                                        'preview',
+
+                                Section::make('More Info')
+                                    ->schema([
+                                        MarkdownEditor::make('description')
+                                            ->toolbarButtons([
+                                                'bold',
+                                                'bulletList',
+                                                'orderedList',
+                                                'edit',
+                                                'preview',
+                                            ])
+                                            ->reactive()
+                                            ->columnSpan(12),
                                     ])
-                                    ->reactive()
-                                    ->columnSpan(12),
+                                    ->compact()
+                                    ->collapsed()
+                                    ->collapsible(),
+                                
                                 TextInput::make('code')
                                     ->columnSpan(3)
                                     ->label('Supplier Code'),
@@ -430,7 +439,7 @@ class CreateOrder extends CreateRecord
                                 ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id'))
                             // ->searchable()
                             ,
-                            Textarea::make('Trasport_note')->label('Trasport Note'),
+                            Textarea::make('trasport_note')->label('Trasport Note'),
                         ]),
 
                         Textarea::make('notes')->label('Order notes'),

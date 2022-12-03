@@ -153,7 +153,7 @@ class OrderResource extends Resource
                             Select::make('trasport_method')
                                 ->label('Trasport Method')
                                 ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id')),
-                            Textarea::make('Trasport_note')->label('Trasport Note'),
+                            Textarea::make('trasport_note')->label('Trasport Note'),
                         ]),
 
                         Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
