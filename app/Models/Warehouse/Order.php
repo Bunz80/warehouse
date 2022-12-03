@@ -29,13 +29,13 @@ class Order extends Model // implements HasWorkflow
         'currency',
         'total_price',
 
-        'delivery_contact_id',
-        'delivery_address_id',
+        'contact_id',
+        'contact',
+        'address_id',
+        'address',
         'delivery_method',
         'delivery_note',
 
-        'address',
-        'contact',
 
         'trasport_method',
         'trasport_note',
@@ -57,11 +57,6 @@ class Order extends Model // implements HasWorkflow
         return $this->belongsTo(Supplier::class);
     }
 
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
-
     public function address()
     {
         return $this->belongsTo(Address::class);
@@ -70,5 +65,10 @@ class Order extends Model // implements HasWorkflow
     public function contact()
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

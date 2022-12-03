@@ -68,6 +68,22 @@ class OrderResource extends Resource
                             ->options(Supplier::where('is_activated', true)->pluck('name', 'id')),
                     ])->columns(2),
 
+                    Card::make([
+                        Select::make('address_id')
+                            ->label('Delivery Address')
+                            ->options(Address::where('addressable_type', 'App\Models\Company')
+                                ->where('collection_name', 'Warehouse-Address')
+                                ->orderBy('name', 'ASC')
+                                ->pluck('name', 'id'))
+                            ->searchable(),
+                        Select::make('contact_id')
+                            ->label('Delivery Contact')
+                            ->options(Contact::where('contactable_type', 'App\Models\Company')
+                                ->orderBy('name', 'ASC')
+                                ->pluck('name', 'id'))
+                            ->searchable(),
+                    ]),
+
                     //Details Order
                     // Card::make([
                     //     Select::make('product')
@@ -180,22 +196,21 @@ class OrderResource extends Resource
                     ]),
 
                     Card::make([
-                        Placeholder::make('Total Order')
-                            ->content(new HtmlString('
-                                Created at: 1 second ago <br >
-                                Last modified at: 1 second ago
-                            ')),
+                        Forms\Components\Placeholder::make('created_at')->label('')
+                            ->content(fn (Order $record): ?string => "Created at: ".$record->created_at?->format('d-m-Y').' ('.$record->created_at?->diffForHumans().')'),
+                        Forms\Components\Placeholder::make('updated_at')->label('')
+                            ->content(fn (Order $record): ?string => "Update at: ".$record->updated_at?->diffForHumans()),
+                        Forms\Components\Placeholder::make('close_at')->label('')
+                            ->content(fn (Order $record): ?string => "Close at: ".$record->close_at?->diffForHumans()),
                     ]),
 
                     Card::make([
-
                         Select::make('status')
                             ->label('Status')
-                            ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
-                            ->columnSpan(2),
+                            ->options(Category::where('collection_name', 'Status')->pluck('name', 'name')),
+                    ]),
 
-                        Placeholder::make('Action')->content(new HtmlString('<hr />'))->columnSpan(2),
-
+                    Card::make([
                         TextInput::make('email')->columnSpan(2),
 
                         Placeholder::make('Send order by email')

@@ -382,7 +382,6 @@ class CreateOrder extends CreateRecord
                 ->icon('heroicon-o-shopping-bag')
                 ->schema([
                     Card::make([
-
                         Select::make('address_id')
                             ->label('Delivery Address')
                             ->options(Address::where('addressable_type', 'App\Models\Company')
@@ -390,12 +389,14 @@ class CreateOrder extends CreateRecord
                                 ->orderBy('name', 'ASC')
                                 ->pluck('name', 'id'))
                             ->searchable(),
+                        // Echo Address
                         Select::make('contact_id')
                             ->label('Delivery Contact')
                             ->options(Contact::where('contactable_type', 'App\Models\Company')
                                 ->orderBy('name', 'ASC')
                                 ->pluck('name', 'id'))
                             ->searchable(),
+                        // Echo Contact
 
                         // Select::make('address')
                         //         ->label('Address')
@@ -434,7 +435,9 @@ class CreateOrder extends CreateRecord
                         //         }
                         //     })
                         //     ->searchable(),
+                    ])->columns(2),
 
+                    Card::make([
                         Group::make([
                             Select::make('payment_method')
                                 ->label('Payment Method')

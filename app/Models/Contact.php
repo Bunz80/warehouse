@@ -25,9 +25,4 @@ class Contact extends Model
     {
         return $this->hasMany(Order::class);
     }
-
-    public function contacts()
-    {
-        return $this->hasMany(Contact::class);
-    }
 }
