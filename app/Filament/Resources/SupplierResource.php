@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CompanyResource\RelationManagers;
-use App\Filament\Resources\SupplierResource\Pages;
+use Filament\Forms;
+use Filament\Tables;
 use App\Models\Category;
 use App\Models\Supplier;
-use Filament\Forms;
-use Filament\Forms\Components\Card;
 use Filament\Resources\Form;
-use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Card;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
+use App\Filament\Resources\SupplierResource\Pages;
+use App\Filament\Resources\CompanyResource\RelationManagers;
 
 class SupplierResource extends Resource
 {

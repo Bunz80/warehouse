@@ -33,10 +33,12 @@ class AddressFactory extends Factory
             $type_id = Customer::inRandomOrder()->first()->id;
         }
 
+        $collection = fake()->randomElement(['Warehouse-Address', 'Address']);
+
         return [
             'addressable_type' => $type,
             'addressable_id' => $type_id,
-            'collection_name' => 'Warehouse-Address',
+            'collection_name' => $collection,
             'name' => fake()->streetName(),
             'address' => fake()->streetAddress(),
             'street_number' => fake()->randomNumber(),
