@@ -30,6 +30,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\HtmlString;
+use App\Filament\Resources\CompanyResource\RelationManagers;
 
 class OrderResource extends Resource
 {
@@ -200,8 +201,8 @@ class OrderResource extends Resource
                             ->content(fn (Order $record): ?string => "Created at: ".$record->created_at?->format('d-m-Y').' ('.$record->created_at?->diffForHumans().')'),
                         Forms\Components\Placeholder::make('updated_at')->label('')
                             ->content(fn (Order $record): ?string => "Update at: ".$record->updated_at?->diffForHumans()),
-                        Forms\Components\Placeholder::make('close_at')->label('')
-                            ->content(fn (Order $record): ?string => "Close at: ".$record->close_at?->diffForHumans()),
+                        // Forms\Components\Placeholder::make('close_at')->label('')
+                        //     ->content(fn (Order $record): ?string => "Close at: ".$record->close_at?->diffForHumans()),
                     ]),
 
                     Card::make([
@@ -308,7 +309,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // RelationManagers\OrderDetailsRelationManager::class,
+            RelationManagers\OrderDetailsRelationManager::class,
         ];
     }
 
