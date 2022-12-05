@@ -35,6 +35,7 @@ class OrderAddressesRelationManager extends RelationManager
                 TextColumn::make('number')->label('Num')->sortable()->searchable(),
                 TextColumn::make('company.name')->label('Company')->sortable()->searchable(),
                 TextColumn::make('supplier.name')->label('Supplier')->sortable()->searchable(),
+                TextColumn::make('price_unit')->sortable()->searchable(),
                 TextColumn::make('total_prices')->sortable()->searchable(),
                 TextColumn::make('order_at')->sortable()->searchable(),
                 IconColumn::make('status'),

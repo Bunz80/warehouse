@@ -2,14 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms;
+use Filament\Tables;
+use App\Models\Address;
+use App\Models\Category;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Card;
+use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\AddressResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers;
-use App\Models\Address;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 
 class AddressResource extends Resource
 {
@@ -25,7 +28,16 @@ class AddressResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Card::make([
+                    Forms\Components\Select::make('collection_name')->options(Category::where('collection_name', 'Address')->pluck('name')),
+                    Forms\Components\TextInput::make('name'),
+                    Forms\Components\TextInput::make('address'),
+                    Forms\Components\TextInput::make('street_number'),
+                    Forms\Components\TextInput::make('zip'),
+                    Forms\Components\TextInput::make('city'),
+                    Forms\Components\TextInput::make('province'),
+                    Forms\Components\TextInput::make('state'),
+                ])->columns(2),
             ]);
     }
 
@@ -33,14 +45,14 @@ class AddressResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('collection_name'),
-                TextColumn::make('name'),
-                TextColumn::make('address'),
+                TextColumn::make('collection_name')->label('Type')->searchable(),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('address')->searchable(),
                 TextColumn::make('street_number'),
-                TextColumn::make('zip'),
-                TextColumn::make('city'),
-                TextColumn::make('province'),
-                TextColumn::make('state'),
+                TextColumn::make('zip')->searchable(),
+                TextColumn::make('city')->searchable(),
+                TextColumn::make('province')->searchable(),
+                TextColumn::make('state')->searchable(),
             ])
             ->filters([
                 //
@@ -49,7 +61,7 @@ class AddressResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                // Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -57,8 +69,6 @@ class AddressResource extends Resource
     {
         return [
             RelationManagers\OrderAddressesRelationManager::class,
-            // RelationManagers\ContactsRelationManager::class,
-            // RelationManagers\BanksRelationManager::class,
         ];
     }
 
@@ -66,7 +76,7 @@ class AddressResource extends Resource
     {
         return [
             'index' => Pages\ListAddresses::route('/'),
-            'create' => Pages\CreateAddress::route('/create'),
+            // 'create' => Pages\CreateAddress::route('/create'),
             'edit' => Pages\EditAddress::route('/{record}/edit'),
         ];
     }

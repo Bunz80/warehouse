@@ -88,6 +88,7 @@ class SupplierResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('vat')

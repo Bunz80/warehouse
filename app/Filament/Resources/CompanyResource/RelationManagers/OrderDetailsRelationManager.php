@@ -58,12 +58,12 @@ class OrderDetailsRelationManager extends RelationManager
                 TextColumn::make('brand')->sortable()->searchable(),
                 TextColumn::make('code')->sortable()->searchable(),
                 TextColumn::make('description')->sortable()->searchable(),
-                TextColumn::make('tax')->sortable()->searchable(),
                 TextColumn::make('unit')->sortable()->searchable(),
+                TextColumn::make('tax')->sortable()->searchable(),
                 TextColumn::make('quantity')->sortable()->searchable(),
-                TextColumn::make('price')->sortable()->searchable(),
-                TextColumn::make('discount_currency')->sortable()->searchable(),
-                TextColumn::make('discount_price')->sortable()->searchable(),
+                TextColumn::make('price_unit')->sortable()->searchable(),
+                // TextColumn::make('discount_currency')->sortable()->searchable(),
+                TextColumn::make('discount_price')->label('Discout')->sortable()->searchable(),
                 TextColumn::make('total_price')->sortable()->searchable(),
             ])
             ->filters([
