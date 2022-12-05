@@ -15,13 +15,14 @@ class OrderDetail extends Model
         'brand',
         'code',
         'description',
+        'currency',
+        'unit',
         'tax',
         'quantity',
-        'unit',
-        'currency',
+        'price',
         'discount_currency',
         'discount_price',
-        'price',
+        'total_price',
     ];
 
     public function order()
