@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('number')->nullable();
             $table->date('order_at')->nullable();
             $table->date('close_at')->nullable();
+            $table->date('deadline_at')->nullable();
             $table->string('status')->default('new');
             // Discount
             // $table->string('discount_currency')->nullable();
@@ -45,7 +46,6 @@ return new class extends Migration
             $table->unsignedBigInteger('contact_id')->nullable()->unsigned();
             $table->foreign('contact_id')->references('id')->on('contacts');
             $table->text('contact')->nullable();
-
 
             $table->string('delivery_method')->nullable();
             $table->text('delivery_note')->nullable();

@@ -28,7 +28,8 @@ class OrderDetailFactory extends Factory
             'tax' => rand(5, 30),
             'unit' => fake()->randomElement(['pz', 'Kg', 'Mt', 'Lt']),
             'quantity' => rand(1, 20),
-            'price' => rand(1, 1000),
+            'price_unit' => rand(1, 1000),
+            'total_price' => rand(1, 1000),
 
             'discount_currency' => fake()->randomElement(['%', '€', '$', '£', '¥']),
             'discount_price' => rand(1, 1000),

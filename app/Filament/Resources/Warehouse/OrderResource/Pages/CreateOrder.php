@@ -457,12 +457,19 @@ class CreateOrder extends CreateRecord
 
                         Textarea::make('notes')->label('Order notes'),
 
-                        Select::make('status')
-                            ->label('Status')
-                            // ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
-                            ->options(['Create', 'Draft'])
-                            ->default('Create')
-                            ->searchable(),
+                        Group::make([
+                            Select::make('status')
+                                ->label('Status')
+                                // ->options(Category::where('collection_name', 'Status')->pluck('name', 'name'))
+                                ->options(['Create', 'Draft'])
+                                ->default('Create')
+                                ->searchable(),
+
+                            DatePicker::make('deadline_at')
+                                ->label('Deadline')
+                                ->displayFormat('d/m/Y'),
+                        ]),
+
                     ])->columns(2),
                 ]),
 

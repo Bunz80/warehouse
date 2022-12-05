@@ -2,17 +2,14 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\AddressResource\Pages;
+use App\Filament\Resources\CompanyResource\RelationManagers;
 use App\Models\Address;
 use Filament\Resources\Form;
-use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\AddressResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\CompanyResource\RelationManagers;
 
 class AddressResource extends Resource
 {
@@ -55,7 +52,7 @@ class AddressResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
@@ -64,7 +61,7 @@ class AddressResource extends Resource
             // RelationManagers\BanksRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -72,5 +69,5 @@ class AddressResource extends Resource
             'create' => Pages\CreateAddress::route('/create'),
             'edit' => Pages\EditAddress::route('/{record}/edit'),
         ];
-    }    
+    }
 }

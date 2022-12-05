@@ -29,10 +29,10 @@ return new class extends Migration
             $table->decimal('quantity', 5, 2)->nullable()->default(1);
             $table->string('unit')->nullable();
             $table->decimal('price_unit', 12, 2)->nullable();
-            
+
             $table->string('discount_currency')->nullable()->default('€');
             $table->decimal('discount_price', 12, 2)->nullable();
-            
+
             $table->decimal('total_price', 12, 2)->nullable();
 
             $table->timestamps();

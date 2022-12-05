@@ -2,15 +2,14 @@
 
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
 use App\Models\Category;
+use Filament\Forms;
 use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Illuminate\Support\HtmlString;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\HtmlString;
 
 class OrderDetailsRelationManager extends RelationManager
 {
@@ -27,15 +26,15 @@ class OrderDetailsRelationManager extends RelationManager
                     ->columnSpan(6),
                 Forms\Components\TextInput::make('brand')->columnSpan(3),
                 Forms\Components\TextInput::make('code')->columnSpan(3),
-                Forms\Components\MarkdownEditor::make('description') ->toolbarButtons(['bold','bulletList','orderedList','edit','preview',])->columnSpan(6),
-                
+                Forms\Components\MarkdownEditor::make('description')->toolbarButtons(['bold', 'bulletList', 'orderedList', 'edit', 'preview'])->columnSpan(6),
+
                 // Currency from order
                 // Forms\Components\Select::make('currency')
                 //     ->label('Currency')
                 //     ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
                 //     ->reactive()
                 //     ->columnSpan(1),
-                
+
                 Forms\Components\TextInput::make('tax')->required(),
                 Forms\Components\TextInput::make('unit')->required(),
                 Forms\Components\TextInput::make('quantity')->required(),

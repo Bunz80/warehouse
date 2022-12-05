@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Warehouse;
 
+use App\Filament\Resources\CompanyResource\RelationManagers;
 use App\Filament\Resources\Warehouse\OrderResource\Pages;
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\Company;
-use App\Models\Supplier;
-use App\Models\Address;
 use App\Models\Contact;
+use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
@@ -30,7 +31,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\HtmlString;
-use App\Filament\Resources\CompanyResource\RelationManagers;
 
 class OrderResource extends Resource
 {
@@ -198,16 +198,21 @@ class OrderResource extends Resource
 
                     Card::make([
                         Forms\Components\Placeholder::make('created_at')->label('')
-                            ->content(fn (Order $record): ?string => "Created at: ".$record->created_at?->format('d-m-Y').' ('.$record->created_at?->diffForHumans().')'),
+                            ->content(fn (Order $record): ?string => 'Created at: '.$record->created_at?->format('d-m-Y').' ('.$record->created_at?->diffForHumans().')'),
                         Forms\Components\Placeholder::make('updated_at')->label('')
-                            ->content(fn (Order $record): ?string => "Update at: ".$record->updated_at?->diffForHumans()),
+                            ->content(fn (Order $record): ?string => 'Update at: '.$record->updated_at?->diffForHumans()),
                         // Forms\Components\Placeholder::make('close_at')->label('')
                         //     ->content(fn (Order $record): ?string => "Close at: ".$record->close_at?->diffForHumans()),
+                        // Forms\Components\Placeholder::make('deadline_at')->label('')
+                        //     ->content(fn (Order $record): ?string => "Close at: ".$record->deadline_at?->diffForHumans()),
                     ]),
 
                     Card::make([
                         Select::make('currency')
                             ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name')),
+                        DatePicker::make('deadline_at')
+                            ->label('Deadline')
+                            ->displayFormat('d/m/Y'),
                         Select::make('status')
                             ->label('Status')
                             ->options(Category::where('collection_name', 'Status')->pluck('name', 'name')),
