@@ -24,10 +24,11 @@ class Order extends Model // implements HasWorkflow
         'year',
         'number',
 
-        'tax',
+        'total_taxes',
         'status',
         'currency',
-        'total_price',
+        'total_prices',
+        'total_order',
 
         'contact_id',
         'contact',
@@ -35,6 +36,7 @@ class Order extends Model // implements HasWorkflow
         'address',
         'delivery_method',
         'delivery_note',
+
 
         'trasport_method',
         'trasport_note',
