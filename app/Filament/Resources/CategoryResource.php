@@ -40,6 +40,7 @@ class CategoryResource extends Resource
                             'Warehouse-Supplier' => 'Warehouse->Supplier',
                             'Warehouse-Payment' => 'Warehouse->Payment',
                             'Warehouse-Transport' => 'Warehouse->Transport',
+                            'Warehouse-Transport' => 'Warehouse->Address',
                         ])
                         ->required(),
                     Forms\Components\TextInput::make('name')
