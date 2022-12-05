@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->integer('default_bank')->nullable();
             $table->decimal('default_tax_rate', 10, 2)->nullable();
-            $table->string('default_currency')->default('€');
+            $table->string('default_currency')->nullable()->default('€');
             $table->string('default_payment')->nullable();
 
             $table->text('page_header')->nullable();
