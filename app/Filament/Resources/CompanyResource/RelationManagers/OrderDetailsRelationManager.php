@@ -27,23 +27,26 @@ class OrderDetailsRelationManager extends RelationManager
                     ->columnSpan(6),
                 Forms\Components\TextInput::make('brand')->columnSpan(3),
                 Forms\Components\TextInput::make('code')->columnSpan(3),
-                Forms\Components\MarkdownEditor::make('description')->columnSpan(6),
-                Forms\Components\Select::make('currency')
-                    ->label('Currency')
-                    ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
-                    ->reactive()
-                    ->columnSpan(1),
-                Forms\Components\TextInput::make('unit')->required(),
+                Forms\Components\MarkdownEditor::make('description') ->toolbarButtons(['bold','bulletList','orderedList','edit','preview',])->columnSpan(6),
+                
+                // Currency from order
+                // Forms\Components\Select::make('currency')
+                //     ->label('Currency')
+                //     ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
+                //     ->reactive()
+                //     ->columnSpan(1),
+                
                 Forms\Components\TextInput::make('tax')->required(),
+                Forms\Components\TextInput::make('unit')->required(),
                 Forms\Components\TextInput::make('quantity')->required(),
-                Forms\Components\TextInput::make('price')->required()->columnSpan(2),
+                Forms\Components\TextInput::make('price_unit')->required()->columnSpan(2),
                 Forms\Components\Placeholder::make('Discount')->content(new HtmlString('<hr />'))->columnSpan(6),
                 Forms\Components\Select::make('discount_currency')
                     ->label('Currency')
                     ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
                     ->reactive(),
                 Forms\Components\TextInput::make('discount_price'),
-                Forms\Components\TextInput::make('total_price')->required()->disabled()->columnSpan(4),
+                Forms\Components\TextInput::make('total_price')->required()->label('disabled')->columnSpan(4),
             ])->columns(6);
     }
 

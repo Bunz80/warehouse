@@ -29,8 +29,8 @@ return new class extends Migration
             $table->date('close_at')->nullable();
             $table->string('status')->default('new');
             // Discount
-            $table->string('discount_currency')->nullable();
-            $table->decimal('discount_price', 12, 2)->nullable();
+            // $table->string('discount_currency')->nullable();
+            // $table->decimal('discount_price', 12, 2)->nullable();
             // Valuta e prezzo totale
             $table->string('currency')->default('€');
             $table->decimal('total_taxes', 12, 2)->nullable();

@@ -19,7 +19,7 @@ class OrderDetail extends Model
         'unit',
         'tax',
         'quantity',
-        'price',
+        'price_unit',
         'discount_currency',
         'discount_price',
         'total_price',

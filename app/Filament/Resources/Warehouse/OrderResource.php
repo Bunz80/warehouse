@@ -206,6 +206,8 @@ class OrderResource extends Resource
                     ]),
 
                     Card::make([
+                        Select::make('currency')
+                            ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name')),
                         Select::make('status')
                             ->label('Status')
                             ->options(Category::where('collection_name', 'Status')->pluck('name', 'name')),
