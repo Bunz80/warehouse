@@ -57,7 +57,8 @@ class CategoryResource extends Resource
                     Forms\Components\Toggle::make('is_activated')
                         ->label('Is Activated')
                         ->onColor('success')
-                        ->offColor('danger'),
+                        ->offColor('danger')
+                        ->default(true),
                 ])->columns(2),
             ]);
     }
