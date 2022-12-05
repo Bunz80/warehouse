@@ -35,7 +35,8 @@ class SupplierResource extends Resource
                     ->columnSpan(2)
                     ->label('Is Activated')
                     ->onColor('success')
-                    ->offColor('danger'),
+                    ->offColor('danger')
+                    ->default(true),
                 Forms\Components\TextInput::make('name')
                     ->label('Name / Business name')
                     ->columnSpan(4)
