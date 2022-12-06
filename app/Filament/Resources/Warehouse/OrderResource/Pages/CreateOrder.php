@@ -354,9 +354,9 @@ class CreateOrder extends CreateRecord
                                 $vatSum += $unit * ($vat / 100) * $qty;
                             }
 
-                            $set("total_prices", $priceSum);
-                            $set("total_taxes", $vatSum);
-                            $set("total_order", $priceSum + $vatSum);
+                            $set('total_prices', $priceSum);
+                            $set('total_taxes', $vatSum);
+                            $set('total_order', $priceSum + $vatSum);
 
                             return new HtmlString('
                             <style>

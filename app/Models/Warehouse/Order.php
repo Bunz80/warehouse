@@ -37,7 +37,6 @@ class Order extends Model // implements HasWorkflow
         'delivery_method',
         'delivery_note',
 
-
         'trasport_method',
         'trasport_note',
 

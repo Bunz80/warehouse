@@ -12,10 +12,12 @@ use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -31,8 +33,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\HtmlString;
-use Filament\Forms\Components\Hidden;
-use Closure;
 
 class OrderResource extends Resource
 {
@@ -193,17 +193,16 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Total Order')
                                 ->content(function (Closure $get) {
-
-                            return new HtmlString('
+                                    return new HtmlString('
 
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.$get("total_prices").' '.$get('currency').'</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.$get("total_taxes").'</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.$get('total_prices').' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.$get('total_taxes').'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.$get("total_order").' '.$get('currency').'</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.$get('total_order').' '.$get('currency').'</td></tr>
                             </table></div>');
-                        })->columnSpan(1),
+                                })->columnSpan(1),
 
                     ]),
 
@@ -232,7 +231,7 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Print Document')
                             ->content(
-                                function(Closure $get){
+                                function (Closure $get) {
                                     return new HtmlString('
                                             <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
                                             <script>
@@ -242,19 +241,19 @@ class OrderResource extends Resource
                                                             "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Number Order</div>" +
-                                                                    "<div>'.$get("number").'</div>" +
+                                                                    "<div>'.$get('number').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Order\'s date</div>" +
-                                                                    "<div>'.$get("order_at").'</div>" +
+                                                                    "<div>'.$get('order_at').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Company</div>" +
-                                                                    "<div>'.$get("company_id").'</div>" +
+                                                                    "<div>'.$get('company_id').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Supplier</div>" +
-                                                                    "<div>'.$get("supplier_id").'</div>" +
+                                                                    "<div>'.$get('supplier_id').'</div>" +
                                                                 "</div>" +
                                                             "</div>" +
                                                         "</div>"+
@@ -262,11 +261,11 @@ class OrderResource extends Resource
                                                             "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Delivery Address</div>" +
-                                                                    "<div>'.$get("address").'</div>" +
+                                                                    "<div>'.$get('address').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Delivery Contact</div>" +
-                                                                    "<div>'.$get("contact").'</div>" +
+                                                                    "<div>'.$get('contact').'</div>" +
                                                                 "</div>" +
                                                             "</div>" +
                                                         "</div>" + 
@@ -278,15 +277,15 @@ class OrderResource extends Resource
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Payment Note</div>" +
-                                                                    "<div>'.$get("payment_note").'</div>" +
+                                                                    "<div>'.$get('payment_note').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Trasport Method</div>" +
-                                                                    "<div>'.$get("trasport_method").'</div>" +
+                                                                    "<div>'.$get('trasport_method').'</div>" +
                                                                 "</div>" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Trasport Note</div>" +
-                                                                    "<div>'.$get("trasport_note").'</div>" +
+                                                                    "<div>'.$get('trasport_note').'</div>" +
                                                                 "</div>" +
                                                             "</div>" +
                                                         "</div>"+
@@ -294,7 +293,7 @@ class OrderResource extends Resource
                                                             "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Order notes</div>" +
-                                                                    "<div>'.$get("notes").'</div>" +
+                                                                    "<div>'.$get('notes').'</div>" +
                                                                 "</div>" +
                                                             "</div>" +
                                                         "</div>"+
@@ -302,7 +301,7 @@ class OrderResource extends Resource
                                                             "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
                                                                 "<div class=\"col-span-1\">" +
                                                                     "<div>Order report</div>" +
-                                                                    "<div>'.$get("report").'</div>" +
+                                                                    "<div>'.$get('report').'</div>" +
                                                                 "</div>" +
                                                             "</div>" +
                                                         "</div>" +

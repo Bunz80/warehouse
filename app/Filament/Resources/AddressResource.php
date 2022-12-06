@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Address;
-use App\Models\Category;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Card;
-use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\AddressResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers;
+use App\Models\Address;
+use App\Models\Category;
+use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 
 class AddressResource extends Resource
 {
