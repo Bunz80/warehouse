@@ -311,7 +311,7 @@ class CreateOrder extends CreateRecord
                     ])->columnSpan(3),
 
                     Placeholder::make('Total Order')
-                        ->content(function (Closure $get) {
+                        ->content(function (Closure $get, Closure $set) {
                             $items = $get('Product list');
                             $priceSum = 0;
                             $vatSum = 0;
@@ -354,6 +354,10 @@ class CreateOrder extends CreateRecord
                                 $vatSum += $unit * ($vat / 100) * $qty;
                             }
 
+                            $set("total_prices", $priceSum);
+                            $set("total_taxes", $vatSum);
+                            $set("total_order", $priceSum + $vatSum);
+
                             return new HtmlString('
                             <style>
                                 #total {
@@ -374,6 +378,10 @@ class CreateOrder extends CreateRecord
                             <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' '.$get('currency').'</td></tr>
                             </table></div>');
                         })->columnSpan(1),
+
+                    Hidden::make('total_prices'),
+                    Hidden::make('total_taxes'),
+                    Hidden::make('total_order'),
 
                 ])->columns(4),
 

@@ -31,6 +31,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Hidden;
+use Closure;
 
 class OrderResource extends Resource
 {
@@ -184,16 +186,25 @@ class OrderResource extends Resource
 
                 // Sidebar Info Order cost and action order
                 Group::make([
+                    Hidden::make('total_prices'),
+                    Hidden::make('total_taxes'),
+                    Hidden::make('total_order'),
+
                     Card::make([
                         Placeholder::make('Total Order')
-                                ->content(new HtmlString('
-                                <table border="1" class="filament-tables-table table-auto w-full">
-                                <tbody><tr><td>Sub Total</td><td style="float:right">993 €</td></tr>
-                                <tr><td>Vat</td><td style="float:right">19.86 €</td></tr>
-                                <tr><td colspan="2"><hr style="margin:10px"></td></tr>
-                                <tr><td><b>Total</b></td><td style="float:right">1012.86 €</td></tr>
-                                </tbody></table>
-                        ')),
+                                ->content(function (Closure $get) {
+
+                            return new HtmlString('
+
+                            <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
+                            <table border="1" class="filament-tables-table table-auto w-full">
+                            <tr><td>Sub Total</td><td style="float:right">'.$get("total_prices").' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.$get("total_taxes").'</td></tr>
+                            <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.$get("total_order").' '.$get('currency').'</td></tr>
+                            </table></div>');
+                        })->columnSpan(1),
+
                     ]),
 
                     Card::make([
@@ -220,7 +231,7 @@ class OrderResource extends Resource
 
                     Card::make([
                         Placeholder::make('Print Document')
-                            ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>Print</span></button>'))
+                            ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="generatePDF()"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>Print</span></button>'))
                             ->columnSpan(2),
 
                         Placeholder::make('View Document')
