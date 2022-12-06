@@ -56,7 +56,7 @@ class AddressResource extends Resource
                 TextColumn::make('collection_name')->label('Type')->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('address')->searchable(),
-                TextColumn::make('street_number'),
+                TextColumn::make('street_number')->label('Nr'),
                 TextColumn::make('zip')->searchable(),
                 TextColumn::make('city')->searchable(),
                 TextColumn::make('province')->searchable(),
