@@ -14,6 +14,10 @@ class ContactsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $modelLabel = 'Contatto';
+
+    protected static ?string $pluralModelLabel = 'Contatti';
+
     public static function form(Form $form): Form
     {
         return $form
