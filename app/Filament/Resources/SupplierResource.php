@@ -59,7 +59,8 @@ class SupplierResource extends Resource
                     ->label('Certified Mail (CM/PEC)'),
                 Forms\Components\TagsInput::make('category')
                     ->label('Category')
-                    ->suggestions(Category::where('collection_name', 'Warehouse->Category')->pluck('name', 'name'))
+                    //->suggestions(Category::where('collection_name', 'Warehouse->Category')->pluck('name', 'name'))
+                    ->suggestions(Category::all()->pluck('name', 'name'))
                     ->columnSpan(4)
                     ->separator(', '),
                 Forms\Components\Textarea::make('note')
