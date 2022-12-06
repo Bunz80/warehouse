@@ -49,8 +49,8 @@ class ProductResource extends Resource
                     Forms\Components\TagsInput::make('category')
                         ->columnSpan(12)
                         ->label('Category')
+                        ->suggestions(Category::where('collection_name', 'Warehouse->Category')->pluck('name', 'name'))
                         ->separator(', '),
-
                     Forms\Components\TextInput::make('code')
                         ->columnSpan(3)
                         ->label('Supplier Code'),

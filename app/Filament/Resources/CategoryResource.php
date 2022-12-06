@@ -43,6 +43,7 @@ class CategoryResource extends Resource
                             'Warehouse-Supplier' => 'Warehouse->Supplier',
                             'Warehouse-Payment' => 'Warehouse->Payment',
                             'Warehouse-Transport' => 'Warehouse->Transport',
+                            'Warehouse-Category' => 'Warehouse->Category',
                             // 'Warehouse-Delivery' => 'Warehouse->Delivery',
                         ])
                         ->required(),
