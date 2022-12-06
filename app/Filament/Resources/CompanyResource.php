@@ -65,7 +65,7 @@ class CompanyResource extends Resource
                     Forms\Components\TagsInput::make('category')
                         ->label('Category')
                         ->columnSpan(4)
-                        ->suggestions(Category::where('collection_name', 'Warehouse->Category')->pluck('name', 'name'))
+                        ->suggestions(Category::where('collection_name', 'Warehouse-Category')->pluck('name', 'name'))
                         ->separator(', '),
                     Forms\Components\Textarea::make('note')
                         ->label('Note')
