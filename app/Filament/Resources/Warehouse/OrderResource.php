@@ -75,7 +75,7 @@ class OrderResource extends Resource
                         Select::make('address_id')
                             ->label('Delivery Address')
                             ->options(Address::where('addressable_type', 'App\Models\Company')
-                                ->where('collection_name', 'Warehouse-Delivery')
+                                ->where('collection_name', 'Delivery')
                                 ->orderBy('name', 'ASC')
                                 ->pluck('name', 'id'))
                             ->searchable(),

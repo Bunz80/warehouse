@@ -42,14 +42,14 @@ class OrderDetailsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('tax')->required(),
                 Forms\Components\TextInput::make('unit')->required(),
                 Forms\Components\TextInput::make('quantity')->required(),
-                Forms\Components\TextInput::make('price_unit')->required()->columnSpan(2),
+                Forms\Components\TextInput::make('price_unit')->required()->columnSpan(3),
                 Forms\Components\Placeholder::make('Discount')->content(new HtmlString('<hr />'))->columnSpan(6),
                 Forms\Components\Select::make('discount_currency')
                     ->label('Currency')
                     ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
                     ->reactive(),
                 Forms\Components\TextInput::make('discount_price'),
-                Forms\Components\TextInput::make('total_price')->required()->label('disabled')->columnSpan(4),
+                Forms\Components\TextInput::make('total_price')->required()->disabled()->label('Total Price')->columnSpan(4),
             ])->columns(6);
     }
 
