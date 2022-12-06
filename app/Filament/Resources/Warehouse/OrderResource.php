@@ -231,11 +231,124 @@ class OrderResource extends Resource
 
                     Card::make([
                         Placeholder::make('Print Document')
-                            ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="generatePDF()"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>Print</span></button>'))
+                            ->content(
+                                function(Closure $get){
+                                    return new HtmlString('
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                                            <script>
+                                                var printContents = 
+                                                    "<div id=\"printcontent\" style=\"padding-right: 30px; padding-left: 30px\">" + 
+                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
+                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Number Order</div>" +
+                                                                    "<div>'.$get("number").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Order\'s date</div>" +
+                                                                    "<div>'.$get("order_at").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Company</div>" +
+                                                                    "<div>'.$get("company_id").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Supplier</div>" +
+                                                                    "<div>'.$get("supplier_id").'</div>" +
+                                                                "</div>" +
+                                                            "</div>" +
+                                                        "</div>"+
+                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
+                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Delivery Address</div>" +
+                                                                    "<div>'.$get("address").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Delivery Contact</div>" +
+                                                                    "<div>'.$get("contact").'</div>" +
+                                                                "</div>" +
+                                                            "</div>" +
+                                                        "</div>" + 
+                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
+                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Payment Method</div>" +
+                                                                    "<div></div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Payment Note</div>" +
+                                                                    "<div>'.$get("payment_note").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Trasport Method</div>" +
+                                                                    "<div>'.$get("trasport_method").'</div>" +
+                                                                "</div>" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Trasport Note</div>" +
+                                                                    "<div>'.$get("trasport_note").'</div>" +
+                                                                "</div>" +
+                                                            "</div>" +
+                                                        "</div>"+
+                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
+                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Order notes</div>" +
+                                                                    "<div>'.$get("notes").'</div>" +
+                                                                "</div>" +
+                                                            "</div>" +
+                                                        "</div>"+
+                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
+                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
+                                                                "<div class=\"col-span-1\">" +
+                                                                    "<div>Order report</div>" +
+                                                                    "<div>'.$get("report").'</div>" +
+                                                                "</div>" +
+                                                            "</div>" +
+                                                        "</div>" +
+                                                    "</div>";
+                                                const viewPDF = () => {
+                                                    var originalContents = document.body.innerHTML;
+                                                    document.body.innerHTML = printContents;
+                                                    window.print();
+                                                    document.body.innerHTML = originalContents;
+                                                    location.reload();
+                                                }
+                                                const generatePDF = () => {
+                                                    var originalContents = document.body.innerHTML;
+                                                    document.body.innerHTML = printContents;
+                                                    const element = document.getElementById("printcontent");
+                                                    html2pdf(element, {
+                                                        margin:       10,
+                                                        filename:     "order.pdf",
+                                                        image:        { type: "jpeg", quality: 0.98 },
+                                                        html2canvas:  { scale: 2, logging: true, dpi: 192, letterRendering: true },
+                                                        jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+                                                      })
+                                                    setTimeout(function(){
+                                                        document.body.innerHTML = originalContents;
+                                                        location.reload();
+                                                    }, 4000);
+                                                  }
+                                            </script>
+                                            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="generatePDF()">
+                                                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+                                                </svg>
+                                                <span>Print</span>
+                                            </button>
+                                        ');
+                                })
                             ->columnSpan(2),
 
                         Placeholder::make('View Document')
-                            ->content(new HtmlString('<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg><span>View Document</span></button>'))
+                            ->content(new HtmlString('
+                                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick="viewPDF()">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+                                    </svg>
+                                    <span>View Document</span>
+                                </button>'))
                             ->columnSpan(2),
                     ]),
                 ])->columnSpan(1),
