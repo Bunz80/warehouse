@@ -37,11 +37,12 @@ class ContactsRelationManager extends RelationManager
                 Tables\Columns\IconColumn::make('collection_name')
                     ->label('Type')
                     ->options([
-                        'heroicon-s-phone' => 'phone',
-                        'heroicon-s-phone' => 'fax',
-                        'heroicon-s-mail' => 'email',
-                        'heroicon-s-globe' => 'social',
-                        'heroicon-s-globe' => 'web',
+                        'heroicon-o-phone' => 'phone',
+                        'heroicon-o-phone' => 'fax',
+                        'heroicon-o-mail' => 'email',
+                        'heroicon-o-globe' => 'social',
+                        'heroicon-o-globe' => 'web',
+                        'heroicon-o-user' => 'user',
                     ])->size('md'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('address'),
