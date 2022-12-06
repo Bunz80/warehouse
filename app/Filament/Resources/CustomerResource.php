@@ -30,6 +30,8 @@ class CustomerResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Clienti';
 
+    protected static ?int $navigationSort = 9;
+
     public static function form(Form $form): Form
     {
         return $form

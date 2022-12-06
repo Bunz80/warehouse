@@ -17,9 +17,9 @@ class OrderDetailsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $modelLabel = 'Ordine';
+    protected static ?string $modelLabel = 'Dettaglio Ordine';
 
-    protected static ?string $pluralModelLabel = 'Ordini';
+    protected static ?string $pluralModelLabel = 'Dettaglio Ordini';
 
     public static function form(Form $form): Form
     {

@@ -37,7 +37,7 @@ class OrdersRelationManager extends RelationManager
                 TextColumn::make('id'),
                 TextColumn::make('year')->sortable()->searchable(),
                 TextColumn::make('number')->sortable()->searchable(),
-                TextColumn::make('company.name')->label('Company')->sortable()->searchable(),
+                TextColumn::make('company.name')->label('Azienda')->sortable()->searchable(),
                 TextColumn::make('supplier.name')->label('Supplier')->sortable()->searchable(),
                 TextColumn::make('order_at')->sortable()->searchable(),
                 IconColumn::make('status'),
