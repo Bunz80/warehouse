@@ -26,6 +26,10 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationGroup = 'Registry';
 
+    protected static ?string $modelLabel = 'Fornitore';
+
+    protected static ?string $pluralModelLabel = 'Fornitori';
+
     public static function form(Form $form): Form
     {
         return $form
