@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
+use App\Filament\Resources\Warehouse\OrderResource;
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Resources\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
-use App\Filament\Resources\Warehouse\OrderResource;
-use Filament\Resources\RelationManagers\RelationManager;
 
 class OrderCompaniesRelationManager extends RelationManager
 {
@@ -50,7 +50,7 @@ class OrderCompaniesRelationManager extends RelationManager
             ->actions([
                 // @todo link to order
                 // @todo show pdf
-                Tables\Actions\EditAction::make()->url(fn (Model $record): string => OrderResource::getUrl('edit', $record )),
+                Tables\Actions\EditAction::make()->url(fn (Model $record): string => OrderResource::getUrl('edit', $record)),
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

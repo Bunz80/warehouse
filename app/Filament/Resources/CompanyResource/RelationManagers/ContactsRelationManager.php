@@ -23,7 +23,7 @@ class ContactsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('collection_name')->options([
-                    'phone', 'email', 'web', 'social', 'fax', 'user'
+                    'phone', 'email', 'web', 'social', 'fax', 'user',
                 ]),
                 Forms\Components\TextInput::make('name'),
                 Forms\Components\TextInput::make('address')->columnSpan(2),

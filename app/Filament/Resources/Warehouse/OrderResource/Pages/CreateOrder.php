@@ -293,7 +293,7 @@ class CreateOrder extends CreateRecord
                                                 $unit = $unit - $get('discount_price');
                                             }
                                         }
-                                        $unit = $unit * (1 + (float)$get('vat') / 100);
+                                        $unit = $unit * (1 + (float) $get('vat') / 100);
                                         $sum = $unit * $get('qty');
 
                                         return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
