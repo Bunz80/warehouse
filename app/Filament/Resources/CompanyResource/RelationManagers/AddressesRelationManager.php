@@ -28,11 +28,11 @@ class AddressesRelationManager extends RelationManager
                 )->required(),
                 Forms\Components\TextInput::make('name')->required(),
                 Forms\Components\TextInput::make('address')->required(),
-                Forms\Components\TextInput::make('street_number')->nullable(),
-                Forms\Components\TextInput::make('zip')->nullable(),
+                Forms\Components\TextInput::make('street_number'),
+                Forms\Components\TextInput::make('zip'),
                 Forms\Components\TextInput::make('city')->required(),
-                Forms\Components\TextInput::make('province')->nullable(),
-                Forms\Components\TextInput::make('state')->nullable(),
+                Forms\Components\TextInput::make('province'),
+                Forms\Components\TextInput::make('state')->default('Italia'),
             ]);
     }
 
