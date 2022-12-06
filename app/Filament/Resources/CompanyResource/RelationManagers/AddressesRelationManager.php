@@ -25,14 +25,14 @@ class AddressesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('collection_name')->options(
                     Category::where('collection_name', 'Address')->pluck('name', 'name'),
-                ),
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('address'),
-                Forms\Components\TextInput::make('street_number'),
-                Forms\Components\TextInput::make('zip'),
-                Forms\Components\TextInput::make('city'),
-                Forms\Components\TextInput::make('province'),
-                Forms\Components\TextInput::make('state'),
+                )->required(),
+                Forms\Components\TextInput::make('name')->required(),
+                Forms\Components\TextInput::make('address')->required(),
+                Forms\Components\TextInput::make('street_number')->nullable(),
+                Forms\Components\TextInput::make('zip')->nullable(),
+                Forms\Components\TextInput::make('city')->required(),
+                Forms\Components\TextInput::make('province')->nullable(),
+                Forms\Components\TextInput::make('state')->nullable(),
             ]);
     }
 

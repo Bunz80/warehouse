@@ -17,13 +17,13 @@ return new class extends Migration
             $table->id();
             $table->morphs('addressable');
             $table->string('collection_name');  //residenza, sede legale, ecc..
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('address');
-            $table->string('street_number');
-            $table->string('zip');
+            $table->string('street_number')->nullable();
+            $table->string('zip')->nullable();
             $table->string('city');
-            $table->string('province');
-            $table->string('state');
+            $table->string('province')->nullable();
+            $table->string('state')->nullable()->default('Italia');
 
             $table->timestamps();
             $table->softDeletes();
