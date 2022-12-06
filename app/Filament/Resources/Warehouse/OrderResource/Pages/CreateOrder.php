@@ -213,7 +213,8 @@ class CreateOrder extends CreateRecord
                             ->schema([
                                 TextInput::make('name')
                                     ->columnSpan(12)
-                                    ->label('Product Name'),
+                                    ->label('Product Name')
+                                    ->default(""),
 
                                 Section::make('More Info')
                                     ->schema([
@@ -226,6 +227,7 @@ class CreateOrder extends CreateRecord
                                                 'preview',
                                             ])
                                             ->reactive()
+                                            ->default("")
                                             ->columnSpan(12),
                                     ])
                                     ->compact()
@@ -234,29 +236,36 @@ class CreateOrder extends CreateRecord
 
                                 TextInput::make('code')
                                     ->columnSpan(3)
+                                    ->default("")
                                     ->label('Supplier Code'),
                                 TextInput::make('vat')
                                     ->columnSpan(2)
                                     ->required()
                                     ->numeric()
                                     ->default(function (Closure $get) {
-                                        return $get('../../Tax');
+                                        if ($get('../../Tax')) {
+                                            return $get('../../Tax');
+                                        }
+                                        return 0;
                                     })
                                     ->label('Vat %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
+                                    ->default("")
                                     ->label('Unit'),
                                 TextInput::make('qty')
                                     ->columnSpan(2)
                                     ->numeric()
                                     ->required()
                                     ->reactive()
+                                    ->default(0)
                                     ->label('Quantity'),
                                 TextInput::make('price_unit')
                                     ->columnSpan(3)
                                     ->numeric()
                                     ->required()
                                     ->reactive()
+                                    ->default(0)
                                     ->label('Price'),
 
                                 Select::make('discount_currency')
@@ -270,6 +279,7 @@ class CreateOrder extends CreateRecord
                                     })
                                     ->reactive()
                                     ->columnSpan(3)
+                                    ->default("%")
                                     ->afterStateUpdated(function (Closure $set, Closure $get) {
                                         if (! $get('discount_currency')) {
                                             $set('discount_price', 0);
@@ -279,6 +289,7 @@ class CreateOrder extends CreateRecord
                                     ->label('Discount Value')
                                     ->numeric()
                                     ->columnSpan(3)
+                                    ->default(0)
                                     ->disabled(function (Closure $get) {
                                         return $get('discount_currency') ? false : true;
                                     }),
@@ -392,17 +403,43 @@ class CreateOrder extends CreateRecord
                     Card::make([
                         Select::make('address_id')
                             ->label('Delivery Address')
-                            ->options(Address::where('addressable_type', 'App\Models\Company')
-                                ->where('collection_name', 'Delivery')
-                                ->orderBy('name', 'ASC')
-                                ->pluck('name', 'id'))
+                            // ->options(Address::where('addressable_type', 'App\Models\Company')
+                            //     ->where('collection_name', 'Delivery')
+                            //     ->orderBy('name', 'ASC')
+                            //     ->pluck('name', 'id'))
+                            ->options(function() {
+                                $addressField = Address::whereRaw('addressable_type = "App\Models\Company" and collection_name = "Delivery"')->orderBy('name', 'ASC');
+                                if ($addressField) {
+                                    $arr = [];
+                                    for ($i = 0; $i < count($addressField->pluck('id')); $i++) {
+                                        $address = $addressField->pluck('name')[$i].' ('.$addressField->pluck('address')[$i].' '.$addressField->pluck('street_number')[$i].' '.$addressField->pluck('zip')[$i].' '.$addressField->pluck('city')[$i].' '.$addressField->pluck('province')[$i].' '.$addressField->pluck('state')[$i].')';
+                                        if ($address) {
+                                            $arr = array_merge($arr, [$addressField->pluck('id')[$i] => $address]);
+                                        }
+                                    }
+                                    return $arr;
+                                }
+                            })
                             ->searchable(),
                         // Echo Address
                         Select::make('contact_id')
                             ->label('Delivery Contact')
-                            ->options(Contact::where('contactable_type', 'App\Models\Company')
-                                ->orderBy('name', 'ASC')
-                                ->pluck('name', 'id'))
+                            // ->options(Contact::where('contactable_type', 'App\Models\Company')
+                            //     ->orderBy('name', 'ASC')
+                            //     ->pluck('name', 'id'))
+                            ->options(function() {
+                                $contacts = Contact::where('contactable_type', 'App\Models\Company')->orderBy('name', 'ASC');
+                                if ($contacts) {
+                                    $arr = [];
+                                    for ($i=0; $i < count($contacts->pluck('id')); $i++) {
+                                        $contact = $contacts->pluck('name')[$i].' ('.$contacts->pluck('collection_name')[$i].' '.$contacts->pluck('address')[$i].')';
+                                        if ($contact) {
+                                            $arr = array_merge($arr, [$contacts->pluck('id')[$i] => $contact]);
+                                        }
+                                    }
+                                    return $arr;
+                                }
+                            })
                             ->searchable(),
                         // Echo Contact
 
