@@ -29,7 +29,9 @@ class AddressResource extends Resource
         return $form
             ->schema([
                 Card::make([
-                    Forms\Components\Select::make('collection_name')->options(Category::where('collection_name', 'Address')->pluck('name')),
+                    Forms\Components\Select::make('collection_name')->options(Category::where('collection_name', 'Address')
+                        // ->where('collection_name', 'Warehouse->Delivery')
+                        ->pluck('name')),
                     Forms\Components\TextInput::make('name'),
                     Forms\Components\TextInput::make('address'),
                     Forms\Components\TextInput::make('street_number'),

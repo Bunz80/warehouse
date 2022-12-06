@@ -17,7 +17,8 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "nesbot/carbon": "^2.63",
-        "pxlrbt/filament-spotlight": "^0.3.6"
+        "pxlrbt/filament-spotlight": "^0.3.6",
+        "ryangjchandler/filament-profile": "^0.2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

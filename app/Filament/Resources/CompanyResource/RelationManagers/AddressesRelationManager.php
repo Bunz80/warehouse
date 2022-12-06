@@ -19,7 +19,9 @@ class AddressesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('collection_name')->options(Category::where('collection_name', 'Address')->pluck('name')),
+                Forms\Components\Select::make('collection_name')->options(
+                    Category::where('collection_name', 'Address')->pluck('name', 'name'),
+                ),
                 Forms\Components\TextInput::make('name'),
                 Forms\Components\TextInput::make('address'),
                 Forms\Components\TextInput::make('street_number'),
