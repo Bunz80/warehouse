@@ -53,6 +53,7 @@ class AddressResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('addressable_type')->label('Class'),
                 TextColumn::make('collection_name')->label('Type')->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('address')->searchable(),
