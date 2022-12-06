@@ -31,7 +31,6 @@ class CategoryResource extends Resource
                 Card::make([
                     Forms\Components\Select::make('collection_name')
                         ->options([
-                            //Value => Label,
                             'Purchase' => 'Purchase',
                             'Address' => 'Address',
                             'Status' => 'Status',
@@ -40,7 +39,7 @@ class CategoryResource extends Resource
                             'Warehouse-Supplier' => 'Warehouse->Supplier',
                             'Warehouse-Payment' => 'Warehouse->Payment',
                             'Warehouse-Transport' => 'Warehouse->Transport',
-                            // 'Warehouse-Delivery' => 'Warehouse->Delivery',
+                            // 'Warehouse-Delivery' => 'Warehouse->Delivery', 
                         ])
                         ->required(),
                     Forms\Components\TextInput::make('name')

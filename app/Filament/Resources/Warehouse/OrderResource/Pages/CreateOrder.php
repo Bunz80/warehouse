@@ -72,7 +72,7 @@ class CreateOrder extends CreateRecord
                             if ($get('supplier_id')) {
                                 $supplier = Supplier::where('id', $get('supplier_id'));
                                 if ($supplier) {
-                                    $tax = $supplier->pluck('vat')[0];
+                                    $tax = $supplier->pluck('default_tax_rate')[0];
                                     $currency = $supplier->pluck('default_currency')[0];
                                     $set('Tax', $tax);
                                     $set('currency', $currency);
