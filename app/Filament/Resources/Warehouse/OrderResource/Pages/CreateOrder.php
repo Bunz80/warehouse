@@ -717,7 +717,20 @@ class CreateOrder extends CreateRecord
                                     }
                                     $total = $punit * (1 + $vat / 100) * $qty;
 
-                                    $str .= '<tr><td>'.$name.'</td><td></td><td>'.$code.'</td><td>'.$description.'</td><td>'.$get('currency').'</td><td>'.$unit.'</td><td>'.$vat.'</td><td>'.$qty.'</td><td>'.$price.'</td><td>'.$discount_currency.'</td><td>'.$discount_price.'</td><td>'.$total.'</td></tr>';
+                                    $str .= '<tr>
+                                                <td>'.$name.'</td>
+                                                <td class="invisible">A</td>
+                                                <td>'.$code.'</td>
+                                                <td>'.$description.'</td>
+                                                <td class="invisible">A</td>
+                                                <td>'.$unit.'</td>
+                                                <td>'.$vat.'</td>
+                                                <td>'.$qty.'</td>
+                                                <td>'.$price.' '.$get('currency').'</td>
+                                                <td></td>
+                                                <td>'.$discount_price.' '.$discount_currency.'</td>
+                                                <td>'.$total.'</td>
+                                             </tr>';
                                 }
 
                                 return new HtmlString('
