@@ -69,7 +69,7 @@ class CreateOrder extends CreateRecord
                         }),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->options(Supplier::all()->pluck('name', 'id'))
+                        ->options(Supplier::where('is_activated', true)->pluck('name', 'id'))
                         ->searchable()
                         ->required()
                         ->columnSpan(2)
