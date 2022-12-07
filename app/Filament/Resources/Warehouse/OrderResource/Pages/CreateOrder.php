@@ -414,7 +414,9 @@ class CreateOrder extends CreateRecord
                         Select::make('address_id')
                             ->label('Delivery Address')
                             ->options(function () {
-                                $addressField = Address::whereRaw('addressable_type = "App\Models\Company" and collection_name = "Delivery"')->orderBy('name', 'ASC');
+                                $addressField = Address::where('addressable_type', 'App\Models\Company')
+                                    ->where('collection_name' , 'Delivery')
+                                    ->orderBy('name', 'ASC');
                                 if ($addressField) {
                                     $arr = [];
                                     for ($i = 0; $i < count($addressField->pluck('id')); $i++) {
@@ -442,7 +444,8 @@ class CreateOrder extends CreateRecord
                         Select::make('contact_id')
                             ->label('Delivery Contact')
                             ->options(function () {
-                                $contacts = Contact::where('contactable_type', 'App\Models\Company')->orderBy('name', 'ASC');
+                                $contacts = Contact::where('contactable_type', 'App\Models\Company')
+                                    ->orderBy('name', 'ASC');
                                 if ($contacts) {
                                     $arr = [];
                                     for ($i = 0; $i < count($contacts->pluck('id')); $i++) {
