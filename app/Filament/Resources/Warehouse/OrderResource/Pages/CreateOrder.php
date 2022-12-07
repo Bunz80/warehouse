@@ -415,7 +415,7 @@ class CreateOrder extends CreateRecord
                             ->label('Delivery Address')
                             ->options(function () {
                                 $addressField = Address::where('addressable_type', 'App\Models\Company')
-                                    ->where('collection_name' , 'Delivery')
+                                    ->where('collection_name', 'Delivery')
                                     ->orderBy('name', 'ASC');
                                 if ($addressField) {
                                     $arr = [];
