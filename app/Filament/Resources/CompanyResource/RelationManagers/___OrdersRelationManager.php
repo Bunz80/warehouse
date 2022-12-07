@@ -10,7 +10,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
-class OrdersRelationManager extends RelationManager
+class XXXOrdersRelationManager extends RelationManager
 {
     protected static string $relationship = 'orders';
 
