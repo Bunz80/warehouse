@@ -17,6 +17,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "nesbot/carbon": "^2.63",
+        "psr/simple-cache": "^2.0",
         "pxlrbt/filament-spotlight": "^0.3.6",
         "ryangjchandler/filament-profile": "^0.2.1"
     },
