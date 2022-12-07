@@ -214,7 +214,7 @@ class CreateOrder extends CreateRecord
                                 TextInput::make('name')
                                     ->columnSpan(12)
                                     ->label('Product Name')
-                                    ->default(""),
+                                    ->default(''),
 
                                 Section::make('More Info')
                                     ->schema([
@@ -227,7 +227,7 @@ class CreateOrder extends CreateRecord
                                                 'preview',
                                             ])
                                             ->reactive()
-                                            ->default("")
+                                            ->default('')
                                             ->columnSpan(12),
                                     ])
                                     ->compact()
@@ -236,7 +236,7 @@ class CreateOrder extends CreateRecord
 
                                 TextInput::make('code')
                                     ->columnSpan(3)
-                                    ->default("")
+                                    ->default('')
                                     ->label('Supplier Code'),
                                 TextInput::make('vat')
                                     ->columnSpan(2)
@@ -246,12 +246,13 @@ class CreateOrder extends CreateRecord
                                         if ($get('../../Tax')) {
                                             return $get('../../Tax');
                                         }
+
                                         return 0;
                                     })
                                     ->label('Vat %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
-                                    ->default("")
+                                    ->default('')
                                     ->label('Unit'),
                                 TextInput::make('qty')
                                     ->columnSpan(2)
@@ -279,7 +280,7 @@ class CreateOrder extends CreateRecord
                                     })
                                     ->reactive()
                                     ->columnSpan(3)
-                                    ->default("%")
+                                    ->default('%')
                                     ->afterStateUpdated(function (Closure $set, Closure $get) {
                                         if (! $get('discount_currency')) {
                                             $set('discount_price', 0);
@@ -407,7 +408,7 @@ class CreateOrder extends CreateRecord
                             //     ->where('collection_name', 'Delivery')
                             //     ->orderBy('name', 'ASC')
                             //     ->pluck('name', 'id'))
-                            ->options(function() {
+                            ->options(function () {
                                 $addressField = Address::whereRaw('addressable_type = "App\Models\Company" and collection_name = "Delivery"')->orderBy('name', 'ASC');
                                 if ($addressField) {
                                     $arr = [];
@@ -417,6 +418,7 @@ class CreateOrder extends CreateRecord
                                             $arr = array_merge($arr, [$addressField->pluck('id')[$i] => $address]);
                                         }
                                     }
+
                                     return $arr;
                                 }
                             })
@@ -427,16 +429,17 @@ class CreateOrder extends CreateRecord
                             // ->options(Contact::where('contactable_type', 'App\Models\Company')
                             //     ->orderBy('name', 'ASC')
                             //     ->pluck('name', 'id'))
-                            ->options(function() {
+                            ->options(function () {
                                 $contacts = Contact::where('contactable_type', 'App\Models\Company')->orderBy('name', 'ASC');
                                 if ($contacts) {
                                     $arr = [];
-                                    for ($i=0; $i < count($contacts->pluck('id')); $i++) {
+                                    for ($i = 0; $i < count($contacts->pluck('id')); $i++) {
                                         $contact = $contacts->pluck('name')[$i].' ('.$contacts->pluck('collection_name')[$i].' '.$contacts->pluck('address')[$i].')';
                                         if ($contact) {
                                             $arr = array_merge($arr, [$contacts->pluck('id')[$i] => $contact]);
                                         }
                                     }
+
                                     return $arr;
                                 }
                             })
