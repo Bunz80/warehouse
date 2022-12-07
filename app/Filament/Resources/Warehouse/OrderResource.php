@@ -278,7 +278,7 @@ class OrderResource extends Resource
                                                     "<div id=\"printcontent\" style=\"padding-right: 30px; padding-left: 30px;margin: 0;\">"+ 
                                                         "<div class=\"grid grid-cols-3\" style=\"border-bottom:1px solid #c3c3c3;padding:20px\">"+
                                                             "<div class=\"text-left\">"+
-                                                                "<img src=\"../../../../images/logo.png\" style=\"width: 70px;\">"+
+                                                                "<img src=\"../../../../images/logo.png\" style=\"width: 120px;\">"+
                                                             "</div>"+
                                                             "<div class=\"text-center\" style=\"font-size: 20px\">"+
                                                                 "<h1>'.$company_name.'</h1> "+
