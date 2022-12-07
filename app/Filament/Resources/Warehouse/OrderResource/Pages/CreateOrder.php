@@ -393,10 +393,10 @@ class CreateOrder extends CreateRecord
                             </style>
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.$priceSum.' '.$get('currency').'</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.$vatSum.' '.$get('currency').'</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.round($priceSum, 2).' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.round($vatSum, 2).' '.$get('currency').'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.$priceSum + $vatSum.' '.$get('currency').'</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.round($priceSum + $vatSum, 2).' '.$get('currency').'</td></tr>
                             </table></div>');
                         })->columnSpan(1),
 
@@ -548,9 +548,6 @@ class CreateOrder extends CreateRecord
                 ->description('Report')
                 ->icon('heroicon-o-shopping-bag')
                 ->schema([
-                    Card::make([
-                        Textarea::make('report')->label('Order report'),
-                    ])->columns(4),
                     Card::make([
                         Placeholder::make('summary_company')
                             ->label('Company: ')

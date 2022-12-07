@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
+use App\Models\Warehouse\OrderDetail;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
@@ -197,10 +198,10 @@ class OrderResource extends Resource
 
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.$get('total_prices').' '.$get('currency').'</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.$get('total_taxes').'</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.round($get('total_prices'), 2).' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.round($get('total_taxes'), 2).'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.$get('total_order').' '.$get('currency').'</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.round($get('total_order'), 2).' '.$get('currency').'</td></tr>
                             </table></div>');
                                 })->columnSpan(1),
 
@@ -232,79 +233,121 @@ class OrderResource extends Resource
                         Placeholder::make('Print Document')
                             ->content(
                                 function (Closure $get) {
+                                    $company = Company::where("id", $get("company_id"));
+                                    $company_name = $company ? $company->pluck("name")[0] : "";
+
+                                    $address = Address::where("id", $get("address_id"));
+                                    $address_name = $address ? $address->pluck("name")[0] : "";
+                                    $address_street = $address ? $address->pluck("address")[0]."-".$address->pluck("street_number")[0].", ".$address->pluck("city")[0] : "";
+                                    $address_state = $address ? $address->pluck("province")[0]."/".$address->pluck("state")[0] : "";
+
+                                    $supplier = Supplier::where("id", $get("supplier_id"));
+                                    $supplier_name = $supplier ? $supplier->pluck("name")[0] : "";
+
+                                    $orderDetail = OrderDetail::where("order_id", $get("id"));
+                                    $totalPrice = 0;
+                                    $totalVat = 0;
+
+                                    $tablestr = '<tr style=\'font-weight: bold\'><td>ID</td><td>COD</td><td>Descrizione</td><td>Qnt</td><td>Prezzo</td><td>Sconto</td><td>Totale</td></tr>';
+                                    if ($orderDetail) {
+                                        for ($i=0; $i < count($orderDetail->pluck("id")); $i++) {
+                                            $unit = (float) $orderDetail->pluck("price_unit")[$i];
+                                            $discount_currency = (float) $orderDetail->pluck("discount_currency")[$i];
+                                            $discount_price = (float) $orderDetail->pluck("discount_price")[$i];
+                                            $tax = (float) $orderDetail->pluck("tax")[$i];
+                                            if ($discount_currency && $discount_price) {
+                                                if ($discount_currency == '%') {
+                                                    $unit = $unit * (1 - $discount_price / 100);
+                                                } else {
+                                                    $unit = $unit - $discount_price;
+                                                }
+                                            }
+                                            $sum = $unit * $orderDetail->pluck("quantity")[$i];
+                                            $totalPrice += $sum;
+                                            $totalVat += $unit * ($tax / 100) * $orderDetail->pluck("quantity")[$i];
+                                            $tablestr .= '<tr><td>'.$orderDetail->pluck("id")[$i].'</td><td>'.$orderDetail->pluck("code")[$i].'</td><td>'.$orderDetail->pluck("description")[$i].'</td><td>'.round($orderDetail->pluck("quantity")[$i]).'</td><td>'.$orderDetail->pluck("price_unit")[$i].'</td><td>'.$orderDetail->pluck("discount_price")[$i].'</td><td>'.$sum.'</td></tr>';
+                                        };
+                                    };
+
+
                                     return new HtmlString('
                                             <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
                                             <script>
                                                 var printContents = 
-                                                    "<div id=\"printcontent\" style=\"padding-right: 30px; padding-left: 30px\">" + 
-                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
-                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Number Order</div>" +
-                                                                    "<div>'.$get('number').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Order\'s date</div>" +
-                                                                    "<div>'.$get('order_at').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Company</div>" +
-                                                                    "<div>'.$get('company_id').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Supplier</div>" +
-                                                                    "<div>'.$get('supplier_id').'</div>" +
-                                                                "</div>" +
-                                                            "</div>" +
+                                                    "<style>td{padding: 5px 15px}</style>"+
+                                                    "<div id=\"printcontent\" style=\"padding-right: 30px; padding-left: 30px;margin: 0;\">"+ 
+                                                        "<div class=\"grid grid-cols-3\" style=\"border-bottom:1px solid #c3c3c3;padding:20px\">"+
+                                                            "<div class=\"text-left\">"+
+                                                                "<img src=\"../../../../images/logo.png\" style=\"width: 70px;\">"+
+                                                            "</div>"+
+                                                            "<div class=\"text-center\" style=\"font-size: 20px\">"+
+                                                                "<h1>'.$company_name.'</h1> "+
+                                                            "</div>"+
+                                                            "<div class=\"text-right\">"+
+                                                                "<h3 style=\"font-size: 15px\">Ordine nr: '.$get("year").'.'.$get("number").'</h3>"+
+                                                            "</div>"+
                                                         "</div>"+
-                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
-                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Delivery Address</div>" +
-                                                                    "<div>'.$get('address').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Delivery Contact</div>" +
-                                                                    "<div>'.$get('contact').'</div>" +
-                                                                "</div>" +
-                                                            "</div>" +
-                                                        "</div>" + 
-                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
-                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Payment Method</div>" +
-                                                                    "<div></div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Payment Note</div>" +
-                                                                    "<div>'.$get('payment_note').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Trasport Method</div>" +
-                                                                    "<div>'.$get('trasport_method').'</div>" +
-                                                                "</div>" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Trasport Note</div>" +
-                                                                    "<div>'.$get('trasport_note').'</div>" +
-                                                                "</div>" +
-                                                            "</div>" +
+                                                        "<div style=\"border-bottom:1px solid #c3c3c3;padding:20px;height: 200px\">"+
+                                                            "<div class=\"text-left\" style=\"font-size: 15px;width: 170px;float:left;\">"+
+                                                                "<h3>Destinazione</h3>"+
+                                                                "<div style=\"font-weight:bold\">'.$address_name.'</div>"+
+                                                                "<div>'.$address_street.'</div>"+
+                                                                "<div>'.$address_state.'</div>"+
+                                                            "</div>"+
+                                                            "<div class=\"text-right\" style=\"font-size: 15px;width: 170px;float:right;\">"+
+                                                                "<h3>Fornitore</h3>"+
+                                                                "<div style=\"font-weight:bold\">'.$supplier_name.'</div>"+
+                                                            "</div>"+
                                                         "</div>"+
-                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
-                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Order notes</div>" +
-                                                                    "<div>'.$get('notes').'</div>" +
-                                                                "</div>" +
-                                                            "</div>" +
+                                                        "<h3 style=\"font-size: 15pxfont-weight: bold;margin-top: 20px\">Lista Prodotti</h3>"+
+                                                        "<table style=\"font-size: 15px; font-weight: normal;border-bottom: 2px solid;\">'.$tablestr.'</table>"+
+                                                        "<div class=\"grid grid-cols-1\" style=\"font-size: 20px; font-weight: normal\">"+
+                                                            "<div style=\"text-align: right\">Totale imponibile<span style=\"width: 140px;display: inline-block\">'.round($totalPrice, 2).'</span></div>"+
+                                                            "<div style=\"text-align: right\">Totale iva<span style=\"width: 140px;display: inline-block\">'.round($totalVat, 2).'</span></div>"+
+                                                            "<div style=\"text-align: right;font-weight: bold;\">Totale Ordine<span style=\"width: 140px;display: inline-block;\">'.round($totalPrice + $totalVat, 2).'</span></div>"+
                                                         "</div>"+
-                                                        "<div class=\"p-6 bg-white rounded-xl border border-gray-300 mt-4\">" +
-                                                            "<div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\">" +
-                                                                "<div class=\"col-span-1\">" +
-                                                                    "<div>Order report</div>" +
-                                                                    "<div>'.$get('report').'</div>" +
-                                                                "</div>" +
-                                                            "</div>" +
-                                                        "</div>" +
+                                                        "<div class=\"grid grid-cols-3\" style=\"padding:20px\">"+
+                                                            "<div style=\"padding: 20px\">"+
+                                                                "<div>Pagamento:</div>"+
+                                                                "<div>'.$get("payment_note").'</div>"+
+                                                            "</div>"+
+                                                            "<div style=\"padding: 20px\">"+
+                                                                "<div>Trasporto:</div>"+
+                                                                "<div>'.$get("trasport_note").'</div>"+
+                                                            "</div>"+
+                                                            "<div style=\"padding: 20px\">"+
+                                                                "<div>Note:</div>"+
+                                                                "<div>'.$get("notes").'</div>"+
+                                                            "</div>"+
+                                                        "</div>"+
+                                                        "<div style=\"font-size:15px;font-weight:bold; padding-left: 20px\">Info e condizioni:</div>"+
+                                                        "<ul style=\"font-size: 10px; padding: 20px 50px;list-style:inside;\">"+
+                                                            "<li>Ogni deroga alle condizioni generali e particolari indicate in ordine sarà valida soltanto se accettate per iscritto dall’Acquirente.</li>"+
+                                                            "<li>L’ordine si intende perfezionato con il ricevimento da parte dell’acquirente della conferma integrale dello stesso, che dovrà pervenirci entro il 10° giorno dalla data dell’ordine, sottoscritta dal Fornitore per accettazione. Al riguardo si fa rinvio alle disposizioni di cui all’Art.1326 del Codice Civile.</li>"+
+                                                            "<li>L’ordine integralmente accettato produce gli effetti previsti dalla legge.</li>"+
+                                                            "<li>I termini di consegna s’intendono essenziali: il mancato rispetto degli stessi oltre a legittimare la richiesta di risarcimento ai sensi degli articoli 1218 e 1223 C.C. dà il diritto all’Acquirente di risolvere il contratto per inadempimento.</li>"+
+                                                            "<li>Nelle spedizioni eseguite con qualsiasi mezzo di trasporto il Fornitore, o chi per lui, dovrà tempestivamente comunicare gli estremi di spedizione, il numero e la data dell’ordine.</li>"+
+                                                            "<li>Le consegne eseguite non in accordo ai termini fissati saranno considerate, ai fini del pagamento, come avvenute nei termini più favorevoli all’Acquirente.</li>"+
+                                                            "<li>Normalmente, se non sia stato convenuto altrimenti nella ordinazione, il costo dell’imballaggio non viene riconosciuto intendendosi compreso nel prezzo della merce. Come pure, a meno che sia stato convenuto differentemente nell’ordinazione, il prezzo pattuito si intende riferito al peso netto della merce escluso imballo. Avarie o dispersione della merce causate da imballaggio inidoneo o difettoso sono a carico del Fornitore, il quale è tenuto a provvedere all’imballaggio nel modo più conveniente ed economico.</li>"+
+                                                            "<li>Le forniture debbono essere spedite all’indirizzo indicato dall’Acquirente e con le modalità riportate nell’ordine. Ogni maggiore onere derivante da inosservanza di questa modalità, sarà addebitato al fornitore.</li>"+
+                                                            "<li>Le merci debbono esser accompagnate da una bolla di consegna sulla quale oltre alla descrizione della fornitura ed il numero di specifica dell’Acquirente, deve essere indicato il numero dell’ordine di acquisto.</li>"+
+                                                            "<li>Ove richiesto, le merci debbono essere accompagnate dal Certificato di Conformità in due esemplari.</li>"+
+                                                            "<li>Entro i termini e con le modalità previste dalle vigenti disposizioni, deve essere inviata all’Acquirente regolare fattura, indicante gli estremi della bolla di consegna e dell’ordine di acquisto.</li>"+
+                                                            "<li>Le fatture non rispondenti alle norme di legge vigenti saranno restituite per le necessarie rettifiche e dovranno pervenire regolarizzate entro i termini previsti dal D.P.R. 26/10/72 n. 633. In caso contrario verrà emessa autofattura ai sensi dell’art. 41 del D.P.R. citato.</li>"+
+                                                            "<li>Le merci contrassegnate all’Acquirente si intendono consegnate in deposito e custodia fino ad avvenuto controllo e conseguente accettazione</li>"+
+                                                            "<li>Il controllo qualitativo e quantitativo delle merci sarà effettuato dall’Acquirente, salvo casi particolari e previamente indicati nell’ordine. L’acquirente notificherà eventuali scarti entro 60 gg. dalla presa in consegna della merce.</li>"+
+                                                            "<li>Il fornitore s’impegna ad accettare tutti i controlli che l’acquirente effettuerà sulle forniture al fine di stabilire la loro rispondenza alle caratteristiche previste dall’ordine.</li>"+
+                                                            "<li>Le merci non accettate in seguito al controllo da parte dell’Acquirente saranno rispedite al Fornitore in porto assegnato. Le relative fatture potranno essere tenute in sospeso fino al reintegro oppure liquidate, a discrezione dell’Acquirente, per la quota parte accettata.</li>"+
+                                                            "<li>Il Fornitore garantisce le proprie merci: in particolare che siano di ottima qualità, esenti da difetti, palesi e occulti, che rispondano a tutti i requisiti indicati nell’offerta o nell’ordine confermato.</li>"+
+                                                            "<li>Con l’accettazione del presente ordine, si rinuncia espressamente al beneficio di cui D.Lgs 231/2002 riservandosi la facoltà di procedere, in caso di inadempimento, con specifica messa in mora.</li>"+
+                                                            "<li>E’ tassativamente escluso il pagamento mediante cessione del credito (art. 1260 C.C.) nonché con procura irrevocabile (art. 1723 C.C.).</li>"+
+                                                        "</ul>"+
+                                                        "<div style=\"padding: 20px;border-bottom: 1px solid #c3c3c3;\">"+
+                                                            "<b>Rispetta l’ambiente:</b> Non stampare questa pagina se non è necessario"+
+                                                        "</div>"+
+                                                        "<div style=\"padding: 20px;text-align:center;\">"+
+                                                            "<b>Medmar Navi SPA:</b> Società soggetta a direzione e coordinamento della Mediterranea Marittima S.p.A. <b>Sede Legale e Uffici:</b> Via Alcide De Gasperi, 55 - 80133 Napoli Tel. 081.5801223 - Fax 081.5512770 - Capitale Sociale € 6,000,000.00 int. vers. Codice Fiscale, Partita IVA e numero iscrizione Registro delle Imprese di Napoli 05984260637 R.E.A. 473782 - <b>Call Center:</b> Tel. 081.3334411 -info@medmarnavi.it - www.medmarnavi.it"+
+                                                        "</div>"+
                                                     "</div>";
                                                 const viewPDF = () => {
                                                     var originalContents = document.body.innerHTML;
@@ -315,14 +358,16 @@ class OrderResource extends Resource
                                                 }
                                                 const generatePDF = () => {
                                                     var originalContents = document.body.innerHTML;
+                                                    window.scrollTo(0, 0);
                                                     document.body.innerHTML = printContents;
                                                     const element = document.getElementById("printcontent");
+
                                                     html2pdf(element, {
-                                                        margin:       10,
+                                                        margin:       1,
                                                         filename:     "order.pdf",
                                                         image:        { type: "jpeg", quality: 0.98 },
-                                                        html2canvas:  { scale: 2, logging: true, dpi: 192, letterRendering: true },
-                                                        jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+                                                        html2canvas:  { scale: 2 },
+                                                        jsPDF:        { unit: "in", format: "letter", orientation: "portrait" }
                                                       })
                                                     setTimeout(function(){
                                                         document.body.innerHTML = originalContents;
