@@ -11,7 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
 
-class XXXOrderDetailsRelationManager extends RelationManager
+class OrderDetailsRelationManager extends RelationManager
 {
     protected static string $relationship = 'orderDetails';
 

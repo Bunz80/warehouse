@@ -62,9 +62,9 @@ class CreateOrder extends CreateRecord
                                     $set('summary_number', 1);
                                 }
                             }
-                            $company = Company::where("id", $get('company_id'));
+                            $company = Company::where('id', $get('company_id'));
                             if ($company) {
-                                $set("summary_company", $company->pluck('name')[0]);
+                                $set('summary_company', $company->pluck('name')[0]);
                             }
                         }),
                     Select::make('supplier_id')
@@ -128,7 +128,7 @@ class CreateOrder extends CreateRecord
                                     }
                                 }
                             }
-                            $set("summary_date_order", $get('order_at'));
+                            $set('summary_date_order', $get('order_at'));
                         }),
                 ])->columns(4),
             ]),
@@ -193,7 +193,7 @@ class CreateOrder extends CreateRecord
                                             'qty' => $qty,
                                             'price_unit' => $price,
                                             'discount_currency' => $discount_currency,
-                                            'discount_price' => $discount_price
+                                            'discount_price' => $discount_price,
                                         ]
                                     );
                                 }
@@ -221,7 +221,7 @@ class CreateOrder extends CreateRecord
                                 TextInput::make('name')
                                     ->columnSpan(12)
                                     ->label('Product Name')
-                                    ->default(""),
+                                    ->default(''),
 
                                 Section::make('More Info')
                                     ->schema([
@@ -234,7 +234,7 @@ class CreateOrder extends CreateRecord
                                                 'preview',
                                             ])
                                             ->reactive()
-                                            ->default("")
+                                            ->default('')
                                             ->columnSpan(12),
                                     ])
                                     ->compact()
@@ -243,7 +243,7 @@ class CreateOrder extends CreateRecord
 
                                 TextInput::make('code')
                                     ->columnSpan(3)
-                                    ->default("")
+                                    ->default('')
                                     ->label('Supplier Code'),
                                 TextInput::make('vat')
                                     ->columnSpan(2)
@@ -253,12 +253,13 @@ class CreateOrder extends CreateRecord
                                         if ($get('../../Tax')) {
                                             return $get('../../Tax');
                                         }
+
                                         return 0;
                                     })
                                     ->label('Vat %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
-                                    ->default("")
+                                    ->default('')
                                     ->label('Unit'),
                                 TextInput::make('qty')
                                     ->columnSpan(2)
@@ -286,7 +287,7 @@ class CreateOrder extends CreateRecord
                                     })
                                     ->reactive()
                                     ->columnSpan(3)
-                                    ->default("%")
+                                    ->default('%')
                                     ->afterStateUpdated(function (Closure $set, Closure $get) {
                                         if (! $get('discount_currency')) {
                                             $set('discount_price', 0);
@@ -412,7 +413,7 @@ class CreateOrder extends CreateRecord
                     Card::make([
                         Select::make('address_id')
                             ->label('Delivery Address')
-                            ->options(function() {
+                            ->options(function () {
                                 $addressField = Address::whereRaw('addressable_type = "App\Models\Company" and collection_name = "Delivery"')->orderBy('name', 'ASC');
                                 if ($addressField) {
                                     $arr = [];
@@ -423,42 +424,44 @@ class CreateOrder extends CreateRecord
                                             $arr = array_merge($arr, [$index => $address]);
                                         }
                                     }
+
                                     return $arr;
                                 }
                             })
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $address = Address::where("id", (int) $get('address_id'));
-                                    if ($address) {
-                                        $val = $address->pluck('name')[0].' ('.$address->pluck('address')[0].' '.$address->pluck('street_number')[0].' '.$address->pluck('zip')[0].' '.$address->pluck('city')[0].' '.$address->pluck('province')[0].' '.$address->pluck('state')[0].')';
-                                        if ($val) {
-                                            $set("summary_address", $val);
-                                        }
+                                $address = Address::where('id', (int) $get('address_id'));
+                                if ($address) {
+                                    $val = $address->pluck('name')[0].' ('.$address->pluck('address')[0].' '.$address->pluck('street_number')[0].' '.$address->pluck('zip')[0].' '.$address->pluck('city')[0].' '.$address->pluck('province')[0].' '.$address->pluck('state')[0].')';
+                                    if ($val) {
+                                        $set('summary_address', $val);
                                     }
+                                }
                             })
                             ->searchable(),
                         // Echo Address
                         Select::make('contact_id')
                             ->label('Delivery Contact')
-                            ->options(function() {
+                            ->options(function () {
                                 $contacts = Contact::where('contactable_type', 'App\Models\Company')->orderBy('name', 'ASC');
                                 if ($contacts) {
                                     $arr = [];
-                                    for ($i=0; $i < count($contacts->pluck('id')); $i++) {
+                                    for ($i = 0; $i < count($contacts->pluck('id')); $i++) {
                                         $contact = $contacts->pluck('name')[$i].' ('.$contacts->pluck('collection_name')[$i].' '.$contacts->pluck('address')[$i].')';
                                         if ($contact) {
                                             $index = $contacts->pluck('id')[$i].'.00';
                                             $arr = array_merge($arr, [$index => $contact]);
                                         }
                                     }
+
                                     return $arr;
                                 }
                             })
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                $contact = Contact::where("id", (int) $get('contact_id'));
+                                $contact = Contact::where('id', (int) $get('contact_id'));
                                 if ($contact) {
                                     $val = $contact->pluck('name')[0].' ('.$contact->pluck('collection_name')[0].' '.$contact->pluck('address')[0].')';
                                     if ($val) {
-                                        $set("summary_contact", $val);
+                                        $set('summary_contact', $val);
                                     }
                                 }
                             })
@@ -470,15 +473,15 @@ class CreateOrder extends CreateRecord
                             Select::make('payment_method')
                                 ->label('Payment Method')
                                 ->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
-                                ->default(function(Closure $get) {
-                                    return $get("default_payment");
+                                ->default(function (Closure $get) {
+                                    return $get('default_payment');
                                 })
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $method = Category::where("id", $get('payment_method'));
+                                    $method = Category::where('id', $get('payment_method'));
                                     if ($method) {
                                         $val = $method->pluck('name')[0];
                                         if ($val) {
-                                            $set("summary_payment_method", $val);
+                                            $set('summary_payment_method', $val);
                                         }
                                     }
                                 })
@@ -486,7 +489,7 @@ class CreateOrder extends CreateRecord
                             Textarea::make('payment_note')
                                 ->label('Payment Note')
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $set("summary_payment_note", $get('payment_note'));
+                                    $set('summary_payment_note', $get('payment_note'));
                                 }),
                         ]),
 
@@ -495,11 +498,11 @@ class CreateOrder extends CreateRecord
                                 ->label('Trasport Method')
                                 ->options(Category::where('collection_name', 'Warehouse-Transport')->pluck('name', 'id'))
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $method = Category::where("id", $get('trasport_method'));
+                                    $method = Category::where('id', $get('trasport_method'));
                                     if ($method) {
                                         $val = $method->pluck('name')[0];
                                         if ($val) {
-                                            $set("summary_trasport_method", $val);
+                                            $set('summary_trasport_method', $val);
                                         }
                                     }
                                 })
@@ -507,13 +510,13 @@ class CreateOrder extends CreateRecord
                             ,
                             Textarea::make('trasport_note')->label('Trasport Note')
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $set("summary_trasport_note", $get('trasport_note'));
+                                    $set('summary_trasport_note', $get('trasport_note'));
                                 }),
                         ]),
 
                         Textarea::make('notes')->label('Order notes')
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                $set("summary_note", $get('notes'));
+                                $set('summary_note', $get('notes'));
                             }),
 
                         Group::make([
@@ -523,14 +526,14 @@ class CreateOrder extends CreateRecord
                                 ->options(['Create', 'Draft'])
                                 ->default('Create')
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $set("summary_status", $get('status'));
+                                    $set('summary_status', $get('status'));
                                 })
                                 ->searchable(),
 
                             DatePicker::make('deadline_at')
                                 ->label('Deadline')
                                 ->afterStateUpdated(function (Closure $set, Closure $get) {
-                                    $set("summary_deadline", $get('deadline_at'));
+                                    $set('summary_deadline', $get('deadline_at'));
                                 })
                                 ->displayFormat('d/m/Y'),
                         ]),
@@ -549,113 +552,114 @@ class CreateOrder extends CreateRecord
                         Placeholder::make('summary_company')
                             ->label('Company: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_company").'</b>');
+                                return new HtmlString('<b>'.$get('summary_company').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_supplier')
                             ->label('Supplier: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_supplier").'</b>');
+                                return new HtmlString('<b>'.$get('summary_supplier').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_number')
                             ->label('Order number: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_number").'</b>');
+                                return new HtmlString('<b>'.$get('summary_number').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_date_order')
                             ->label('Date order: ')
                             ->content(function (Closure $get) {
-                                $value = $get("summary_date_order") ? $get("summary_date_order") : Carbon::now();
+                                $value = $get('summary_date_order') ? $get('summary_date_order') : Carbon::now();
+
                                 return new HtmlString('<b>'.$value.'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_deadline')
                             ->label('Order deadline: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_deadline").'</b>');
+                                return new HtmlString('<b>'.$get('summary_deadline').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_status')
                             ->label('Order status: ')
                             ->content(function (Closure $get) {
-                                $value = $get("summary_status") ? $get("summary_status") : 'Create';
+                                $value = $get('summary_status') ? $get('summary_status') : 'Create';
+
                                 return new HtmlString('<b>'.$value.'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_total_price')
                             ->label('Total price: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_total_price").'</b>');
+                                return new HtmlString('<b>'.$get('summary_total_price').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_total_tax')
                             ->label('Total tax: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_total_tax").'</b>');
+                                return new HtmlString('<b>'.$get('summary_total_tax').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_address')
                             ->label('Address: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_address").'</b>');
+                                return new HtmlString('<b>'.$get('summary_address').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_contact')
                             ->label('Contact: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_contact").'</b>');
+                                return new HtmlString('<b>'.$get('summary_contact').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_delivery_method')
                             ->label('Delivery method: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_delivery_method").'</b>');
+                                return new HtmlString('<b>'.$get('summary_delivery_method').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_delivery_note')
                             ->label('Delivery note: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_delivery_note").'</b>');
+                                return new HtmlString('<b>'.$get('summary_delivery_note').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_payment_method')
                             ->label('Payment method: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_payment_method").'</b>');
+                                return new HtmlString('<b>'.$get('summary_payment_method').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_payment_note')
                             ->label('Payment note: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_payment_note").'</b>');
+                                return new HtmlString('<b>'.$get('summary_payment_note').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_trasport_method')
                             ->label('Transport method: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_trasport_method").'</b>');
+                                return new HtmlString('<b>'.$get('summary_trasport_method').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_transport_note')
                             ->label('Transport note: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_trasport_note").'</b>');
+                                return new HtmlString('<b>'.$get('summary_trasport_note').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_note')
                             ->label('Note: ')
                             ->content(function (Closure $get) {
-                                return new HtmlString('<b>'.$get("summary_note").'</b>');
+                                return new HtmlString('<b>'.$get('summary_note').'</b>');
                             })
                             ->columnSpan(1),
                         Placeholder::make('summary_products')
                             ->label('Products: ')
                             ->content(function (Closure $get) {
-
                                 $items = $get('Product list');
-                                $str = "";
+                                $str = '';
 
                                 foreach ($items as $item) {
                                     $i = 0;
@@ -710,9 +714,9 @@ class CreateOrder extends CreateRecord
                                     }
                                     $total = $punit * (1 + $vat / 100) * $qty;
 
-                                    $str .= '<tr><td>'.$name.'</td><td></td><td>'.$code.'</td><td>'.$description.'</td><td>'.$get("currency").'</td><td>'.$unit.'</td><td>'.$vat.'</td><td>'.$qty.'</td><td>'.$price.'</td><td>'.$discount_currency.'</td><td>'.$discount_price.'</td><td>'.$total.'</td></tr>';
-
+                                    $str .= '<tr><td>'.$name.'</td><td></td><td>'.$code.'</td><td>'.$description.'</td><td>'.$get('currency').'</td><td>'.$unit.'</td><td>'.$vat.'</td><td>'.$qty.'</td><td>'.$price.'</td><td>'.$discount_currency.'</td><td>'.$discount_price.'</td><td>'.$total.'</td></tr>';
                                 }
+
                                 return new HtmlString('
                                     <style>
                                         td {
@@ -730,7 +734,7 @@ class CreateOrder extends CreateRecord
                             })
                             ->columnSpan(2),
                     ])->columns(2),
-                ])
+                ]),
         ];
     }
 }
