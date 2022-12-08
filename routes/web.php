@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin/warehouse/orders/print/', function () {
-    return view('welcome');
+Route::get('/admin/warehouse/orders/print/{id}', function () {
+    return view('order_print');
 });
+
+// FROM OLD PROJECT
+// Route::get('orderprint/{id}', 'EcommerceController@orderprint');
+// Route::get('/dynamic_pdf/pdf/{id}/{status}', 'DynamicPDFController@pdf');
