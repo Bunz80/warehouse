@@ -233,7 +233,6 @@ class OrderResource extends Resource
                         Placeholder::make('Print Document')
                             ->content(
                                 function (Closure $get) {
-                                    // $company = Company::where('id', $get('company_id'));
                                     $company = Company::where("id", $get("company_id"));
                                     $company_name = $company && count($company->pluck("name")) > 0 ? $company->pluck("name")[0] : "";
 
