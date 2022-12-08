@@ -662,17 +662,8 @@ class CreateOrder extends CreateRecord
                                 $str = '';
 
                                 foreach ($items as $item) {
-                                    $i = 0;
-                                    $price = 0;
-                                    $vat = 0;
-                                    $qty = 0;
-                                    $discount_currency = '';
-                                    $discount_price = 0;
-                                    $unit = '';
-                                    $code = '';
-                                    $description = '';
-                                    $name = '';
-                                    $total = 0;
+                                    $i = $price = $vat = $qty = $discount_price = $total = 0;
+                                    $discount_currency = $unit = $code = $description = $name = '';
 
                                     foreach ($item as $value) {
                                         if ($i == 8) {

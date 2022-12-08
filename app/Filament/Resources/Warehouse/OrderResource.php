@@ -233,28 +233,28 @@ class OrderResource extends Resource
                         Placeholder::make('Print Document')
                             ->content(
                                 function (Closure $get) {
-                                    $company = Company::where('id', $get('company_id'));
-                                    $company_name = $company ? $company->pluck('name')[0] : '';
+                                    $company = Company::where("id", $get("company_id"));
+                                    $company_name = $company ? $company->pluck("name")[0] : "";
 
-                                    $address = Address::where('id', $get('address_id'));
-                                    $address_name = $address ? $address->pluck('name')[0] : '';
-                                    $address_street = $address ? $address->pluck('address')[0].'-'.$address->pluck('street_number')[0].', '.$address->pluck('city')[0] : '';
-                                    $address_state = $address ? $address->pluck('province')[0].'/'.$address->pluck('state')[0] : '';
+                                    $address = Address::where("id", $get("address_id"));
+                                    $address_name = $address ? $address->pluck("name")[0] : "";
+                                    $address_street = $address ? $address->pluck("address")[0]."-".$address->pluck("street_number")[0].", ".$address->pluck("city")[0] : "";
+                                    $address_state = $address ? $address->pluck("province")[0]."/".$address->pluck("state")[0] : "";
 
-                                    $supplier = Supplier::where('id', $get('supplier_id'));
-                                    $supplier_name = $supplier ? $supplier->pluck('name')[0] : '';
+                                    $supplier = Supplier::where("id", $get("supplier_id"));
+                                    $supplier_name = $supplier ? $supplier->pluck("name")[0] : "";
 
-                                    $orderDetail = OrderDetail::where('order_id', $get('id'));
+                                    $orderDetail = OrderDetail::where("order_id", $get("id"));
                                     $totalPrice = 0;
                                     $totalVat = 0;
 
                                     $tablestr = '<tr style=\'font-weight: bold\'><td>ID</td><td>COD</td><td>Descrizione</td><td>Qnt</td><td>Prezzo</td><td>Sconto</td><td>Totale</td></tr>';
                                     if ($orderDetail) {
-                                        for ($i = 0; $i < count($orderDetail->pluck('id')); $i++) {
-                                            $unit = (float) $orderDetail->pluck('price_unit')[$i];
-                                            $discount_currency = (float) $orderDetail->pluck('discount_currency')[$i];
-                                            $discount_price = (float) $orderDetail->pluck('discount_price')[$i];
-                                            $tax = (float) $orderDetail->pluck('tax')[$i];
+                                        for ($i=0; $i < count($orderDetail->pluck("id")); $i++) {
+                                            $unit = (float) $orderDetail->pluck("price_unit")[$i];
+                                            $discount_currency = (float) $orderDetail->pluck("discount_currency")[$i];
+                                            $discount_price = (float) $orderDetail->pluck("discount_price")[$i];
+                                            $tax = (float) $orderDetail->pluck("tax")[$i];
                                             if ($discount_currency && $discount_price) {
                                                 if ($discount_currency == '%') {
                                                     $unit = $unit * (1 - $discount_price / 100);
@@ -262,12 +262,13 @@ class OrderResource extends Resource
                                                     $unit = $unit - $discount_price;
                                                 }
                                             }
-                                            $sum = $unit * $orderDetail->pluck('quantity')[$i];
+                                            $sum = $unit * $orderDetail->pluck("quantity")[$i];
                                             $totalPrice += $sum;
-                                            $totalVat += $unit * ($tax / 100) * $orderDetail->pluck('quantity')[$i];
-                                            $tablestr .= '<tr><td>'.$orderDetail->pluck('id')[$i].'</td><td>'.$orderDetail->pluck('code')[$i].'</td><td>'.$orderDetail->pluck('description')[$i].'</td><td>'.round($orderDetail->pluck('quantity')[$i]).'</td><td>'.$orderDetail->pluck('price_unit')[$i].'</td><td>'.$orderDetail->pluck('discount_price')[$i].'</td><td>'.$sum.'</td></tr>';
-                                        }
-                                    }
+                                            $totalVat += $unit * ($tax / 100) * $orderDetail->pluck("quantity")[$i];
+                                            $tablestr .= '<tr><td>'.$orderDetail->pluck("id")[$i].'</td><td>'.$orderDetail->pluck("code")[$i].'</td><td>'.$orderDetail->pluck("description")[$i].'</td><td>'.round($orderDetail->pluck("quantity")[$i]).'</td><td>'.$orderDetail->pluck("price_unit")[$i].'</td><td>'.$orderDetail->pluck("discount_price")[$i].'</td><td>'.$sum.'</td></tr>';
+                                        };
+                                    };
+
 
                                     return new HtmlString('
                                             <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -283,7 +284,7 @@ class OrderResource extends Resource
                                                                 "<h1>'.$company_name.'</h1> "+
                                                             "</div>"+
                                                             "<div class=\"text-right\">"+
-                                                                "<h3 style=\"font-size: 15px\">Ordine nr: '.$get('year').'.'.$get('number').'</h3>"+
+                                                                "<h3 style=\"font-size: 15px\">Ordine nr: '.$get("year").'.'.$get("number").'</h3>"+
                                                             "</div>"+
                                                         "</div>"+
                                                         "<div style=\"border-bottom:1px solid #c3c3c3;padding:20px;height: 200px\">"+
@@ -308,15 +309,15 @@ class OrderResource extends Resource
                                                         "<div class=\"grid grid-cols-3\" style=\"padding:20px\">"+
                                                             "<div style=\"padding: 20px\">"+
                                                                 "<div>Pagamento:</div>"+
-                                                                "<div>'.$get('payment_note').'</div>"+
+                                                                "<div>'.$get("payment_note").'</div>"+
                                                             "</div>"+
                                                             "<div style=\"padding: 20px\">"+
                                                                 "<div>Trasporto:</div>"+
-                                                                "<div>'.$get('trasport_note').'</div>"+
+                                                                "<div>'.$get("trasport_note").'</div>"+
                                                             "</div>"+
                                                             "<div style=\"padding: 20px\">"+
                                                                 "<div>Note:</div>"+
-                                                                "<div>'.$get('notes').'</div>"+
+                                                                "<div>'.$get("notes").'</div>"+
                                                             "</div>"+
                                                         "</div>"+
                                                         "<div style=\"font-size:15px;font-weight:bold; padding-left: 20px\">Info e condizioni:</div>"+

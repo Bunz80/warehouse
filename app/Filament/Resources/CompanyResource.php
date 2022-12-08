@@ -43,11 +43,14 @@ class CompanyResource extends Resource
                         ->label('Is Activated')
                         ->onColor('success')
                         ->offColor('danger')
+                        ->columnSpan(4)
                         ->default(true),
                     Forms\Components\TextInput::make('name')
                         ->label('Name / Business name')
-                        ->columnSpan(4)
+                        ->columnSpan(2)
                         ->required(),
+                    Forms\Components\TextInput::make('logo')
+                        ->columnSpan(2),
                     Forms\Components\TextInput::make('code_acronym')
                         ->label('Code (Acronym)'),
                     Forms\Components\TextInput::make('code_accounting')
