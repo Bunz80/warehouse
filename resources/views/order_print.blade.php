@@ -25,30 +25,37 @@
                 font-family: 'Nunito', sans-serif;
                 margin: 20px !important;
             }
-
+            
             @page {
-                /* margin:20px; */
+                size: A4;
+                margin: 1cm;
             }
+
             .row{
                 width: 100% !important;
                 font-family: Montserrat,Helvetica,Arial,sans-serif;
                 font-weight: 400;
                 font-size:14px
             }
+
             .clear{
                 clear:both;
             }
+            
             .w100{
                 width: 100% !important;
             }
+            
             .w50{
                 width: 50% !important;
                 float:left;
             }
+            
             .w33{
                 width: 33.33% !important;
                 float:left;
             }
+            
             .title {
                 font-size:18px;
                 font: bold;
@@ -56,9 +63,11 @@
                 margin: 0px;
                 padding: 0px;
             }
+            
             .text-right{
                 text-align:right;
             }
+            
             .alert{
                 width: 100%;
                 color: #fff;
@@ -67,27 +76,33 @@
                 border-color: #ea5455;
                 margin:0px;
             }
+            
             ul li {
                 list-style-position: outside;
                 margin-left:-30px;
                 text-align: justify;
                 text-align-last: justify; /* IE */
             }
+            
             .footer {
                 position: fixed;
                 bottom: 40;
             }
+            
             .footer_info {
                 position: fixed;
                 bottom: 320;
             }
+            
             .footer_signature {
                 position: fixed;
                 bottom: 360;
             }
+            
             tr:nth-child(2n+1) {
                 background-color: #bfbecf;
             }
+            
             .tr_clear{
                 background-color: #fff;
             }
@@ -135,8 +150,8 @@
             <!-- List Product / Order Details -->
             <div class="table-responsive col-12">
                 <hr>
-                <!--START TABLE -->
                 <h3>Lista Prodotti</h3>
+                <!--START TABLE -->
                 <div class="table-responsive">
                     <table class="table table-hover-animation table-striped">
                         <thead>
