@@ -157,7 +157,7 @@
                         <thead>
                             <tr>                                       
                                 <th class="text-left">ID</th>
-                                <th class="text-left">COD</th>
+                                <th class="text-left">Code</th>
                                 <th class="text-left">Name</th>                                        
                                 <th class="text-left">Qnt</th>
                                 <th class="text-right">Prezzo</th>
