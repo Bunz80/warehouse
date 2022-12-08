@@ -404,17 +404,17 @@ class OrderResource extends Resource
                                                     document.body.innerHTML = printContents;
                                                     const element = document.getElementById("printcontent");
 
-                                                    // html2pdf(element, {
-                                                    //     margin:       1,
-                                                    //     filename:     "order.pdf",
-                                                    //     image:        { type: "jpeg", quality: 0.98 },
-                                                    //     html2canvas:  { scale: 2 },
-                                                    //     jsPDF:        { unit: "in", format: "letter", orientation: "portrait" }
-                                                    //   })
-                                                    // setTimeout(function(){
-                                                    //     document.body.innerHTML = originalContents;
-                                                    //     location.reload();
-                                                    // }, 4000);
+                                                    html2pdf(element, {
+                                                        margin:       1,
+                                                        filename:     "order.pdf",
+                                                        image:        { type: "jpeg", quality: 0.98 },
+                                                        html2canvas:  { scale: 2 },
+                                                        jsPDF:        { unit: "in", format: "letter", orientation: "portrait" }
+                                                      })
+                                                    setTimeout(function(){
+                                                        document.body.innerHTML = originalContents;
+                                                        location.reload();
+                                                    }, 4000);
                                                   }
                                             </script>
                                             <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="generatePDF()">
