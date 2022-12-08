@@ -152,37 +152,26 @@
                         </thead>
                         <tbody>
                             <tr class="invoicerow" id="invoicerow24">                                           
-                                <td>24</td>
-                                <td></td>
-                                <td>fsdfsdfsd</td>                                           
-                                <td>20</td>
-                                <td class="text-right">10.00 €</td>
-                                <td class="text-right">2%</td>
-                                <td class="text-right">196.00 €</td>
+                                <td>1</td>
+                                <td>ABC</td>
+                                <td>{ {order_details.name}} <br /> { {order_details.description}}</td>                                           
+                                <td>{ {order_details.quantity}}</td>
+                                <td class="text-right">{ {order_details.price}} { {order_details.currency}}</td>
+                                <td class="text-right">{ {order_details.discount_price}} { {order_details.discount_currency}}</td>
+                                <td class="text-right">{ {order_details.total}}</td>
                             </tr>
-                            <tr class="invoicerow" id="invoicerow25">                                           
-                                <td>25</td>
-                                <td></td>
-                                <td>cssfdd</td>                                           
-                                <td>10</td>
-                                <td class="text-right">30.00 €</td>
-                                <td class="text-right">6%</td>
-                                <td class="text-right">282.00 €</td>
-                            </tr>
-                                
                             <tr class="text-right" style="border-top:1px solid #000">
                                 <td colspan="6">Totale imponibile</td>
-                                <td>478.00 €</td>
+                                <td>{ {order_details.total_price}}{ {order_details.currency}}</td>
                             </tr>
                             <tr class="text-right ">
                                 <td colspan="6">Totale iva</td>
-                                <td>105.16 €</td>
+                                <td>{ {order_details.total_tax}}{ {order_details.currency}}</td>
                             </tr> 
                             <tr class="text-right text-bold-700 ">
                                 <td colspan="6">Totale Ordine</td>
-                                <td>583.16 €</td>
-                            </tr>  
-                                                    
+                                <td>{ {order_details.total_order}}{ {order_details.currency}}</td>
+                            </tr>       
                         </tbody>
                     </table>        
                 </div>  
@@ -191,11 +180,15 @@
             
             
             <!-- Footer -->
-            <span style="font-size:10px; margin:0; width:100%; "> <i class="fa fa-leaf fa-2x success"></i> <strong>Rispetta lambiente: </strong>Non stampare questa pagina se non è necessario </span>
-            <hr />
-            <span style="font-size:10px; text-align: center; "><b>{ {companyname}}:</b> { {companyinfo}}</span>';
+            <div class="footer-info">
+                <span> <i class="fa fa-leaf fa-2x success"></i> <strong>Rispetta lambiente: </strong>Non stampare questa pagina se non è necessario </span>
+                <hr />
+                <span><b>{ {companyname}}:</b> { {companyinfo}}</span>
+            </div>
 
 
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            
         </div>
     </body>
 </html>
