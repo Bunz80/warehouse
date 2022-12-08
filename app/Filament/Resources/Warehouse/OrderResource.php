@@ -235,14 +235,49 @@ class OrderResource extends Resource
                                 function (Closure $get) {
                                     $company = Company::where("id", $get("company_id"));
                                     $company_name = $company && count($company->pluck("name")) > 0 ? $company->pluck("name")[0] : "";
+                                    $company_vat = $company && count($company->pluck("vat")) > 0 ? $company->pluck("vat")[0] : "";
+                                    $company_icode = $company && count($company->pluck("invoice_code")) > 0 ? $company->pluck("invoice_code")[0] : "";
+                                    $company_mail = $company && count($company->pluck("page_header")) > 0 ? $company->pluck("page_header")[0] : "";
 
                                     $address = Address::where('id', $get('address_id'));
                                     $address_name = $address && count($address->pluck('name')) > 0 ? $address->pluck('name')[0] : '';
                                     $address_street = $address && count($address->pluck('address')) > 0 && count($address->pluck('street_number')) > 0 && count($address->pluck('city')) > 0 ? $address->pluck('address')[0].'-'.$address->pluck('street_number')[0].', '.$address->pluck('city')[0] : '';
                                     $address_state = $address && count($address->pluck('province')) > 0 && count($address->pluck('state')) > 0 ? $address->pluck('province')[0].'/'.$address->pluck('state')[0] : '';
 
+                                    $companyAddress = Address::whereRaw('collection_name = "Address" and addressable_type LIKE "%Company" and addressable_id = '.$get('company_id'));
+                                    $companyAddressStr = "";
+                                    if ($companyAddress) {
+                                        if (count($companyAddress->pluck('address')) > 0) {
+                                            $companyAddressStr .= $companyAddress->pluck('address')[0];
+                                        }
+                                        if (count($companyAddress->pluck('zip')) > 0) {
+                                            $companyAddressStr .= ' - '.$companyAddress->pluck('zip')[0];
+                                        }
+                                        if (count($companyAddress->pluck('city')) > 0) {
+                                            $companyAddressStr .= $companyAddress->pluck('city')[0];
+                                        }
+                                    }
+
+                                    $supplierAddress = Address::whereRaw('collection_name = "Address" and addressable_type LIKE "%Supplier" and addressable_id = '.$get('supplier_id'));
+                                    $supplierAddressStr = "";
+                                    if ($supplierAddress) {
+                                        if (count($supplierAddress->pluck('address')) > 0) {
+                                            $supplierAddressStr .= $supplierAddress->pluck('address')[0];
+                                        }
+                                        if (count($supplierAddress->pluck('zip')) > 0) {
+                                            $supplierAddressStr .= ' - '.$supplierAddress->pluck('zip')[0];
+                                        }
+                                        if (count($supplierAddress->pluck('city')) > 0) {
+                                            $supplierAddressStr .= ' - '.$supplierAddress->pluck('city')[0];
+                                        }
+                                    }
+
                                     $supplier = Supplier::where('id', $get('supplier_id'));
                                     $supplier_name = $supplier && count($supplier->pluck('name')) > 0 ? $supplier->pluck('name')[0] : '';
+                                    $supplier_logo = $supplier && count($supplier->pluck('logo')) > 0 ? $supplier->pluck('logo')[0] : '';
+                                    $supplier_icode = $supplier && count($supplier->pluck('invoice_code')) > 0 ? $supplier->pluck('invoice_code')[0] : '';
+                                    $supplier_pec = $supplier && count($supplier->pluck('pec')) > 0 && $supplier->pluck('pec')[0] !== null ? $supplier->pluck('pec')[0] : 0;
+                                    $supplier_vat = $supplier && count($supplier->pluck('vat')) > 0 ? $supplier->pluck('vat')[0] : 0;
 
                                     $orderDetail = OrderDetail::where('order_id', $get('id'));
                                     $totalPrice = 0;
@@ -280,10 +315,14 @@ class OrderResource extends Resource
                                                                 "<img src=\"../../../../images/logo.png\" style=\"width: 120px;\">"+
                                                             "</div>"+
                                                             "<div class=\"text-center\" style=\"font-size: 20px\">"+
-                                                                "<h1>'.$company_name.'</h1> "+
+                                                                "<h1 style=\"font-weight: bold\">'.$company_name.'</h1> "+
+                                                                "<div>'.$companyAddressStr.'</div>"+
+                                                                "<div>'.$company_vat.'/'.$company_icode.'</div>"+
                                                             "</div>"+
                                                             "<div class=\"text-right\">"+
                                                                 "<h3 style=\"font-size: 15px\">Ordine nr: '.$get('year').'.'.$get('number').'</h3>"+
+                                                                "<div>Emesso il: '.$get("order_at").'</div>"+
+                                                                "<div>'.str_replace("Mail:", "", $company_mail).'</div>"+
                                                             "</div>"+
                                                         "</div>"+
                                                         "<div style=\"border-bottom:1px solid #c3c3c3;padding:20px;height: 200px\">"+
@@ -295,7 +334,11 @@ class OrderResource extends Resource
                                                             "</div>"+
                                                             "<div class=\"text-right\" style=\"font-size: 15px;width: 170px;float:right;\">"+
                                                                 "<h3>Fornitore</h3>"+
+                                                                "<img src=\"'.$supplier_logo.'\" style=\"width: 70px;display:inline;\">"+
                                                                 "<div style=\"font-weight:bold\">'.$supplier_name.'</div>"+
+                                                                "<div>'.$supplierAddressStr.'</div>"+
+                                                                "<div>'.$supplier_vat.'</div>"+
+                                                                "<div>'.$supplier_icode.'/'.$supplier_pec.'</div>"+
                                                             "</div>"+
                                                         "</div>"+
                                                         "<h3 style=\"font-size: 15pxfont-weight: bold;margin-top: 20px\">Lista Prodotti</h3>"+
@@ -361,17 +404,17 @@ class OrderResource extends Resource
                                                     document.body.innerHTML = printContents;
                                                     const element = document.getElementById("printcontent");
 
-                                                    html2pdf(element, {
-                                                        margin:       1,
-                                                        filename:     "order.pdf",
-                                                        image:        { type: "jpeg", quality: 0.98 },
-                                                        html2canvas:  { scale: 2 },
-                                                        jsPDF:        { unit: "in", format: "letter", orientation: "portrait" }
-                                                      })
-                                                    setTimeout(function(){
-                                                        document.body.innerHTML = originalContents;
-                                                        location.reload();
-                                                    }, 4000);
+                                                    // html2pdf(element, {
+                                                    //     margin:       1,
+                                                    //     filename:     "order.pdf",
+                                                    //     image:        { type: "jpeg", quality: 0.98 },
+                                                    //     html2canvas:  { scale: 2 },
+                                                    //     jsPDF:        { unit: "in", format: "letter", orientation: "portrait" }
+                                                    //   })
+                                                    // setTimeout(function(){
+                                                    //     document.body.innerHTML = originalContents;
+                                                    //     location.reload();
+                                                    // }, 4000);
                                                   }
                                             </script>
                                             <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="generatePDF()">
