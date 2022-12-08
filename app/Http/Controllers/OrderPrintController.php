@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\Supplier;
+use App\Models\Address;
+use App\Models\Contact;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
 use PDF;
 
 class DynamicPDFController extends Controller
 {
-    //function pdf($id, $status)
     public function pdf($id)
     {
         $order = Order::join('company', 'company.id', '=', 'order.company_id')
