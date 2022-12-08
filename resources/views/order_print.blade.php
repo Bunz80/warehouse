@@ -4,10 +4,16 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Print Order</title>
 
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
         <!-- Styles -->
         <style>
@@ -100,9 +106,8 @@
                 { {companymail}} - { {companypec}}
             </div>
             <div class="w33 text-right">
-                <b class="title" >Ordine nr: { {year}}.sprintf("%'.04d\n", $order->number)}}</b>  <br /> 
-                Emesso il: { {order_at}} <br /> 
-                { {company_html_wh_info}} <br />
+                <b class="title" >Ordine nr: { {year}}.{ {number)}}</b>  
+                <br /> Emesso il: { {order_at}} <br /> { {company_html_wh_info}} 
             </div>
             <hr class="clear" style="margin-top:-1px" >
             
@@ -163,6 +168,7 @@
                                 <td class="text-right">6%</td>
                                 <td class="text-right">282.00 €</td>
                             </tr>
+                                
                             <tr class="text-right" style="border-top:1px solid #000">
                                 <td colspan="6">Totale imponibile</td>
                                 <td>478.00 €</td>
@@ -174,14 +180,13 @@
                             <tr class="text-right text-bold-700 ">
                                 <td colspan="6">Totale Ordine</td>
                                 <td>583.16 €</td>
-                            </tr>                   
+                            </tr>  
+                                                    
                         </tbody>
                     </table>        
                 </div>  
                 <!--END TABLE -->
             </div>
-            
-            <!-- Sign -->
             
             
             <!-- Footer -->
