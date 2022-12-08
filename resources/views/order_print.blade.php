@@ -127,7 +127,61 @@
             <hr class="clear" style="margin-top:-10px" >';
             
             <!-- List Product / Order Details -->
+            <div class="table-responsive col-12">
+                <hr>
+                <!--START TABLE -->
+                <h3>Lista Prodotti</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover-animation table-striped">
+                        <thead>
+                            <tr>                                       
+                                <th class="text-left">ID</th>
+                                <th class="text-left">COD</th>
+                                <th class="text-left">Name</th>                                        
+                                <th class="text-left">Qnt</th>
+                                <th class="text-right">Prezzo</th>
+                                <th class="text-right">Sconto</th>
+                                <th class="text-right">Totale</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="invoicerow" id="invoicerow24">                                           
+                                <td>24</td>
+                                <td></td>
+                                <td>fsdfsdfsd</td>                                           
+                                <td>20</td>
+                                <td class="text-right">10.00 €</td>
+                                <td class="text-right">2%</td>
+                                <td class="text-right">196.00 €</td>
+                            </tr>
+                            <tr class="invoicerow" id="invoicerow25">                                           
+                                <td>25</td>
+                                <td></td>
+                                <td>cssfdd</td>                                           
+                                <td>10</td>
+                                <td class="text-right">30.00 €</td>
+                                <td class="text-right">6%</td>
+                                <td class="text-right">282.00 €</td>
+                            </tr>
+                            <tr class="text-right" style="border-top:1px solid #000">
+                                <td colspan="6">Totale imponibile</td>
+                                <td>478.00 €</td>
+                            </tr>
+                            <tr class="text-right ">
+                                <td colspan="6">Totale iva</td>
+                                <td>105.16 €</td>
+                            </tr> 
+                            <tr class="text-right text-bold-700 ">
+                                <td colspan="6">Totale Ordine</td>
+                                <td>583.16 €</td>
+                            </tr>                   
+                        </tbody>
+                    </table>        
+                </div>  
+                <!--END TABLE -->
+            </div>
             
+            <!-- Sign -->
             
             
             <!-- Footer -->
