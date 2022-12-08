@@ -12,7 +12,7 @@ class OrderPrintController extends Controller
     //function pdf($id, $status)
     public function pdf($id)
     {
-        $order = Order::join('companies', 'companies.id', '=', 'orders.company_id')
+        $order =   Order::join('companies', 'companies.id', '=', 'orders.company_id')
                         ->join('suppliers', 'suppliers.id', '=', 'orders.supplier_id')
                         //delivery
                         ->join('addresses', 'addresses.id', '=', 'orders.address_id')
@@ -56,15 +56,10 @@ class OrderPrintController extends Controller
                         )
                         ->first();
 
+        //Initialize variables
+        $style = $header = $destination = $footer_company = $output = '';
+        
         $products = OrderDetail::where('order_id', '=', $id)->get();
-
-        $style = "";
-        $header = "";
-        $destination = "";
-        $footer_company = "";
-
-        //set output
-        $output = '';
 
         $logoCompany = '';
         if ($order->company_logo != '') {
@@ -86,19 +81,19 @@ class OrderPrintController extends Controller
                 $note .= '• '.$value->note.'<br/>';
             }
         }
+
         //overwrite note
         $note = $order->ordernote;
-        
 
         if (! empty($order)) {
-            //HEADER
+            // Header
             $output .= $style;
             $output .= '
             <div class="row" XXXstyle="height:100px" >'.$header.'</div>
             <div class="row" XXXstyle="height:100px" >'.$destination.'</div>';
         }
 
-        //TABELLA
+        // Table - OrderDetails
         $output .= '
             <div class="row">
                 <h3>Lista Prodotti</h3>
@@ -116,11 +111,14 @@ class OrderPrintController extends Controller
                     </thead>
                     <tbody>';
         if (isset($products) && ! empty($products)) {
-            $total = 0;
-            $vat = 0;
+            
+            $total = $vat = 0;
+            $priceunit = '';
+
             foreach ($products as $value) {
                 $total += ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount));
                 $vat += (float) ($value->vat) * ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)) / 100;
+                $priceunit = $value->priceunit;
 
                 $output .= '<tr class="invoicerow ">
                                     <!--td>'.$value->id.'</td-->
@@ -132,23 +130,24 @@ class OrderPrintController extends Controller
                 if ($value->discount > 0) {
                     $output .= $value->discount.' '.$value->discountunit;
                 } //if
-                $output .= '</td>
-                                    <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
-                                </tr>';
-            } //foreach
 
-            $output .= ' <tr class="text-right tr_clear">
-                                    <td colspan="5" ><hr />Totale imponibile: </td>
-                                    <td ><hr />'.number_format($total, 2).' '.$value->priceunit.'</td>
-                                </tr>
-                                <tr class="text-right tr_clear">
-                                    <td colspan="5" >Totale iva: </td>
-                                    <td >'.number_format($vat, 2).' '.$value->priceunit.'</td>
-                                </tr> 
-                                <tr class="text-right title tr_clear">
-                                    <td colspan="5" >Totale Ordine: </td>
-                                    <td >'.number_format($total + $vat, 2).' '.$value->priceunit.'</td>
-                                </tr>';
+                $output .= '</td>
+                                <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
+                            </tr>';
+            
+                $output .= '<tr class="text-right tr_clear">
+                                <td colspan="5" ><hr />Totale imponibile: </td>
+                                <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
+                            </tr>
+                            <tr class="text-right tr_clear">
+                                <td colspan="5" >Totale iva: </td>
+                                <td >'.number_format($vat, 2).' '.$priceunit.'</td>
+                            </tr> 
+                            <tr class="text-right title tr_clear">
+                                <td colspan="5" >Totale Ordine: </td>
+                                <td >'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                            </tr>';
+            } //foreach
         } //if product
 
         $output .= '</tbody>
@@ -171,11 +170,9 @@ class OrderPrintController extends Controller
             </div>';
 
         //SIGNATURE
-        $output .= '<br /><br /><br /><br /><br /><br />
+        $output .= '<br /><br /><br />
             <div class="row footer_signature">
-                <div class="w33">
-                    .
-                </div>
+                <div class="w33"> . </div>
                 <div class="w33">
                     <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
                     (Firma - Uff. Acquisti)
@@ -192,10 +189,7 @@ class OrderPrintController extends Controller
                 <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->companyacquistiinfo.'</span></span>
             </div>
             <div class="anchor_footer" style="margin-bottom:-90px !important;"></div>
-            
-            <div class="row footer">
-                '.$footer_company.'
-            </div>
+            <div class="row footer">'.$footer_company.'</div>
             <div class="anchor_footer" style="margin-bottom:-90px !important;"></div>';
 
         $pdf = \App::make('dompdf.wrapper');
