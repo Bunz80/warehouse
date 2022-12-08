@@ -23,6 +23,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+                margin: 20px !important;
             }
 
             @page {
