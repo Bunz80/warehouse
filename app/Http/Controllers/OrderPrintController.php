@@ -2,55 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\Supplier;
-use App\Models\Address;
-use App\Models\Contact;
+use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
 use PDF;
 
-class DynamicPDFController extends Controller
+class OrderPrintController extends Controller
 {
+    //function pdf($id, $status)
     public function pdf($id)
     {
-        $order = Order::join('company', 'company.id', '=', 'order.company_id')
-                        ->join('supplier', 'supplier.id', '=', 'order.supplier_id')
+        $order = Order::join('companies', 'companies.id', '=', 'orders.company_id')
+                        ->join('suppliers', 'suppliers.id', '=', 'orders.supplier_id')
                         //delivery
-                        ->join('address', 'address.id', '=', 'order.address_id')
-                        ->join('contact', 'contact.id', '=', 'order.contact_id')
+                        ->join('addresses', 'addresses.id', '=', 'orders.address_id')
+                        ->join('contacts', 'contacts.id', '=', 'orders.contact_id')
                         //where id order
-                        ->where('order.id', '=', $id)
+                        ->where('orders.id', '=', $id)
                         ->select('*',
-                            'order.id as order_id',
-                            'order.year as order_year',
-                            'order.number as order_num',
-                            'order.order_at as order_order_at',
-                            'order.close_at as order_close_at',
-                            'order.deadline_at as order_deadline_at',
-                            'order.status as order_status',
-                            'order.currency as order_currency',
-                            'order.total_taxes as order_total_taxes',
-                            'order.total_prices as order_total_prices',
-                            'order.total_order as order_total_order',
+                            'orders.id as order_id',
+                            'orders.year as order_year',
+                            'orders.number as order_num',
+                            'orders.order_at as order_order_at',
+                            'orders.close_at as order_close_at',
+                            'orders.deadline_at as order_deadline_at',
+                            'orders.status as order_status',
+                            'orders.currency as order_currency',
+                            'orders.total_taxes as order_total_taxes',
+                            'orders.total_prices as order_total_prices',
+                            'orders.total_order as order_total_order',
 
-                            'company.id as company_id',
-                            'company.name as company_name',
-                            'company.logo as company_logo',
-                            'company.vat as company_vat',
-                            'company.pec as company_pec',
-                            'company.invoice_code as company_icode',
-                            'company.page_header as company_html_header',
-                            'company.page_footer as company_html_footer',
-                            'company.page_warehouse_info as company_html_wh_info',
-                            'company.page_warehouse_terms as company_html_wh_terms',
+                            'companies.id as company_id',
+                            'companies.name as company_name',
+                            'companies.logo as company_logo',
+                            'companies.vat as company_vat',
+                            'companies.pec as company_pec',
+                            'companies.invoice_code as company_icode',
+                            'companies.page_header as company_html_header',
+                            'companies.page_footer as company_html_footer',
+                            'companies.page_warehouse_info as company_html_wh_info',
+                            'companies.page_warehouse_terms as company_html_wh_terms',
 
-                            'supplier.id as supplier_id',
-                            'supplier.name as supplier_name',
-                            'supplier.logo as supplier_logo',
-                            'supplier.vat as supplier_vat',
-                            'supplier.pec as supplier_pec',
-                            'supplier.invoice_code as supplier_icode',
+                            'suppliers.id as supplier_id',
+                            'suppliers.name as supplier_name',
+                            'suppliers.logo as supplier_logo',
+                            'suppliers.vat as supplier_vat',
+                            'suppliers.pec as supplier_pec',
+                            'suppliers.invoice_code as supplier_icode',
 
                             // Delivery
 
@@ -59,6 +57,11 @@ class DynamicPDFController extends Controller
                         ->first();
 
         $products = OrderDetail::where('order_id', '=', $id)->get();
+
+        $style = "";
+        $header = "";
+        $destination = "";
+        $footer_company = "";
 
         //set output
         $output = '';
@@ -85,6 +88,7 @@ class DynamicPDFController extends Controller
         }
         //overwrite note
         $note = $order->ordernote;
+        
 
         if (! empty($order)) {
             //HEADER

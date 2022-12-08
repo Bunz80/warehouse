@@ -17,9 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin/warehouse/orders/print/{id}', function () {
-    return view('order_print');
-});
+Route::get('/admin/warehouse/orders/print/{id}', 'OrderPrintController@pdf');
 
 // FROM OLD PROJECT
 // Route::get('orderprint/{id}', 'EcommerceController@orderprint');
