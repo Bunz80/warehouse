@@ -234,15 +234,16 @@ class OrderResource extends Resource
                             ->content(
                                 function (Closure $get) {
                                     $company = Company::where('id', $get('company_id'));
-                                    $company_name = $company ? $company->pluck('name')[0] : '';
+                                    $company = Company::where("id", $get("company_id"));
+                                    $company_name = $company && count(company->pluck("name")) ? $company->pluck("name")[0] : "";
 
-                                    $address = Address::where('id', $get('address_id'));
-                                    $address_name = $address ? $address->pluck('name')[0] : '';
-                                    $address_street = $address ? $address->pluck('address')[0].'-'.$address->pluck('street_number')[0].', '.$address->pluck('city')[0] : '';
-                                    $address_state = $address ? $address->pluck('province')[0].'/'.$address->pluck('state')[0] : '';
+                                    $address = Address::where("id", $get("address_id"));
+                                    $address_name = $address && count($address->pluck("name")) ? $address->pluck("name")[0] : "";
+                                    $address_street = $address && count($address->pluck("address")) ? $address->pluck("address")[0]."-".$address->pluck("street_number")[0].", ".$address->pluck("city")[0] : "";
+                                    $address_state = $address && count($address->pluck("province")) ? $address->pluck("province")[0]."/".$address->pluck("state")[0] : "";
 
                                     $supplier = Supplier::where('id', $get('supplier_id'));
-                                    $supplier_name = $supplier ? $supplier->pluck('name')[0] : '';
+                                    $supplier_name = $supplier && count($supplier->pluck('name')) ? $supplier->pluck('name')[0] : '';
 
                                     $orderDetail = OrderDetail::where('order_id', $get('id'));
                                     $totalPrice = 0;
