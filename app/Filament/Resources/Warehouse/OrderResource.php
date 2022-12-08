@@ -235,7 +235,7 @@ class OrderResource extends Resource
                                 function (Closure $get) {
                                     $company = Company::where('id', $get('company_id'));
                                     $company = Company::where("id", $get("company_id"));
-                                    $company_name = $company && count(company->pluck("name")) > 0 ? $company->pluck("name")[0] : "";
+                                    $company_name = $company && count($company->pluck("name")) > 0 ? $company->pluck("name")[0] : "";
 
                                     $address = Address::where("id", $get("address_id"));
                                     $address_name = $address && count($address->pluck("name")) > 0 ? $address->pluck("name")[0] : "";
