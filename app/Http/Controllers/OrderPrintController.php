@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
+use App\Models\Address;
+use App\Models\Company;
 use PDF;
 
 class OrderPrintController extends Controller
@@ -58,54 +60,80 @@ class OrderPrintController extends Controller
 
         //Initialize variables
         $style = $header = $destination = $footer_company = $output = '';
-        $style = '  <!-- Latest compiled and minified CSS -->
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-                    <!-- Optional theme -->
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-                    
-                ';
+        $style = '
+        <style>
+        body { font-family: \'Nunito\', sans-serif; margin: 10px !important; }
+        .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
+        .clear{ clear:both; }
+        .w100{ width: 100% !important; }
+        .w50{ width: 50% !important; float:left; }
+        .w33{ width: 33.33% !important; float:left; }
+        .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
+        .text-right{ text-align:right; }        
+        .footer { position: fixed; bottom: 40; }
+        .footer_info { position: fixed; bottom: 320; }
+        .footer_signature { position: fixed; bottom: 360; }
+        tr:nth-child(2n+1) { background-color: #bfbecf; }
+        .tr_clear{ background-color: #fff; }
+        </style>';
         
-        $products = OrderDetail::where('order_id', '=', $id)->get();
-
         $logoCompany = '';
         if ($order->company_logo != '') {
-            $logoCompany = '<img src="/uploads/logo/'.$order->company_logo.'" style="max-width: 300px; max-height: 100px;">';
+            $logoCompany = '<img src="'.$order->company_logo.'" style="max-width: 300px; max-height: 100px;">';
         } else {
             $logoCompany = '<h3 class="title">'.$order->company_name.'</h3>';
         }
-
+        
         $logoSupplier = '';
         if ($order->supplier_logo != '') {
             $logoSupplier = '<img src="/uploads/logo/'.$order->supplier_logo.'" style="max-height: 90px; max-width:120px; float: right; padding: 5px 0 15px 15px; " >';
         }
-
+        
         $page = 'Pagine: 1/1';
-
-        $note = '';
-        if (isset($note) && ! empty($note)) {
-            foreach ($note as $value) {
-                $note .= '• '.$value->note.'<br/>';
-            }
-        }
-
+        
+        // $note = '';
+        // if (isset($note) && ! empty($note)) {
+        //     foreach ($note as $value) {
+        //         $note .= '• '.$value->note.'<br/>';
+        //     }
+        // }
+        
         //overwrite note
         $note = $order->ordernote;
 
+        $company_address = Address::where('company_id', '=', $order->company_id)->get();
+
+        $header = ' <div class="w33">'.$logoCompany.'</div>
+                    <div class="w33">
+                        <b class="title">'.$order->company_name.'</b> <br /> 
+                        { {company_address}} - { {company_zip}} { {company_city}}<br />
+                        IVA: { {company_vat}} - SDI: { {company_icode}}}} <br />
+                        { {companymail}} - { {companypec}}
+                    </div>
+                    <div class="w33 text-right">
+                        <b class="title" >Ordine nr: { {year}}.{ {number)}}</b>  
+                        <br /> Emesso il: { {order_at}} <br /> { {company_html_wh_info}} 
+                    </div>
+                    <hr class="clear" style="margin-top:-1px" >';
+
+        
         if (! empty($order)) {
             // Header
             $output .= $style;
             $output .= '
-            <div class="row" XXXstyle="height:100px" >'.$header.'</div>
-            <div class="row" XXXstyle="height:100px" >'.$destination.'</div>';
+            <div class="row" style="height:100px" >'.$header.'</div>
+            <div class="row" style="height:100px" >'.$destination.'</div>';
         }
-
+        
+        $products = OrderDetail::where('order_id', '=', $id)->get();
+        
         // Table - OrderDetails
         $output .= '
-            <div class="row">
-                <h3>Lista Prodotti</h3>
-                <table style="width:100%">
-                    <thead>
-                        <tr class="tr_clear">
+        <div class="row">
+        <h3>Lista Prodotti</h3>
+        <table style="width:100%">
+        <thead>
+        <tr class="tr_clear">
                             <!--th class="text-left">ID</th-->
                             <th class="text-left">Cod</th>
                             <th class="text-left">Descrizione</th>                                        
