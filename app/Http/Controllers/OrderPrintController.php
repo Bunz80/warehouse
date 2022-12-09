@@ -101,18 +101,22 @@ class OrderPrintController extends Controller
         //overwrite note
         $note = $order->ordernote;
 
-        $company_address = Address::where('company_id', '=', $order->company_id)->get();
+        $company_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Address" and addressable_id='.$order->company_id)->first();
+        $comapnyAddress = "";
+        if ($company_address) {
+            $comapnyAddress = $company_address->address.' - '.$company_address->zip.' '.$company_address->city;
+        }
 
         $header = ' <div class="w33">'.$logoCompany.'</div>
                     <div class="w33">
                         <b class="title">'.$order->company_name.'</b> <br /> 
-                        { {company_address}} - { {company_zip}} { {company_city}}<br />
-                        IVA: { {company_vat}} - SDI: { {company_icode}}}} <br />
-                        { {companymail}} - { {companypec}}
+                        '.$comapnyAddress.'<br />
+                        IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
+                        '.$order->companymail.' - '.$order->companypec.'
                     </div>
                     <div class="w33 text-right">
-                        <b class="title" >Ordine nr: { {year}}.{ {number)}}</b>  
-                        <br /> Emesso il: { {order_at}} <br /> { {company_html_wh_info}} 
+                        <b class="title" >Ordine nr: '.$order->order_year.'.'.$order->order_num.'</b>  
+                        <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
                     </div>
                     <hr class="clear" style="margin-top:-1px" >';
 
