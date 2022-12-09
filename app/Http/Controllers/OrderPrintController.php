@@ -134,7 +134,7 @@ class OrderPrintController extends Controller
         if ($delivery_address) {
             $deliveryAddress = $delivery_address->name.' <br />'.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
         }
-        $delivery_contact = Address::where('id', $order->delivery_contact_id)->first();
+        $delivery_contact = Contact::where('id', $order->delivery_contact_id)->first();
         $deliveryContact = "";
         if ($delivery_contact) {
             $deliveryContact = $delivery_contact->name.' '.$delivery_contact->address;
