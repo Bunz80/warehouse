@@ -121,12 +121,14 @@ class OrderPrintController extends Controller
         </div>
         <hr class="clear" style="margin-top:-1px" >';
         
+        // Supplier
         $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede legale" and addressable_id='.$order->supplier_id)->first();
         $supplierAddress = "";
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
         }
         
+        // Delivery
         $delivery_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Delivery" and addressable_id='.$order->delivery_address_id)->first();
         $deliveryAddress = "";
         if ($delivery_address) {
@@ -136,7 +138,7 @@ class OrderPrintController extends Controller
         $destination = ' 
         <div class="w50">
             Consegna:<br />
-            <b>'.$deliveryAddress.'</b><br /> 
+            <b>'.$deliveryAddress.'</b><br /> addressable_type LIKE "%Company" and collection_name = "Delivery" and addressable_id='.$order->delivery_address_id.'
             Ref: { {referent}} / { {referent_contact}}
         </div>
         <div class="text-right" >

@@ -40,6 +40,7 @@ class AddressesRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('collection_name')
                     ->label('Type'),
                 Tables\Columns\TextColumn::make('name'),
