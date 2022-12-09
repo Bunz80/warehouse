@@ -261,17 +261,15 @@ class OrderPrintController extends Controller
         //FOOTER
         $output .= '
             <div class="row XXXfooter_info">
-                <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span></span>
+                <span ><b>Info e condizioni:</b></span>
+                <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
                 <hr style="margin:5px !important;">
                 <span >'.$order->company_html_footer.'</span>
             </div>';
                 
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
-
-        //$pdf->set_paper(DEFAULT_PDF_PAPER_SIZE, 'A4');
-        $pdf->loadHTML($output)->setPaper($customPaper);
-
+        $pdf->loadHTML($output)->setPaper($customPaper);    
         return $pdf->stream();
     }
 }
