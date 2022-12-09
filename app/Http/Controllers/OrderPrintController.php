@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
-use App\Models\Address;
 use App\Models\Company;
+use App\Models\Supplier;
+use App\Models\Address;
+use App\Models\Contact;
 use PDF;
 
 class OrderPrintController extends Controller
