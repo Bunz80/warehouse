@@ -64,7 +64,7 @@ class OrderPrintController extends Controller
         $style = $header = $destination = $footer_company = $output = '';
         $style = '
         <style>
-        body { font-family: \'Nunito\', sans-serif; margin: 10px !important; }
+        body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
         .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
         .clear{ clear:both; }
         .w100{ width: 100% !important; }
