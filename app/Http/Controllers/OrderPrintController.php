@@ -107,26 +107,47 @@ class OrderPrintController extends Controller
             $comapnyAddress = $company_address->address.' - '.$company_address->zip.' '.$company_address->city;
         }
 
-        $header = ' <div class="w33">'.$logoCompany.'</div>
-                    <div class="w33">
-                        <b class="title">'.$order->company_name.'</b> <br /> 
-                        '.$comapnyAddress.'<br />
-                        IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
-                        '.$order->companymail.' - '.$order->companypec.'
-                    </div>
-                    <div class="w33 text-right">
-                        <b class="title" >Ordine nr: '.$order->order_year.'.'.$order->order_num.'</b>  
-                        <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
-                    </div>
-                    <hr class="clear" style="margin-top:-1px" >';
+        $header = ' 
+        <div class="w33">'.$logoCompany.'</div>
+        <div class="w33">
+            <b class="title">'.$order->company_name.'</b> <br /> 
+            '.$comapnyAddress.'<br />
+            IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
+            '.$order->companymail.' - '.$order->companypec.'
+        </div>
+        <div class="w33 text-right">
+            <b class="title" >Ordine nr: '.$order->order_year.'/'.$order->order_num.'</b>  
+            <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
+        </div>
+        <hr class="clear" style="margin-top:-1px" >';
+        
+        $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Address" and addressable_id='.$order->supplier_id)->first();
+        $supplierAddress = "";
+        if ($supplier_address) {
+            $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
+        }
+        $destination = ' 
+        <div class="w50">
+            <b style="font-size:18px; margin:1px;">Destinazione</b><br /> 
+            <b>{ {destination}}</b><br /> 
+            { {address}} - { {zip}}, { {city}}<br />
+            { {province}} / { {state}} <br />
+            Ref: { {referent}} / { {referent_contact}}
+        </div>
+        <div class="text-right" >
+            <b style="font-size:18px; margin:1px;">Fornitore</b><br /> 
+            <div style="float:right;">
+                '.$supplierAddress.'<br />
+            </div>
+        </div>';
 
         
         if (! empty($order)) {
-            // Header
             $output .= $style;
-            $output .= '
-            <div class="row" style="height:100px" >'.$header.'</div>
-            <div class="row" style="height:100px" >'.$destination.'</div>';
+            $output .= '<!-- Header Company -->
+                        <div class="row" style="height:100px" >'.$header.'</div>
+                        <!-- Delivery / Supplier -->
+                        <div class="row" style="height:100px" >'.$destination.'</div>';
         }
         
         $products = OrderDetail::where('order_id', '=', $id)->get();
