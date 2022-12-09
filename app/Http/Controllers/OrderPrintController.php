@@ -262,11 +262,10 @@ class OrderPrintController extends Controller
         $output .= '
             <div class="row XXXfooter_info">
                 <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span></span>
-            </div>
-            <div class="XXXanchor_footer" style="margin-bottom:-90px !important;"></div>
-            <div class="XXXrow footer">'.$order->company_html_footer.'</div>
-            <div class="XXXanchor_footer" style="margin-bottom:-90px !important;"></div>';
-
+                <hr style="margin:5px !important;">
+                <span >'.$order->company_html_footer.'</span>
+            </div>';
+                
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
 
