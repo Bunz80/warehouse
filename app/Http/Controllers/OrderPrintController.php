@@ -129,18 +129,24 @@ class OrderPrintController extends Controller
         }
         
         // Delivery
-        $delivery_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Delivery" and addressable_id='.$order->delivery_address_id)->first();
+        $delivery_address = Address::where('id', $order->delivery_address_id)->first();
         $deliveryAddress = "";
         if ($delivery_address) {
             $deliveryAddress = $delivery_address->name.' '.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
+        }
+        $delivery_contact = Address::where('id', $order->delivery_contact_id)->first();
+        $deliveryContact = "";
+        if ($delivery_contact) {
+            $deliveryContact = $delivery_contact->name.' '.$delivery_contact->address;
         }
 
         $destination = ' 
         <div class="w50">
             Consegna:<br />
-            <b>'.$deliveryAddress.'</b><br /> addressable_type LIKE "%Company" and collection_name = "Delivery" and addressable_id='.$order->delivery_address_id.'
-            Ref: { {referent}} / { {referent_contact}}
+            <b>'.$deliveryAddress.'</b><br />
+            Ref: '.$deliveryContact.'
         </div>
+        
         <div class="text-right" >
             Fornitore:<br />
             <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br /> 
