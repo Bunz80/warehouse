@@ -146,7 +146,7 @@ class OrderPrintController extends Controller
         <div class="w50">
             Consegna:<br />
             <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
-            Ref: '.$deliveryContact.'
+            Referente: '.$deliveryContact.'
         </div>
 
         <div class="text-right" >
