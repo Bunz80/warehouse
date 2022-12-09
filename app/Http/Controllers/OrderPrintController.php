@@ -125,14 +125,14 @@ class OrderPrintController extends Controller
         $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede legale" and addressable_id='.$order->supplier_id)->first();
         $supplierAddress = "";
         if ($supplier_address) {
-            $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
+            $supplierAddress = $supplier_address->address.' <br />'.$supplier_address->zip.' '.$supplier_address->city;
         }
         
         // Delivery
         $delivery_address = Address::where('id', $order->delivery_address_id)->first();
         $deliveryAddress = "";
         if ($delivery_address) {
-            $deliveryAddress = $delivery_address->name.' '.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
+            $deliveryAddress = $delivery_address->name.' <br />'.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
         }
         $delivery_contact = Address::where('id', $order->delivery_contact_id)->first();
         $deliveryContact = "";
@@ -146,7 +146,7 @@ class OrderPrintController extends Controller
             <b>'.$deliveryAddress.'</b><br />
             Ref: '.$deliveryContact.'
         </div>
-        
+
         <div class="text-right" >
             Fornitore:<br />
             <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br /> 
