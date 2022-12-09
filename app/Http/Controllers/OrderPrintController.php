@@ -33,6 +33,9 @@ class OrderPrintController extends Controller
                             'orders.total_taxes as order_total_taxes',
                             'orders.total_prices as order_total_prices',
                             'orders.total_order as order_total_order',
+                            // Delivery & Concact
+                            'orders.address_id as delivery_address_id',
+                            'orders.contact_id as delivery_contact_id',
 
                             'companies.id as company_id',
                             'companies.name as company_name',
@@ -51,10 +54,7 @@ class OrderPrintController extends Controller
                             'suppliers.vat as supplier_vat',
                             'suppliers.pec as supplier_pec',
                             'suppliers.invoice_code as supplier_icode',
-
-                            // Delivery
-
-                            // Concact
+                            
                         )
                         ->first();
 
@@ -126,16 +126,22 @@ class OrderPrintController extends Controller
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
         }
+        
+        $delivery_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Delivery" and addressable_id='.$order->delivery_address_id)->first();
+        $deliveryAddress = "";
+        if ($delivery_address) {
+            $deliveryAddress = $delivery_address->name.' '.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
+        }
+
         $destination = ' 
         <div class="w50">
-            <b style="font-size:18px; margin:1px;">Destinazione</b><br /> 
-            <b>{ {destination}}</b><br /> 
-            { {address}} - { {zip}}, { {city}}<br />
-            { {province}} / { {state}} <br />
+            Consegna:<br />
+            <b>'.$deliveryAddress.'</b><br /> 
             Ref: { {referent}} / { {referent_contact}}
         </div>
         <div class="text-right" >
-            <b style="font-size:18px; margin:1px;">Fornitore</b><br /> 
+            Fornitore:<br />
+            <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br /> 
             <div style="float:right;">
                 '.$supplierAddress.'<br />
             </div>
