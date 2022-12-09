@@ -121,7 +121,7 @@ class OrderPrintController extends Controller
         </div>
         <hr class="clear" style="margin-top:-1px" >';
         
-        $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Address" and addressable_id='.$order->supplier_id)->first();
+        $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede Legale" and addressable_id='.$order->supplier_id)->first();
         $supplierAddress = "";
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
@@ -137,7 +137,7 @@ class OrderPrintController extends Controller
         <div class="text-right" >
             <b style="font-size:18px; margin:1px;">Fornitore</b><br /> 
             <div style="float:right;">
-                '.$supplierAddress.'<br />
+                '.$supplierAddress.'<br />addressable_type LIKE "%Supplier" and collection_name = "Sede Legale" and addressable_id='.$order->supplier_id.'
             </div>
         </div>';
 
