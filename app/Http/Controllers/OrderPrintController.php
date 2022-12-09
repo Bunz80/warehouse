@@ -101,7 +101,7 @@ class OrderPrintController extends Controller
         //overwrite note
         $note = $order->ordernote;
 
-        $company_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name LIKE= "%legale" and addressable_id='.$order->company_id)->first();
+        $company_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name LIKE "%legale" and addressable_id='.$order->company_id)->first();
         $comapnyAddress = "";
         if ($company_address) {
             $comapnyAddress = $company_address->address.' - '.$company_address->zip.' '.$company_address->city;
@@ -121,7 +121,7 @@ class OrderPrintController extends Controller
         </div>
         <hr class="clear" style="margin-top:-1px" >';
         
-        $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name LIKE "%legale" and addressable_id='.$order->supplier_id)->first();
+        $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede legale" and addressable_id='.$order->supplier_id)->first();
         $supplierAddress = "";
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br /> '.$supplier_address->zip.' '.$supplier_address->city;
