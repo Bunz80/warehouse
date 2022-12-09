@@ -261,7 +261,7 @@ class OrderPrintController extends Controller
         //FOOTER
         $output .= '
             <div class="row footer_info">
-                <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->company_html_wh_info.'</span></span>
+                <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span></span>
             </div>
             <div class="anchor_footer" style="margin-bottom:-90px !important;"></div>
             <div class="row footer">'.$order->company_html_footer.'</div>
