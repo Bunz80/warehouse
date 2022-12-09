@@ -143,7 +143,7 @@ class OrderPrintController extends Controller
         $destination = ' 
         <div class="w50">
             Consegna:<br />
-            <b>'.$deliveryAddress.'</b><br />
+            <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
             Ref: '.$deliveryContact.'
         </div>
 
