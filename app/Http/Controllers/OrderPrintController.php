@@ -135,7 +135,7 @@ class OrderPrintController extends Controller
                                     <td class="text-right">';
                 if ($value->discount > 0) {
                     $output .= $value->discount.' '.$value->discountunit;
-                } //if
+                } //if 
 
                 $output .= '</td>
                                 <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
@@ -185,17 +185,17 @@ class OrderPrintController extends Controller
                 </div>
                 <div class="w33">
                     <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
-                    (Firma - '.$order->companyname.')
+                    (Firma - '.$order->company_name.')
                 </div>
             </div>';
 
         //FOOTER
         $output .= '
             <div class="row footer_info">
-                <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->companyacquistiinfo.'</span></span>
+                <span ><b>Info e condizioni: </b> <span style="font-size:11px; ">'.$order->company_html_wh_info.'</span></span>
             </div>
             <div class="anchor_footer" style="margin-bottom:-90px !important;"></div>
-            <div class="row footer">'.$footer_company.'</div>
+            <div class="row footer">'.$order->company_html_footer.'</div>
             <div class="anchor_footer" style="margin-bottom:-90px !important;"></div>';
 
         $pdf = \App::make('dompdf.wrapper');
