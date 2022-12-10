@@ -9,7 +9,6 @@ use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\Address;
 use App\Models\Contact;
-use App\Models\Category;
 use PDF;
 
 class OrderPrintController extends Controller
@@ -32,24 +31,14 @@ class OrderPrintController extends Controller
                             'orders.close_at as order_close_at',
                             'orders.deadline_at as order_deadline_at',
                             'orders.status as order_status',
-                            // Price
                             'orders.currency as order_currency',
                             'orders.total_taxes as order_total_taxes',
                             'orders.total_prices as order_total_prices',
                             'orders.total_order as order_total_order',
-                            // Address & Concact for Delivery
+                            // Delivery & Concact
                             'orders.address_id as delivery_address_id',
                             'orders.contact_id as delivery_contact_id',
-                            // Notes
-                            'orders.delivery_note as note_delivery',
-                            'orders.trasport_note as note_trasport',
-                            'orders.payment_note as note_payment',
-                            'orders.notes as note',
-                            // Method Delivery/Trasport/Payment
-                            'orders.delivery_method as deliverymethod',
-                            'orders.trasport_method as trasportmethod',
-                            'orders.payment_method as paymentmethod',
-                            
+
                             'companies.id as company_id',
                             'companies.name as company_name',
                             'companies.logo as company_logo',
@@ -75,22 +64,21 @@ class OrderPrintController extends Controller
         $style = $header = $destination = $footer_company = $output = '';
         $style = '
         <style>
-            body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
-            .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
-            .clear{ clear:both; }
-            .w100{ width: 100% !important; }
-            .w50{ width: 50% !important; float:left; }
-            .w33{ width: 33.33% !important; float:left; }
-            .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
-            .text-right{ text-align:right; }        
-            .footer { position: fixed; bottom: 0; }
-            .footer_info { position: fixed; bottom: 320; }
-            .footer_signature { position: fixed; bottom: 360; }
-            tr:nth-child(2n+1) { background-color: #bfbecf; }
-            .tr_clear{ background-color: #fff; }
+        body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
+        .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
+        .clear{ clear:both; }
+        .w100{ width: 100% !important; }
+        .w50{ width: 50% !important; float:left; }
+        .w33{ width: 33.33% !important; float:left; }
+        .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
+        .text-right{ text-align:right; }        
+        .footer { position: fixed; bottom: 0; }
+        .footer_info { position: fixed; bottom: 320; }
+        .footer_signature { position: fixed; bottom: 360; }
+        tr:nth-child(2n+1) { background-color: #bfbecf; }
+        .tr_clear{ background-color: #fff; }
         </style>';
         
-        // LOGO COMPANY
         $logoCompany = '';
         if ($order->company_logo != '') {
             $logoCompany = '<img src="'.$order->company_logo.'" style="max-width: 300px; max-height: 100px;">';
@@ -98,132 +86,122 @@ class OrderPrintController extends Controller
             $logoCompany = '<h3 class="title">'.$order->company_name.'</h3>';
         }
         
-        // LOGO SUPPLIER
         $logoSupplier = '';
         if ($order->supplier_logo != '') {
             $logoSupplier = '<img src="/uploads/logo/'.$order->supplier_logo.'" style="max-height: 90px; max-width:120px; float: right; padding: 5px 0 15px 15px; " >';
         }
         
-        // ADDRESS COMPANY
+        $page = 'Pagine: 1/1';
+        
+        // $note = '';
+        // if (isset($note) && ! empty($note)) {
+        //     foreach ($note as $value) {
+        //         $note .= '• '.$value->note.'<br/>';
+        //     }
+        // }
+        
+        //overwrite note
+        $note = $order->ordernote;
+
         $company_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Sede legale" and addressable_id='.$order->company_id)->first();
         $comapnyAddress = "";
         if ($company_address) {
             $comapnyAddress = $company_address->address.' - '.$company_address->zip.' '.$company_address->city;
         }
-        // ADDRESS SUPPLIER
+
+        $header = ' 
+        <div class="w33">'.$logoCompany.'</div>
+        <div class="w33">
+            <b class="title">'.$order->company_name.'</b> <br /> 
+            '.$comapnyAddress.'<br />
+            IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
+            '.$order->companymail.' - '.$order->companypec.'
+        </div>
+        <div class="w33 text-right">
+            <b class="title" >Ordine nr: '.$order->order_year.'/'.$order->order_num.'</b>  
+            <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
+        </div>
+        <hr class="clear" style="margin-top:-1px" >';
+        
+        // Supplier
         $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede legale" and addressable_id='.$order->supplier_id)->first();
         $supplierAddress = "";
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br />'.$supplier_address->zip.' '.$supplier_address->city;
         }
         
-        // ADDRESS DELIVERY
+        // Delivery
         $delivery_address = Address::where('id', $order->delivery_address_id)->first();
         $deliveryAddress = "";
         if ($delivery_address) {
             $deliveryAddress = $delivery_address->name.' <br />'.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
         }
-
-        // CONTACT DELIVERY
         $delivery_contact = Contact::where('id', $order->delivery_contact_id)->first();
         $deliveryContact = "";
         if ($delivery_contact) {
             $deliveryContact = $delivery_contact->name.' '.$delivery_contact->address;
         }
 
-        // CATEGORY
-        $deliveryCategory = $paymentCategory = $trasportCategory = "";
-
-        $delivery_category = Category::where('id', $order->deliverymethod)->first();
-        if ($delivery_category) {
-            $deliveryCategory = $deliveryCategory->name;
-        }
-
-        $trasport_category = Category::where('id', $order->trasportmethod)->first();
-        if ($trasport_category) {
-            $trasportCategory = $trasport_category->name;
-        }
-
-        $payment_category = Category::where('id', $order->paymentmethod)->first();
-        if ($payment_category) {
-            $paymentCategory = $payment_category->name;
-        }
-
-        $page = 'Pagine: 1/1'; 
-        $output = $style .'<body><div class="container">';
-        
-        // HEADER COMPANY
-        $output .= ' 
-        <div class="row w100" style="height:100px" >
-            <div class="w33">'.$logoCompany.'</div>
-            <div class="w33">
-                <b class="title">'.$order->company_name.'</b> <br /> 
-                '.$comapnyAddress.'<br />
-                IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
-                '.$order->companymail.' - '.$order->companypec.'
-            </div>
-            <div class="w33 text-right">
-                <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>  
-                <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
-            </div>
-            <hr class="clear" style="margin-top:-1px" >
+        $destination = ' 
+        <div class="w50">
+            Consegna:<br />
+            <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
+            Referente: '.$deliveryContact.'
         </div>
-        ';
+
+        <div class="text-right" >
+            Fornitore:<br />
+            <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br /> 
+            <div style="float:right;">
+                '.$supplierAddress.'<br />
+            </div>
+        </div>';
+
         
-        // BODY SUPPLIER + DELIVERY
-        $output .= '
-        <div class="row w100" >
-            <div class="w50">
-                Consegna:<br />
-                <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
-                Referente: '.$deliveryContact.'
-            </div>
-
-            <div class="text-right" >
-                Fornitore:<br />
-                <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br /> 
-                <div style="float:right;">
-                    '.$supplierAddress.'<br />
-                </div>
-            </div>
-        </div>
-        <div class="clear" ></div>';
-
+        if (! empty($order)) {
+            $output .= $style;
+            $output .= '<!-- Header Company -->
+                        <div class="row" style="height:100px" >'.$header.'</div>
+                        <!-- Delivery / Supplier -->
+                        <div class="row" style="height:100px" >'.$destination.'</div>';
+        }
+        
+        $products = OrderDetail::where('order_id', '=', $id)->get();
         
         // Table - OrderDetails
-        $products = OrderDetail::where('order_id', '=', $id)->get();
         $output .= '
-        <div class="row w100">
-            <h3>Lista Prodotti</h3>
-            <table style="width:100%">
-                <thead>
-                    <tr class="tr_clear">
-                        <th class="text-left">ID</th>
-                        <th class="text-left">Cod</th>
-                        <th class="text-left">Descrizione</th>                                        
-                        <th class="text-left">Qnt</th>
-                        <th class="text-right">Prezzo</th>
-                        <th class="text-right">Sconto</th>
-                        <th class="text-right">Totale</th>                                
-                    </tr>
-                </thead>
-                <tbody>';
+        <div class="row">
+        <h3>Lista Prodotti</h3>
+        <table style="width:100%">
+        <thead>
+        <tr class="tr_clear">
+                            <!--th class="text-left">ID</th-->
+                            <th class="text-left">Cod</th>
+                            <th class="text-left">Descrizione</th>                                        
+                            <th class="text-left">Qnt</th>
+                            <th class="text-right">Prezzo</th>
+                            <th class="text-right">Sconto</th>
+                            <th class="text-right">Totale</th>                                
+                        </tr>
+                    </thead>
+                    <tbody>';
         if (isset($products) && ! empty($products)) {
             
             $total = $vat = 0;
             $priceunit = '';
+
             foreach ($products as $value) {
                 $total += ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount));
                 $vat += (float) ($value->vat) * ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)) / 100;
                 $priceunit = $value->priceunit;
 
                 $output .= '<tr class="invoicerow ">
-                                <td>'.$value->id.'</td>
-                                <td>'.$value->product_code.'</td>
-                                <td>'.$value->product_description.'</td>                                           
-                                <td>'.$value->amount.'</td>
-                                <td class="text-right">'.number_format((float) ($value->price), 2).' '.$value->priceunit.'</td>
-                                <td class="text-right">';
+                                    <!--td>'.$value->id.'</td-->
+                                    <td>'.$value->product_code.'</td>
+                                    <td>'.$value->product_description.'</td>                                           
+                                    <td>'.$value->amount.'</td>
+                                    <td class="text-right">'.number_format((float) ($value->price), 2).' '.$value->priceunit.'</td>
+                                    <td class="text-right">';
                 if ($value->discount > 0) {
                     $output .= $value->discount.' '.$value->discountunit;
                 } //if 
@@ -247,37 +225,24 @@ class OrderPrintController extends Controller
             } //foreach
         } //if product
 
-        $output .= '
-                </tbody>
-            </table> 
-        </div>';
+        $output .= '</tbody>
+                </table> 
+            </div>';
 
         //NOTE
         $output .= '
-            <br />
-            <div class="row w100">
-                <table class="table table-bordered" style="width:100%" >
-                    <tr>
-                        <td width="100">Info sulla consegna: </td>
-                        <td>'.$deliveryCategory.'</td>                                
-                        <td>'.$order->note_delivery.'</td>                                
-                    </tr>
-                    <tr>
-                        <td>Info sul trasporto: </td>
-                        <td>'.$trasportCategory.'</td>                                
-                        <td>'.$order->note_trasport.'</td>                                
-                    </tr>
-                    <tr>
-                        <td width="100">Info Pagemento: </td>
-                        <td>'.$paymentCategory.'</td>                                
-                        <td>'.$order->note_payment.'</td>                                
-                    </tr>
-                    <tr>
-                        <td>Note sull\'ordine: </td>                              
-                        <td colspan="2">'.$order->note.'</td>                                
-                    </tr>
-                <table>
-            </div>';
+            <div class="row">
+                <br />
+                <div class="w33">
+                    <b>Pagamento:</b><br />'.$order->paymentmethod.'<br />'.$order->payment_note.'
+                </div>
+                <div class="w33">
+                    <b>Trasporto:</b><br />'.$order->transport.'<br />'.$order->transport_note.'
+                </div>
+                <div class="w33">
+                    <b>Note:</b><br />'.$note.'
+                </div>
+            </div';
 
         //SIGNATURE
         $output .= '
@@ -295,11 +260,10 @@ class OrderPrintController extends Controller
             <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
             <hr style="margin:5px !important;">
             <span >'.$order->company_html_footer.'</span>
-        </div>';
+        </div>
 
-
-        $output .= '</div></body>';
-
+        
+            ';
                 
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
