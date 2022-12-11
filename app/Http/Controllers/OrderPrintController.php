@@ -252,9 +252,13 @@ class OrderPrintController extends Controller
             </table> 
         </div>';
 
+        // Test page 2
+        // for($i=0; $i<200; $i++){
+        //     $output .= $i.'<br>';
+        // }
+
         //NOTE
         $output .= '
-            <br />
             <div class="row w100">
                 <table class="table table-bordered" style="width:100%" >
                     <tr>
@@ -277,7 +281,8 @@ class OrderPrintController extends Controller
                         <td colspan="2">'.$order->note.'</td>                                
                     </tr>
                 <table>
-            </div>';
+            </div>
+            ';
 
         //SIGNATURE
         $output .= '
