@@ -10,7 +10,6 @@ use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
-use App\Models\Warehouse\OrderDetail;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
@@ -232,7 +231,7 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('View Document')
                             ->content(
-                                function(Closure $get) {
+                                function (Closure $get) {
                                     return new HtmlString('
                                         <a target="_blank" href = "/admin/warehouse/orders/print/'.$get('id').'" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
                                             <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

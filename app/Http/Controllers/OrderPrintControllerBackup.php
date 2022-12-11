@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Warehouse\Order;
-use App\Models\Warehouse\OrderDetail;
-use App\Models\Company;
-use App\Models\Supplier;
 use App\Models\Address;
 use App\Models\Contact;
+use App\Models\Supplier;
+use App\Models\Warehouse\Order;
+use App\Models\Warehouse\OrderDetail;
 use PDF;
 
 class OrderPrintController extends Controller
@@ -16,7 +14,7 @@ class OrderPrintController extends Controller
     //function pdf($id, $status)
     public function pdf($id)
     {
-        $order =   Order::join('companies', 'companies.id', '=', 'orders.company_id')
+        $order = Order::join('companies', 'companies.id', '=', 'orders.company_id')
                         ->join('suppliers', 'suppliers.id', '=', 'orders.supplier_id')
                         //delivery
                         ->join('addresses', 'addresses.id', '=', 'orders.address_id')
@@ -56,7 +54,7 @@ class OrderPrintController extends Controller
                             'suppliers.vat as supplier_vat',
                             'suppliers.pec as supplier_pec',
                             'suppliers.invoice_code as supplier_icode',
-                            
+
                         )
                         ->first();
 
@@ -78,33 +76,33 @@ class OrderPrintController extends Controller
         tr:nth-child(2n+1) { background-color: #bfbecf; }
         .tr_clear{ background-color: #fff; }
         </style>';
-        
+
         $logoCompany = '';
         if ($order->company_logo != '') {
             $logoCompany = '<img src="'.$order->company_logo.'" style="max-width: 300px; max-height: 100px;">';
         } else {
             $logoCompany = '<h3 class="title">'.$order->company_name.'</h3>';
         }
-        
+
         $logoSupplier = '';
         if ($order->supplier_logo != '') {
             $logoSupplier = '<img src="/uploads/logo/'.$order->supplier_logo.'" style="max-height: 90px; max-width:120px; float: right; padding: 5px 0 15px 15px; " >';
         }
-        
+
         $page = 'Pagine: 1/1';
-        
+
         // $note = '';
         // if (isset($note) && ! empty($note)) {
         //     foreach ($note as $value) {
         //         $note .= '• '.$value->note.'<br/>';
         //     }
         // }
-        
+
         //overwrite note
         $note = $order->ordernote;
 
         $company_address = Address::whereRaw('addressable_type LIKE "%Company" and collection_name = "Sede legale" and addressable_id='.$order->company_id)->first();
-        $comapnyAddress = "";
+        $comapnyAddress = '';
         if ($company_address) {
             $comapnyAddress = $company_address->address.' - '.$company_address->zip.' '.$company_address->city;
         }
@@ -122,22 +120,22 @@ class OrderPrintController extends Controller
             <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.' 
         </div>
         <hr class="clear" style="margin-top:-1px" >';
-        
+
         // Supplier
         $supplier_address = Address::whereRaw('addressable_type LIKE "%Supplier" and collection_name = "Sede legale" and addressable_id='.$order->supplier_id)->first();
-        $supplierAddress = "";
+        $supplierAddress = '';
         if ($supplier_address) {
             $supplierAddress = $supplier_address->address.' <br />'.$supplier_address->zip.' '.$supplier_address->city;
         }
-        
+
         // Delivery
         $delivery_address = Address::where('id', $order->delivery_address_id)->first();
-        $deliveryAddress = "";
+        $deliveryAddress = '';
         if ($delivery_address) {
             $deliveryAddress = $delivery_address->name.' <br />'.$delivery_address->address.' <br /> '.$delivery_address->zip.' '.$delivery_address->city;
         }
         $delivery_contact = Contact::where('id', $order->delivery_contact_id)->first();
-        $deliveryContact = "";
+        $deliveryContact = '';
         if ($delivery_contact) {
             $deliveryContact = $delivery_contact->name.' '.$delivery_contact->address;
         }
@@ -157,7 +155,6 @@ class OrderPrintController extends Controller
             </div>
         </div>';
 
-        
         if (! empty($order)) {
             $output .= $style;
             $output .= '<!-- Header Company -->
@@ -165,9 +162,9 @@ class OrderPrintController extends Controller
                         <!-- Delivery / Supplier -->
                         <div class="row" style="height:100px" >'.$destination.'</div>';
         }
-        
+
         $products = OrderDetail::where('order_id', '=', $id)->get();
-        
+
         // Table - OrderDetails
         $output .= '
         <div class="row">
@@ -186,7 +183,6 @@ class OrderPrintController extends Controller
                     </thead>
                     <tbody>';
         if (isset($products) && ! empty($products)) {
-            
             $total = $vat = 0;
             $priceunit = '';
 
@@ -204,12 +200,12 @@ class OrderPrintController extends Controller
                                     <td class="text-right">';
                 if ($value->discount > 0) {
                     $output .= $value->discount.' '.$value->discountunit;
-                } //if 
+                } //if
 
                 $output .= '</td>
                                 <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
                             </tr>';
-            
+
                 $output .= '<tr class="text-right tr_clear">
                                 <td colspan="5" ><hr />Totale imponibile: </td>
                                 <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
@@ -264,10 +260,11 @@ class OrderPrintController extends Controller
 
         
             ';
-                
+
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
-        $pdf->loadHTML($output)->setPaper($customPaper);    
+        $pdf->loadHTML($output)->setPaper($customPaper);
+
         return $pdf->stream();
     }
 }
