@@ -141,6 +141,7 @@ class OrderPrintController extends Controller
             .w33{ width: 33.33% !important; float:left; }
             .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
             .text-right{ text-align:right; }
+            
             .header {
                 position: fixed;
                 top: -60px;
@@ -155,8 +156,11 @@ class OrderPrintController extends Controller
                 right: 0px;
                 height: 50px;
              }
+
              tr:nth-child(2n+1) { background-color: #bfbecf; }
              .tr_clear{ background-color: #fff; }
+
+             .page-break {page-break-after: always;}
         </style>';
 
         $output = '
@@ -318,7 +322,7 @@ class OrderPrintController extends Controller
         </div>';
 
         $output .= '
-                <!-- end container-->
+                <!-- <div class="page-break"></div> end container-->
                 </div>
             </main>
         </body>
