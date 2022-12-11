@@ -195,7 +195,7 @@ class OrderPrintController extends Controller
         $output .= '
         <div class="row w100">
             <h3>Lista Prodotti</h3>
-            <table style="width:100%">
+            <table class="table table-striped" style="width:100%">
                 <thead>
                     <tr class="tr_clear">
                         <th class="text-left">ID</th>
