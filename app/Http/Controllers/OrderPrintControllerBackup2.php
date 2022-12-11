@@ -285,19 +285,22 @@ class OrderPrintController extends Controller
                 <table class="table table-bordered" style="width:100%" >
                     <tr>
                         <td width="100">Info sulla consegna: </td>
-                        <td>'.$deliveryCategory.' <br>'.$order->note_delivery.'</td>  
+                        <td>'.$deliveryCategory.'</td>                                
+                        <td>'.$order->note_delivery.'</td>                                
                     </tr>
                     <tr>
                         <td>Info sul trasporto: </td>
-                        <td>'.$trasportCategory.' <br>'.$order->note_trasport.'</td>                                
+                        <td>'.$trasportCategory.'</td>                                
+                        <td>'.$order->note_trasport.'</td>                                
                     </tr>
                     <tr>
                         <td width="100">Info Pagemento: </td>
-                        <td>'.$paymentCategory.' <br>'.$order->note_payment.'</td>                                
+                        <td>'.$paymentCategory.'</td>                                
+                        <td>'.$order->note_payment.'</td>                                
                     </tr>
                     <tr>
                         <td>Note sull\'ordine: </td>                              
-                        <td>'.$order->note.'</td>                                
+                        <td colspan="2">'.$order->note.'</td>                                
                     </tr>
                 <table>
             </div>
@@ -305,7 +308,7 @@ class OrderPrintController extends Controller
 
         //SIGNATURE
         $output .= '
-        <p style="height:30px" > . </p>
+        <br class="clear" style="margin:30px; margin-top:80px" />
         <div class="row" style="font-size:12px; text-align: justify;">
             <div class="w50">
                 <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
