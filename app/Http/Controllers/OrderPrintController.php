@@ -322,7 +322,7 @@ class OrderPrintController extends Controller
         </div>';
 
         $output .= '
-                <!-- <div class="page-break"></div> end container-->
+                <!-- page-break end container-->
                 </div>
             </main>
         </body>
