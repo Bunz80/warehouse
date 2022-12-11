@@ -128,7 +128,7 @@ class OrderPrintController extends Controller
         $delivery_contact = Contact::where('id', $order->delivery_contact_id)->first();
         $deliveryContact = "";
         if ($delivery_contact) {
-            $deliveryContact = $delivery_contact->name.' '.$delivery_contact->address;
+            $deliveryContact = 'Referente: '.$delivery_contact->name.' '.$delivery_contact->address;
         }
 
         // CATEGORY
@@ -176,7 +176,7 @@ class OrderPrintController extends Controller
             <div class="w50">
                 Consegna:<br />
                 <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
-                Referente: '.$deliveryContact.'
+                '.$deliveryContact.'
             </div>
 
             <div class="text-right" >
