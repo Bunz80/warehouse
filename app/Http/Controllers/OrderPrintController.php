@@ -161,7 +161,7 @@ class OrderPrintController extends Controller
             .tr_clear{ background-color: #fff; }
             .page-break {page-break-after: always;}
 
-            .td-margin { margin-left: 5px; margin-right:60px; }
+            .td-price { margin:20px; text-align:right;}
         </style>';
 
         $output = '
@@ -254,21 +254,21 @@ class OrderPrintController extends Controller
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
                                 <td>'.$value->name.'<br/>'.$value->description.'</td>
-                                <td class="text-right"><span class="td-margin">'.$value->quantity.'</span></td>
-                                <td class="text-right"><span class="td-margin">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</span></td>
+                                <td class="text-right"><span class="td-price">'.$value->quantity.'</span></td>
+                                <td class="text-right"><span class="td-price">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</span></td>
                                 <td class="text-right">';
 
                 if ($value->discount > 0) {
-                    $output .= '<span class="td-margin">'.$value->discount_price.' '.$value->discount_currency.'</span>';
+                    $output .= '<span class="td-price">'.$value->discount_price.' '.$value->discount_currency.'</span>';
                 } //if
 
                 if ($value->discount_currency === "%") {
                     $output .= '</td>
-                        <td class="text-right"><span class="td-margin">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
+                        <td class="text-right"><span class="td-price">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
                     </tr>';
                 } else {
                     $output .= '</td>
-                        <td class="text-right"><span class="td-margin">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
+                        <td class="text-right"><span class="td-price">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
                     </tr>';
                 }
 
