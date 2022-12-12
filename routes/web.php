@@ -18,7 +18,3 @@ Route::get('/', function () {
 });
 
 Route::get('/admin/warehouse/orders/print/{id}', 'OrderPrintController@pdf');
-
-// FROM OLD PROJECT
-// Route::get('orderprint/{id}', 'EcommerceController@orderprint');
-// Route::get('/dynamic_pdf/pdf/{id}/{status}', 'DynamicPDFController@pdf');
