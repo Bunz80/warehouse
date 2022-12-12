@@ -255,7 +255,7 @@ class OrderPrintController extends Controller
                                 <td>'.$value->code.'</td>
                                 <td>'.$value->name.'<br/>'.$value->description.'</td>
                                 <td class="text-right"><span class="td-price">'.$value->quantity.'</span></td>
-                                <td class="text-right"><span class="td-price">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</span></td>
+                                <td class="text-right"><span class="td-price">'.number_format((float) ($value->price_unit), 2).''.$value->currency.'</span></td>
                                 <td class="text-right">';
 
                 if ($value->discount > 0) {
