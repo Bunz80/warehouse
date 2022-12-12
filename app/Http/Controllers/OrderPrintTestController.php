@@ -11,7 +11,7 @@ use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
 use PDF;
 
-class OrderPrintController extends Controller
+class OrderPrintTestController extends Controller
 {
     //function pdf($id, $status)
     public function pdf($id)
