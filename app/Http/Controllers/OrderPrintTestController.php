@@ -312,7 +312,7 @@ class OrderPrintTestController extends Controller
                 '.$cont.'
             </div>
         </body>
-        </html>';
+        </html>'; 
 
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
