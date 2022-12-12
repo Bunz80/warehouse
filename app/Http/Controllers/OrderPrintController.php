@@ -161,7 +161,7 @@ class OrderPrintController extends Controller
             .tr_clear{ background-color: #fff; }
             .page-break {page-break-after: always;}
 
-            .td-price { padding:10px; text-align:right;}
+            .td-price { padding:20px; text-align:right;}
         </style>';
 
         $output = '
@@ -277,16 +277,16 @@ class OrderPrintController extends Controller
         } //if product
 
         $output .= '<tr class="text-right tr_clear">
-                        <td colspan="5" ><hr />Totale imponibile: </td>
-                        <td colspan="2" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
+                        <td colspan="4" ><hr />Totale imponibile: </td>
+                        <td colspan="3" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right tr_clear">
-                        <td colspan="5" >Totale iva: </td>
-                        <td colspan="2" class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
+                        <td colspan="4" >Totale iva: </td>
+                        <td colspan="3" class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right title tr_clear">
-                        <td colspan="5" >Totale Ordine: </td>
-                        <td colspan="2" class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                        <td colspan="4" >Totale Ordine: </td>
+                        <td colspan="3" class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
                     </tr>
                 </tbody>
             </table>
