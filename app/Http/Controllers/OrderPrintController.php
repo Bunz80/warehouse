@@ -254,21 +254,21 @@ class OrderPrintController extends Controller
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
                                 <td>'.$value->name.'<br/>'.$value->description.'</td>
-                                <td class="text-right"><span class="td-price">'.$value->quantity.'</span></td>
-                                <td class="text-right"><span class="td-price">'.number_format((float) ($value->price_unit), 2).''.$value->currency.'</span></td>
-                                <td class="text-right">';
+                                <td class="text-right td-price">'.$value->quantity.'</td>
+                                <td class="text-right td-price">'.number_format((float) ($value->price_unit), 2).''.$value->currency.'</td>
+                                <td class="text-right td-price">';
 
                 if ($value->discount > 0) {
-                    $output .= '<span class="td-price">'.$value->discount_price.' '.$value->discount_currency.'</span>';
+                    $output .= ''.$value->discount_price.' '.$value->discount_currency.'';
                 } //if
 
                 if ($value->discount_currency === "%") {
                     $output .= '</td>
-                        <td class="text-right"><span class="td-price">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
+                        <td class="text-right td-price">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
                 } else {
                     $output .= '</td>
-                        <td class="text-right"><span class="td-price">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
+                        <td class="text-right td-price">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
                 }
 
@@ -278,15 +278,15 @@ class OrderPrintController extends Controller
 
         $output .= '<tr class="text-right tr_clear">
                         <td colspan="6" ><hr />Totale imponibile: </td>
-                        <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
+                        <td class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right tr_clear">
                         <td colspan="6" >Totale iva: </td>
-                        <td >'.number_format($vat, 2).' '.$priceunit.'</td>
+                        <td class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right title tr_clear">
                         <td colspan="6" >Totale Ordine: </td>
-                        <td >'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                        <td class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
                     </tr>
                 </tbody>
             </table>
