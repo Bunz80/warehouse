@@ -10,6 +10,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
+use Closure;
 
 class OrderDetailsRelationManager extends RelationManager
 {
@@ -39,16 +40,95 @@ class OrderDetailsRelationManager extends RelationManager
                 //     ->reactive()
                 //     ->columnSpan(1),
 
-                Forms\Components\TextInput::make('tax')->required(),
+                Forms\Components\TextInput::make('tax')->required()
+                    ->reactive()
+                    ->numeric()
+                    ->afterStateUpdated(function (Closure $get, Closure $set) {
+                        $unit = $get('price_unit');
+                        if ($get('discount_currency') && $get('discount_price')) {
+                            if ($get('discount_currency') == '%') {
+                                $unit = $unit * (1 - $get('discount_price') / 100);
+                            } else {
+                                $unit = $unit - $get('discount_price');
+                            }
+                        }
+                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                        $sum = $unit * $get('quantity');
+
+                        $set('total_price', round($sum,2));
+                    }),
                 Forms\Components\TextInput::make('unit')->required(),
-                Forms\Components\TextInput::make('quantity')->required(),
-                Forms\Components\TextInput::make('price_unit')->required()->columnSpan(3),
+                Forms\Components\TextInput::make('quantity')->required()
+                    ->numeric()
+                    ->reactive()
+                    ->afterStateUpdated(function (Closure $get, Closure $set) {
+                        $unit = $get('price_unit');
+                        if ($get('discount_currency') && $get('discount_price')) {
+                            if ($get('discount_currency') == '%') {
+                                $unit = $unit * (1 - $get('discount_price') / 100);
+                            } else {
+                                $unit = $unit - $get('discount_price');
+                            }
+                        }
+                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                        $sum = $unit * $get('quantity');
+
+                        $set('total_price', round($sum,2));
+                    }),
+                Forms\Components\TextInput::make('price_unit')->required()->columnSpan(3)
+                    ->reactive()
+                    ->numeric()
+                    ->afterStateUpdated(function (Closure $get, Closure $set) {
+                        $unit = $get('price_unit');
+                        if ($get('discount_currency') && $get('discount_price')) {
+                            if ($get('discount_currency') == '%') {
+                                $unit = $unit * (1 - $get('discount_price') / 100);
+                            } else {
+                                $unit = $unit - $get('discount_price');
+                            }
+                        }
+                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                        $sum = $unit * $get('quantity');
+
+                        $set('total_price', round($sum,2));
+                    }),
                 Forms\Components\Placeholder::make('Discount')->content(new HtmlString('<hr />'))->columnSpan(6),
                 Forms\Components\Select::make('discount_currency')
                     ->label('Currency')
                     ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
-                    ->reactive(),
-                Forms\Components\TextInput::make('discount_price'),
+                    ->reactive()
+                    ->reactive()
+                    ->afterStateUpdated(function (Closure $get, Closure $set) {
+                        $unit = $get('price_unit');
+                        if ($get('discount_currency') && $get('discount_price')) {
+                            if ($get('discount_currency') == '%') {
+                                $unit = $unit * (1 - $get('discount_price') / 100);
+                            } else {
+                                $unit = $unit - $get('discount_price');
+                            }
+                        }
+                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                        $sum = $unit * $get('quantity');
+
+                        $set('total_price', round($sum,2));
+                    }),
+                Forms\Components\TextInput::make('discount_price')
+                    ->reactive()
+                    ->numeric()
+                    ->afterStateUpdated(function (Closure $get, Closure $set) {
+                        $unit = $get('price_unit');
+                        if ($get('discount_currency') && $get('discount_price')) {
+                            if ($get('discount_currency') == '%') {
+                                $unit = $unit * (1 - $get('discount_price') / 100);
+                            } else {
+                                $unit = $unit - $get('discount_price');
+                            }
+                        }
+                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                        $sum = $unit * $get('quantity');
+
+                        $set('total_price', round($sum,2));
+                    }),
                 Forms\Components\TextInput::make('total_price')->required()->disabled()->label('Total Price')->columnSpan(4),
             ])->columns(6);
     }
@@ -79,8 +159,10 @@ class OrderDetailsRelationManager extends RelationManager
             ->actions([
                 // @todo link to order
                 // @todo show pdf
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->afterCompletion(function() {
+                    return Redirect::back();
+                }),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),

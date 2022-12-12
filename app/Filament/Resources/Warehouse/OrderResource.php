@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
+use App\Models\Warehouse\OrderDetail;
 use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
@@ -87,77 +88,6 @@ class OrderResource extends Resource
                             ->searchable(),
                     ]),
 
-                    //Details Order
-                    // Card::make([
-                    //     Select::make('product')
-                    //         ->label('Search and Add Product')
-                    //         ->options(Product::all()->pluck('name', 'id'))
-                    //         ->searchable(),
-
-                    //     Repeater::make('Product list')
-                    //         ->schema([
-                    //             TextInput::make('name')
-                    //                 ->columnSpan(12)
-                    //                 ->default('Name')
-                    //                 ->label('Product Name'),
-                    //             MarkdownEditor::make('description')
-                    //                 ->toolbarButtons([
-                    //                     'bold',
-                    //                     'bulletList',
-                    //                     'orderedList',
-                    //                     'edit',
-                    //                     'preview',
-                    //                 ])
-                    //                 ->default('Product test')
-                    //                 ->reactive()
-                    //                 ->required()
-                    //                 ->columnSpan(12),
-                    //             TextInput::make('code')
-                    //                 ->columnSpan(3)
-                    //                 ->label('Supplier Code'),
-                    //             TextInput::make('vat')
-                    //             ->columnSpan(2)
-                    //                 ->default('22.00')
-                    //                 ->required()
-                    //                 ->label('Vat %'),
-                    //             TextInput::make('unit')
-                    //             ->columnSpan(2)
-                    //                 ->default('Pz')
-                    //                 ->label('Unit'),
-                    //             TextInput::make('qty')
-                    //                 ->columnSpan(2)
-                    //                 ->default('1')
-                    //                 ->required()
-                    //                 ->label('Quantity'),
-                    //             TextInput::make('price_unit')
-                    //                 ->columnSpan(3)
-                    //                 ->default('10')
-                    //                 ->numeric()
-                    //                 ->required()
-                    //                 ->label('Price'),
-
-                    //             Select::make('discount_currency')
-                    //                 ->label('Discount Currency')
-                    //                 //->options(Category::where('collection_name', 'Warehouse-Payment')->pluck('name', 'id'))
-                    //                 ->options(['%', '€', '$', '£', '¥'])
-                    //                 ->columnSpan(3),
-                    //             TextInput::make('discount_price')
-                    //                 ->label('Discount Value')
-                    //                 ->columnSpan(3)
-                    //                 ->numeric(),
-                    //             Placeholder::make('Total Price Item')
-                    //                 ->label('Total Price Item: ')
-                    //                 ->content(new HtmlString('<b>€ 100.00</b>'))->columnSpan(6),
-
-                    //         ])
-                    //         ->collapsible()
-                    //         ->cloneable()
-                    //         ->orderable()
-                    //         ->defaultItems(1)
-                    //         ->createItemButtonLabel('Add Item')
-                    //         ->columns(12),
-                    // ]),
-
                     // Info Payment & Trasport
                     Card::make([
                         Group::make([
@@ -192,15 +122,51 @@ class OrderResource extends Resource
 
                     Card::make([
                         Placeholder::make('Total Order')
-                                ->content(function (Closure $get) {
+                                ->content(function (Closure $get, Closure $set) {
+                                    $details = OrderDetail::where("order_id", $get("id"));
+                                    $total_prices = 0;
+                                    $total_taxes = 0;
+                                    $total_order = 0;
+
+                                    if ($details) {
+                                        for ($i = 0; $i < count($details->pluck('id')); $i++) {
+                                            $price_unit =  $details->pluck('price_unit')[$i];
+                                            $qty = $details->pluck('quantity')[$i];
+                                            $tax = $details->pluck('tax')[$i];
+                                            $discount_currency = $details->pluck('discount_currency')[$i];
+                                            $discount_price = $details->pluck('discount_price')[$i];
+
+                                            if ($discount_currency == '%') {
+                                                $price_unit = $price_unit * (1 - $discount_price / 100);
+                                            } else {
+                                                $price_unit = $price_unit - $discount_price;
+                                            }
+
+                                            $prices = $price_unit * $qty;
+                                            $taxes = $price_unit * ($tax/100) * $qty;
+                                            $total = $prices + $taxes;
+
+                                            $total_prices += $prices;
+                                            $total_taxes += $taxes;
+                                            $total_order += $total;
+
+                                            $set("total_prices", $prices);
+                                            $set("total_taxes", $taxes);
+                                            $set("total_order", $total_order);
+
+                                        }
+    
+                                    }
+
+
                                     return new HtmlString('
 
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
                             <table border="1" class="filament-tables-table table-auto w-full">
-                            <tr><td>Sub Total</td><td style="float:right">'.round($get('total_prices'), 2).' '.$get('currency').'</td></tr>
-                            <tr><td>Vat</td><td style="float:right">'.round($get('total_taxes'), 2).'</td></tr>
+                            <tr><td>Sub Total</td><td style="float:right">'.round($total_prices, 2).' '.$get('currency').'</td></tr>
+                            <tr><td>Vat</td><td style="float:right">'.round($total_taxes, 2).' '.$get('currency').'</td></tr>
                             <tr><td colspan="2"><hr style="margin:10px" /></td></tr>
-                            <tr><td><b>Total</b></td><td style="float:right">'.round($get('total_order'), 2).' '.$get('currency').'</td></tr>
+                            <tr><td><b>Total</b></td><td style="float:right">'.round($total_order, 2).' '.$get('currency').'</td></tr>
                             </table></div>');
                                 })->columnSpan(1),
 
