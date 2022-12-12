@@ -277,16 +277,16 @@ class OrderPrintController extends Controller
         } //if product
 
         $output .= '<tr class="text-right tr_clear">
-                        <td colspan="6" ><hr />Totale imponibile: </td>
-                        <td class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
+                        <td colspan="5" ><hr />Totale imponibile: </td>
+                        <td colspan="2" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right tr_clear">
-                        <td colspan="6" >Totale iva: </td>
-                        <td class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
+                        <td colspan="5" >Totale iva: </td>
+                        <td colspan="2" class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right title tr_clear">
-                        <td colspan="6" >Totale Ordine: </td>
-                        <td class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                        <td colspan="5" >Totale Ordine: </td>
+                        <td colspan="2" class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
                     </tr>
                 </tbody>
             </table>
