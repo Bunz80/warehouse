@@ -220,7 +220,7 @@ class OrderPrintTestController extends Controller
                 (Firma - Uff. Acquisti)
             </div>
             <div class="w50">
-                <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
+                <hr style="color:#000; border:1px solid #000; margin:5px; width:90%;">
                 (Firma - '.$order->company_name.')
             </div>
         </div>';
@@ -280,7 +280,7 @@ class OrderPrintTestController extends Controller
                 </div>
             </div>
             <div id="footer">
-				<span class="text-right pagenum"></span>
+				<span style="text-right !important;">Pagina <span class="pagenum" style="text-align:right"></span></span>
                 <div class="row w100" style="font-size:12px; text-align: justify;">
                     <hr style="border:1px solid #000; width:100%;">
                     <span>'.$order->company_html_footer.'</span>
@@ -304,6 +304,7 @@ class OrderPrintTestController extends Controller
                 </div>
                 <div class="clear" ></div>
                 '.$table.'
+				<span class="clear" style="margin:20px" ></span>
                 <div class="row w100" style="font-size:12px; text-align: justify;">
                     <span ><b>Info e condizioni:</b></span>
                     <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
