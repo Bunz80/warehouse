@@ -156,12 +156,13 @@ class OrderPrintController extends Controller
                 right: 0px;
                 height: 50px;
              }
-            /* table { vertical-align: top; } */ 
-            tr:nth-child(2n+1) { background-color: #ededed; }
-            .tr_clear{ background-color: #fff; }
-            .page-break {page-break-after: always;}
-
-            .td-price { padding-left:10px; padding-right:10px; text-align:right; width:60px; }
+            
+             tr:nth-child(2n+1) { background-color: #ededed; }
+             .tr_clear{ background-color: #fff; }
+             .page-break {page-break-after: always;}
+             
+             td { vertical-align: top; }
+             .td-price { padding-left:10px; padding-right:10px; text-align:right; width:60px; }
         </style>';
 
         $output = '
