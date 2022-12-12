@@ -194,7 +194,7 @@ class OrderPrintController extends Controller
         $output .= '
         <div class="row w100" >
             <div class="w50">
-                Consegna:<br />
+                Destinazione:<br />
                 <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
                 '.$deliveryContact.'
             </div>
