@@ -189,7 +189,7 @@ class OrderPrintController extends Controller
             <div class="w33 text-right">
                 <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
                 <br /> Emesso il: '.$order->order_order_at.' 
-                <!-- br /> '.$order->company_html_wh_info.' -->
+                <br /> '.$order->company_html_wh_info.' 
                 <br /> Pagina <span class="pagenum"></span>
             </div>
             <hr class="clear" style="margin-top:-1px" >
