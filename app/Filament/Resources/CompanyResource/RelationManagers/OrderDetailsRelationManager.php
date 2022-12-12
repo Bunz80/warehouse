@@ -159,10 +159,8 @@ class OrderDetailsRelationManager extends RelationManager
             ->actions([
                 // @todo link to order
                 // @todo show pdf
-                Tables\Actions\EditAction::make()->afterCompletion(function() {
-                    return Redirect::back();
-                }),
-                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
