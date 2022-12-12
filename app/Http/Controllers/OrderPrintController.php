@@ -156,7 +156,7 @@ class OrderPrintController extends Controller
                 right: 0px;
                 height: 50px;
              }
-            table { vertical-align: top; }
+            /* table { vertical-align: top; } */ 
             tr:nth-child(2n+1) { background-color: #ededed; }
             .tr_clear{ background-color: #fff; }
             .page-break {page-break-after: always;}
