@@ -269,7 +269,11 @@ class OrderPrintController extends Controller
                     </tr>';
                 }
 
-                $output .= '<tr class="text-right tr_clear">
+                
+            } //foreach
+        } //if product
+
+        $output .= '<tr class="text-right tr_clear">
                                 <td colspan="5" ><hr />Totale imponibile: </td>
                                 <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                             </tr>
@@ -280,11 +284,7 @@ class OrderPrintController extends Controller
                             <tr class="text-right title tr_clear">
                                 <td colspan="5" >Totale Ordine: </td>
                                 <td >'.number_format($total + $vat, 2).' '.$priceunit.'</td>
-                            </tr>';
-            } //foreach
-        } //if product
-
-        $output .= '
+                            </tr>
                 </tbody>
             </table>
         </div>';
