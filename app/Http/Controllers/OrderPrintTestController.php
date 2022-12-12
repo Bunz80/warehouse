@@ -277,7 +277,7 @@ class OrderPrintTestController extends Controller
                     <hr class="clear" style="margin-top:-1px" >
                 </div>
             </div>
-            <div id="foter">
+            <div id="footer">
                 <p style="height:30px" > . </p>
                 <div class="row footer" style="font-size:12px; text-align: justify;">
                     <span ><b>Info e condizioni:</b></span>
