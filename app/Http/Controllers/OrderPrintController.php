@@ -253,7 +253,7 @@ class OrderPrintController extends Controller
                 $output .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
-                                <td>'.$value->name.'<br/>'.$value->description.'</td>
+                                <td><b>'.$value->name.'</b><br/>'.$value->description.'</td>
                                 <td class="text-right td-price">'.$value->quantity.'</td>
                                 <td class="text-right td-price">'.number_format((float) ($value->price_unit), 2).''.$value->currency.'</td>
                                 <td class="text-right td-price">';
@@ -285,8 +285,8 @@ class OrderPrintController extends Controller
                         <td colspan="3" class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right title tr_clear">
-                        <td colspan="4" >Totale Ordine: </td>
-                        <td colspan="3" class="td-price">'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                        <td colspan="4" ><b>Totale Ordine: </b></td>
+                        <td colspan="3" class="td-price"><b>'.number_format($total + $vat, 2).' '.$priceunit.'</b></td>
                     </tr>
                 </tbody>
             </table>
