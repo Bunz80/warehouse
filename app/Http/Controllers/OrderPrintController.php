@@ -156,9 +156,11 @@ class OrderPrintController extends Controller
                 right: 0px;
                 height: 50px;
              }
-
+             tr { border-bottom: 1pt solid black; }
+             /*
              tr:nth-child(2n+1) { background-color: #bfbecf; }
              .tr_clear{ background-color: #fff; }
+             */
 
              .page-break {page-break-after: always;}
         </style>';
