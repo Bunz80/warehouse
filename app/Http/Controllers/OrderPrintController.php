@@ -160,6 +160,8 @@ class OrderPrintController extends Controller
             tr:nth-child(2n+1) { background-color: #ededed; }
             .tr_clear{ background-color: #fff; }
             .page-break {page-break-after: always;}
+
+            .td-margin { margin-left: 3px; margin-right:3px; }
         </style>';
 
         $output = '
@@ -252,8 +254,8 @@ class OrderPrintController extends Controller
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
                                 <td>'.$value->name.'<br/>'.$value->description.'</td>
-                                <td>'.$value->quantity.'</td>
-                                <td class="text-right">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</td>
+                                <td class="text-right"><span class="td-margin">'.$value->quantity.'</span></td>
+                                <td class="text-right"><span class="td-margin">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</span></td>
                                 <td class="text-right">';
 
                 if ($value->discount > 0) {
