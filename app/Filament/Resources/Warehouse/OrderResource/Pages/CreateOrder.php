@@ -189,9 +189,9 @@ class CreateOrder extends CreateRecord
                                                 'name' => $name,
                                                 'description' => $description,
                                                 'code' => $code,
-                                                'vat' => $vat,
+                                                'tax' => $vat,
                                                 'unit' => $unit,
-                                                'qty' => $qty,
+                                                'quantity' => $qty,
                                                 'price_unit' => $price,
                                                 'discount_currency' => $discount_currency,
                                                 'discount_price' => $discount_price,
@@ -208,9 +208,9 @@ class CreateOrder extends CreateRecord
                                             'name' => $item->pluck('name')[0],
                                             'description' => $item->pluck('description')[0],
                                             'code' => $item->pluck('code')[0],
-                                            'vat' => $item->pluck('tax')[0],
+                                            'tax' => $item->pluck('tax')[0],
                                             'unit' => $item->pluck('unit')[0],
-                                            'qty' => 1,
+                                            'quantity' => 1,
                                             'price_unit' => $item->pluck('price')[0],
                                             'discount_currency' => $item->pluck('currency')[0],
                                             'discount_price' => 0,
@@ -250,7 +250,7 @@ class CreateOrder extends CreateRecord
                                     ->columnSpan(3)
                                     ->default('')
                                     ->label('Supplier Code'),
-                                TextInput::make('vat')
+                                TextInput::make('tax')
                                     ->columnSpan(2)
                                     ->required()
                                     ->numeric()
@@ -266,7 +266,7 @@ class CreateOrder extends CreateRecord
                                     ->columnSpan(2)
                                     ->default('')
                                     ->label('Unit'),
-                                TextInput::make('qty')
+                                TextInput::make('quantity')
                                     ->columnSpan(2)
                                     ->numeric()
                                     ->required()
@@ -318,8 +318,8 @@ class CreateOrder extends CreateRecord
                                                 $unit = $unit - $get('discount_price');
                                             }
                                         }
-                                        $unit = $unit * (1 + (float) $get('vat') / 100);
-                                        $sum = $unit * $get('qty');
+                                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                                        $sum = $unit * $get('quantity');
 
                                         $set("total_price", $sum);
 
