@@ -231,24 +231,43 @@ class OrderPrintController extends Controller
             $total = $vat = 0;
             $priceunit = '';
             foreach ($products as $value) {
-                $total += ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount));
-                $vat += (float) ($value->vat) * ((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)) / 100;
-                $priceunit = $value->priceunit;
+                $priceunit = $value->currency;
+
+                $unit = (float) ($value->price_unit);
+                $discount_price = (float) ($value->discount_price);
+                $discount_currency = $value->discount_currency;
+                $tax = (float) ($value->tax);
+                $qty = (float) ($value->quantity);
+
+                if ($discount_currency == '%') {
+                    $unit = $unit * (1 - $discount_price / 100);
+                } else {
+                    $unit = $unit - $discount_price;
+                }
+
+                $total += $unit * $qty;
+                $vat += $unit * $tax / 100 * $qty;
 
                 $output .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>
-                                <td>'.$value->product_code.'</td>
-                                <td>'.$value->product_description.'</td>
-                                <td>'.$value->amount.'</td>
-                                <td class="text-right">'.number_format((float) ($value->price), 2).' '.$value->priceunit.'</td>
+                                <td>'.$value->code.'</td>
+                                <td>'.$value->description.'</td>
+                                <td>'.$value->quantity.'</td>
+                                <td class="text-right">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</td>
                                 <td class="text-right">';
                 if ($value->discount > 0) {
-                    $output .= $value->discount.' '.$value->discountunit;
+                    $output .= $value->discount_price.' '.$value->discount_currency;
                 } //if
 
-                $output .= '</td>
-                                <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
-                            </tr>';
+                if ($value->discount_currency === "%") {
+                    $output .= '</td>
+                        <td class="text-right">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
+                    </tr>';
+                } else {
+                    $output .= '</td>
+                        <td class="text-right">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
+                    </tr>';
+                }
 
                 $output .= '<tr class="text-right tr_clear">
                                 <td colspan="5" ><hr />Totale imponibile: </td>
