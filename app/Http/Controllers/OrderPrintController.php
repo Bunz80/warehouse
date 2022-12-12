@@ -264,11 +264,11 @@ class OrderPrintController extends Controller
 
                 if ($value->discount_currency === "%") {
                     $output .= '</td>
-                        <td class="text-right">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
+                        <td class="text-right"><span class="td-margin">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
                     </tr>';
                 } else {
                     $output .= '</td>
-                        <td class="text-right">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
+                        <td class="text-right"><span class="td-margin">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</span></td>
                     </tr>';
                 }
 
