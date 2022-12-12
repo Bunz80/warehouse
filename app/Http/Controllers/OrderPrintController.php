@@ -173,7 +173,6 @@ class OrderPrintController extends Controller
 
         // HEADER COMPANY
         $output .= '
-        <header>
         <div class="row w100 " style="height:100px" >
             <div class="w33">'.$logoCompany.'</div>
             <div class="w33">
@@ -187,8 +186,7 @@ class OrderPrintController extends Controller
                 <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.'
             </div>
             <hr class="clear" style="margin-top:-1px" >
-        </div>
-        </header>';
+        </div>';
 
         // BODY MAIN
         $output .= '<main>';
@@ -273,9 +271,9 @@ class OrderPrintController extends Controller
         </div>';
 
         // Test page 2
-        for($i=0; $i<200; $i++){
-            $output .= $i.'<br>';
-        }
+        // for($i=0; $i<200; $i++){
+        //     $output .= $i.'<br>';
+        // }
 
         //NOTE
         $output .= '
@@ -315,14 +313,12 @@ class OrderPrintController extends Controller
         //FOOTER
         $output .= '
         <p style="height:30px" > . </p>
-        <footer>
         <div class="row footer" style="font-size:12px; text-align: justify;">
             <span ><b>Info e condizioni:</b></span>
             <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
             <hr style="border:1px solid #000; width:100%;">
             <span>'.$order->company_html_footer.'</span>
-        </div>
-        </footer>';
+        </div>';
 
         $output .= '
                 <!-- page-break end container-->
