@@ -259,7 +259,7 @@ class OrderPrintController extends Controller
                                 <td class="text-right">';
 
                 if ($value->discount > 0) {
-                    $output .= $value->discount_price.' '.$value->discount_currency;
+                    $output .= '<span class="td-margin">'.$value->discount_price.' '.$value->discount_currency.'</span>';
                 } //if
 
                 if ($value->discount_currency === "%") {
