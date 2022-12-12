@@ -169,11 +169,11 @@ class OrderPrintTestController extends Controller
                     $output .= $value->discount.' '.$value->discountunit;
                 } //if
 
-                $table .= '</td>
+                $table .= ' </td>
                                 <td class="text-right">'.number_format(((float) ($value->price) * (1 - (float) ($value->discount) / 100) * (float) ($value->amount)), 2).' '.$value->priceunit.'</td>
                             </tr>';
 
-                $table .= '<tr class="text-right tr_clear">
+                $table .= ' <tr class="text-right tr_clear">
                                 <td colspan="5" ><hr />Totale imponibile: </td>
                                 <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                             </tr>
@@ -248,9 +248,9 @@ class OrderPrintTestController extends Controller
                     .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
                     .text-right{ text-align:right; }
                     
-                    @page { margin: 180px 50px; }
-                    #header { position: fixed; left: 0px; top: -100px; right: 0px; height: 100px; background-color: orange; text-align: center; }
-                    #footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px; background-color: lightblue; }
+                    @page { margin: 50px; }
+                    #header { position: fixed; left: 0px; top: -200px; right: 0px; height: 100px; background-color: orange; text-align: center; }
+                    #footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 150px; background-color: lightblue; }
                     #footer .page:after { content: counter(page, upper-roman); }
                     .page-break {page-break-after: always;}
 
