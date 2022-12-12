@@ -65,6 +65,7 @@ class OrderResource extends Resource
                         Select::make('company_id')
                             ->label('Company')
                             ->disabled()
+                            // ->relationship('Company', 'id')
                             ->options(Company::all()->pluck('name', 'id')),
                         Select::make('supplier_id')
                             ->label('Supplier')
