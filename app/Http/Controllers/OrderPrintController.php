@@ -160,6 +160,7 @@ class OrderPrintController extends Controller
              tr:nth-child(2n+1) { background-color: #ededed; }
              .tr_clear{ background-color: #fff; }
              .page-break {page-break-after: always;}
+             .pagenum:before { content: counter(page); }
              
              td { vertical-align: top; }
              .td-price { padding-left:10px; padding-right:10px; text-align:right; width:60px; }
