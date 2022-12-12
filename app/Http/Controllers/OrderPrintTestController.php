@@ -250,7 +250,7 @@ class OrderPrintTestController extends Controller
                     
                     @page { margin: 180px 50px; }
                     #header { position: fixed; left: 0px; top: -100px; right: 0px; height: 100px; background-color: orange; text-align: center; }
-                    #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 350px; background-color: lightblue; }
+                    #footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px; background-color: lightblue; }
                     #footer .page:after { content: counter(page, upper-roman); }
                     .page-break {page-break-after: always;}
 
