@@ -152,7 +152,7 @@ class CreateOrder extends CreateRecord
                                 if ($pros !== null) {
                                     foreach ($pros as $pro) {
                                         $i = 0;
-    
+
                                         foreach ($pro as $value) {
                                             if ($i == 8) {
                                                 $discount_price = $value;
@@ -183,7 +183,7 @@ class CreateOrder extends CreateRecord
                                             }
                                             $i++;
                                         }
-    
+
                                         array_push($arr,
                                             [
                                                 'name' => $name,
@@ -200,7 +200,6 @@ class CreateOrder extends CreateRecord
                                     }
                                 }
 
-                                
                                 if ($get('product')) {
                                     $item = Product::where('id', $get('product'));
                                     array_push($arr,
@@ -321,7 +320,7 @@ class CreateOrder extends CreateRecord
                                         $unit = $unit * (1 + (float) $get('tax') / 100);
                                         $sum = $unit * $get('quantity');
 
-                                        $set("total_price", $sum);
+                                        $set('total_price', $sum);
 
                                         return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
                                     })
