@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/admin/warehouse/orders/print/{id}', 'OrderPrintController@pdf');
+Route::get('/admin/warehouse/orders/print-test/{id}', 'OrderPrintTestController@pdf');
