@@ -219,8 +219,7 @@ class OrderPrintController extends Controller
                     <tr class="tr_clear">
                         <th class="text-left">ID</th>
                         <th class="text-left">Cod</th>
-                        <th class="text-left">Name</th>
-                        <th class="text-left">Descrizione</th>
+                        <th class="text-left">Prodotto</th>
                         <th class="text-left">Qnt</th>
                         <th class="text-right">Prezzo</th>
                         <th class="text-right">Sconto</th>
@@ -252,8 +251,7 @@ class OrderPrintController extends Controller
                 $output .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
-                                <td>'.$value->name.'</td>
-                                <td>'.$value->description.'</td>
+                                <td>'.$value->name.'< br/>'.$value->description.'</td>
                                 <td>'.$value->quantity.'</td>
                                 <td class="text-right">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</td>
                                 <td class="text-right">';
