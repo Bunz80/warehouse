@@ -147,56 +147,60 @@ class CreateOrder extends CreateRecord
                             ->afterStateUpdated(function (Closure $set, Closure $get) {
                                 $arr = [];
 
-                                $pros = $get('Product list');
+                                $pros = $get('orderDetails');
 
-                                foreach ($pros as $pro) {
-                                    $i = 0;
-
-                                    foreach ($pro as $value) {
-                                        if ($i == 8) {
-                                            $discount_price = $value;
+                                if ($pros !== null) {
+                                    foreach ($pros as $pro) {
+                                        $i = 0;
+    
+                                        foreach ($pro as $value) {
+                                            if ($i == 8) {
+                                                $discount_price = $value;
+                                            }
+                                            if ($i == 7) {
+                                                $discount_currency = $value;
+                                            }
+                                            if ($i == 6) {
+                                                $price = $value;
+                                            }
+                                            if ($i == 5) {
+                                                $qty = $value;
+                                            }
+                                            if ($i == 4) {
+                                                $unit = $value;
+                                            }
+                                            if ($i == 3) {
+                                                $vat = $value;
+                                            }
+                                            if ($i == 2) {
+                                                $code = $value;
+                                            }
+                                            if ($i == 1) {
+                                                $description = $value;
+                                            }
+                                            if ($i == 0) {
+                                                $name = $value;
+                                            }
+                                            $i++;
                                         }
-                                        if ($i == 7) {
-                                            $discount_currency = $value;
-                                        }
-                                        if ($i == 6) {
-                                            $price = $value;
-                                        }
-                                        if ($i == 5) {
-                                            $qty = $value;
-                                        }
-                                        if ($i == 4) {
-                                            $unit = $value;
-                                        }
-                                        if ($i == 3) {
-                                            $vat = $value;
-                                        }
-                                        if ($i == 2) {
-                                            $code = $value;
-                                        }
-                                        if ($i == 1) {
-                                            $description = $value;
-                                        }
-                                        if ($i == 0) {
-                                            $name = $value;
-                                        }
-                                        $i++;
+    
+                                        array_push($arr,
+                                            [
+                                                'name' => $name,
+                                                'description' => $description,
+                                                'code' => $code,
+                                                'vat' => $vat,
+                                                'unit' => $unit,
+                                                'qty' => $qty,
+                                                'price_unit' => $price,
+                                                'discount_currency' => $discount_currency,
+                                                'discount_price' => $discount_price,
+                                            ]
+                                        );
                                     }
-
-                                    array_push($arr,
-                                        [
-                                            'name' => $name,
-                                            'description' => $description,
-                                            'code' => $code,
-                                            'vat' => $vat,
-                                            'unit' => $unit,
-                                            'qty' => $qty,
-                                            'price_unit' => $price,
-                                            'discount_currency' => $discount_currency,
-                                            'discount_price' => $discount_price,
-                                        ]
-                                    );
                                 }
+
+                                
                                 if ($get('product')) {
                                     $item = Product::where('id', $get('product'));
                                     array_push($arr,
@@ -212,11 +216,12 @@ class CreateOrder extends CreateRecord
                                             'discount_price' => 0,
                                         ]
                                     );
-                                    $set('Product list', $arr);
+                                    $set('orderDetails', $arr);
                                 }
                             }),
 
-                        Repeater::make('Product list')
+                        Repeater::make('orderDetails')
+                            ->relationship()
                             ->schema([
                                 TextInput::make('name')
                                     ->columnSpan(12)
@@ -301,9 +306,10 @@ class CreateOrder extends CreateRecord
                                     ->disabled(function (Closure $get) {
                                         return $get('discount_currency') ? false : true;
                                     }),
+                                Hidden::make('total_price'),
                                 Placeholder::make('Total_price_item')
                                     ->label('Total Price Item: ')
-                                    ->content(function (Closure $get) {
+                                    ->content(function (Closure $get, Closure $set) {
                                         $unit = $get('price_unit');
                                         if ($get('discount_currency') && $get('discount_price')) {
                                             if ($get('discount_currency') == '%') {
@@ -315,6 +321,8 @@ class CreateOrder extends CreateRecord
                                         $unit = $unit * (1 + (float) $get('vat') / 100);
                                         $sum = $unit * $get('qty');
 
+                                        $set("total_price", $sum);
+
                                         return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
@@ -322,7 +330,6 @@ class CreateOrder extends CreateRecord
                             ])
                             ->collapsible()
                             ->cloneable()
-                            ->orderable()
                             ->defaultItems(0)
                             ->createItemButtonLabel('Add Item')
                             ->columns(12)
@@ -331,46 +338,48 @@ class CreateOrder extends CreateRecord
 
                     Placeholder::make('Total Order')
                         ->content(function (Closure $get, Closure $set) {
-                            $items = $get('Product list');
+                            $items = $get('orderDetails');
                             $priceSum = 0;
                             $vatSum = 0;
-                            foreach ($items as $item) {
-                                $i = 0;
-                                $price = 0;
-                                $vat = 0;
-                                $qty = 0;
-                                $discount_currency = '';
-                                $discount_price = 0;
+                            if ($items != null) {
+                                foreach ($items as $item) {
+                                    $i = 0;
+                                    $price = 0;
+                                    $vat = 0;
+                                    $qty = 0;
+                                    $discount_currency = '';
+                                    $discount_price = 0;
 
-                                foreach ($item as $value) {
-                                    if ($i == 8) {
-                                        $discount_price = $value;
+                                    foreach ($item as $value) {
+                                        if ($i == 8) {
+                                            $discount_price = $value;
+                                        }
+                                        if ($i == 7) {
+                                            $discount_currency = $value;
+                                        }
+                                        if ($i == 6) {
+                                            $price = $value;
+                                        }
+                                        if ($i == 5) {
+                                            $qty = $value;
+                                        }
+                                        if ($i == 3) {
+                                            $vat = $value;
+                                        }
+                                        $i++;
                                     }
-                                    if ($i == 7) {
-                                        $discount_currency = $value;
-                                    }
-                                    if ($i == 6) {
-                                        $price = $value;
-                                    }
-                                    if ($i == 5) {
-                                        $qty = $value;
-                                    }
-                                    if ($i == 3) {
-                                        $vat = $value;
-                                    }
-                                    $i++;
-                                }
 
-                                $unit = $price;
-                                if ($discount_currency && $discount_price) {
-                                    if ($discount_currency == '%') {
-                                        $unit = $unit * (1 - $discount_price / 100);
-                                    } else {
-                                        $unit = $unit - $discount_price;
+                                    $unit = $price;
+                                    if ($discount_currency && $discount_price) {
+                                        if ($discount_currency == '%') {
+                                            $unit = $unit * (1 - $discount_price / 100);
+                                        } else {
+                                            $unit = $unit - $discount_price;
+                                        }
                                     }
+                                    $priceSum += $unit * $qty;
+                                    $vatSum += $unit * ($vat / 100) * $qty;
                                 }
-                                $priceSum += $unit * $qty;
-                                $vatSum += $unit * ($vat / 100) * $qty;
                             }
 
                             $set('total_prices', $priceSum);
@@ -658,67 +667,68 @@ class CreateOrder extends CreateRecord
                         Placeholder::make('summary_products')
                             ->label('Products: ')
                             ->content(function (Closure $get) {
-                                $items = $get('Product list');
+                                $items = $get('orderDetails');
                                 $str = '';
+                                if ($items !== null) {
+                                    foreach ($items as $item) {
+                                        $i = $price = $vat = $qty = $discount_price = $total = 0;
+                                        $discount_currency = $unit = $code = $description = $name = '';
 
-                                foreach ($items as $item) {
-                                    $i = $price = $vat = $qty = $discount_price = $total = 0;
-                                    $discount_currency = $unit = $code = $description = $name = '';
+                                        foreach ($item as $value) {
+                                            if ($i == 8) {
+                                                $discount_price = $value;
+                                            }
+                                            if ($i == 7) {
+                                                $discount_currency = $value;
+                                            }
+                                            if ($i == 6) {
+                                                $price = $value;
+                                            }
+                                            if ($i == 5) {
+                                                $qty = $value;
+                                            }
+                                            if ($i == 4) {
+                                                $unit = $value;
+                                            }
+                                            if ($i == 3) {
+                                                $vat = $value;
+                                            }
+                                            if ($i == 2) {
+                                                $code = $value;
+                                            }
+                                            if ($i == 1) {
+                                                $description = $value;
+                                            }
+                                            if ($i == 0) {
+                                                $name = $value;
+                                            }
+                                            $i++;
+                                        }
+                                        $punit = $price;
+                                        if ($discount_currency && $discount_price) {
+                                            if ($discount_currency == '%') {
+                                                $punit = $punit * (1 - $discount_price / 100);
+                                            } else {
+                                                $punit = $punit - $discount_price;
+                                            }
+                                        }
+                                        $total = $punit * (1 + $vat / 100) * $qty;
 
-                                    foreach ($item as $value) {
-                                        if ($i == 8) {
-                                            $discount_price = $value;
-                                        }
-                                        if ($i == 7) {
-                                            $discount_currency = $value;
-                                        }
-                                        if ($i == 6) {
-                                            $price = $value;
-                                        }
-                                        if ($i == 5) {
-                                            $qty = $value;
-                                        }
-                                        if ($i == 4) {
-                                            $unit = $value;
-                                        }
-                                        if ($i == 3) {
-                                            $vat = $value;
-                                        }
-                                        if ($i == 2) {
-                                            $code = $value;
-                                        }
-                                        if ($i == 1) {
-                                            $description = $value;
-                                        }
-                                        if ($i == 0) {
-                                            $name = $value;
-                                        }
-                                        $i++;
+                                        $str .= '<tr>
+                                                    <td>'.$name.'</td>
+                                                    <td class="invisible">A</td>
+                                                    <td>'.$code.'</td>
+                                                    <td>'.$description.'</td>
+                                                    <td class="invisible">A</td>
+                                                    <td>'.$unit.'</td>
+                                                    <td>'.$vat.'</td>
+                                                    <td>'.$qty.'</td>
+                                                    <td>'.$price.' '.$get('currency').'</td>
+                                                    <td></td>
+                                                    <td>'.$discount_price.' '.$discount_currency.'</td>
+                                                    <td>'.$total.'</td>
+                                                </tr>';
                                     }
-                                    $punit = $price;
-                                    if ($discount_currency && $discount_price) {
-                                        if ($discount_currency == '%') {
-                                            $punit = $punit * (1 - $discount_price / 100);
-                                        } else {
-                                            $punit = $punit - $discount_price;
-                                        }
-                                    }
-                                    $total = $punit * (1 + $vat / 100) * $qty;
-
-                                    $str .= '<tr>
-                                                <td>'.$name.'</td>
-                                                <td class="invisible">A</td>
-                                                <td>'.$code.'</td>
-                                                <td>'.$description.'</td>
-                                                <td class="invisible">A</td>
-                                                <td>'.$unit.'</td>
-                                                <td>'.$vat.'</td>
-                                                <td>'.$qty.'</td>
-                                                <td>'.$price.' '.$get('currency').'</td>
-                                                <td></td>
-                                                <td>'.$discount_price.' '.$discount_currency.'</td>
-                                                <td>'.$total.'</td>
-                                             </tr>';
                                 }
 
                                 return new HtmlString('
