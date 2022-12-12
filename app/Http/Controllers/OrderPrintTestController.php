@@ -226,7 +226,7 @@ class OrderPrintTestController extends Controller
         </div>';
 
         // Test page 2
-        for($i=0; $i<200; $i++){
+        for ($i = 0; $i < 200; $i++) {
             $cont .= $i.'<br>';
         }
 
