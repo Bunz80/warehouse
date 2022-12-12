@@ -183,7 +183,7 @@ class OrderPrintController extends Controller
                 <b class="title">'.$order->company_name.'</b> <br />
                 '.$comapnyAddress.'<br />
                 IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
-                <!-- '.$order->companymail.' - '.$order->companypec.' --> 
+                '.$order->companymail.' - '.$order->companypec.'
             </div>
             <div class="w33 text-right">
                 <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
