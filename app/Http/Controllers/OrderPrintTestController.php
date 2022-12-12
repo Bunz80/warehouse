@@ -249,8 +249,8 @@ class OrderPrintTestController extends Controller
                     .text-right{ text-align:right; }
                     
                     @page { margin: 180px 50px; }
-                    #header { position: fixed; left: 0px; top: -180px; right: 0px; height: 150px; background-color: orange; text-align: center; }
-                    #footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 150px; background-color: lightblue; }
+                    #header { position: fixed; left: 0px; top: -100px; right: 0px; height: 100px; background-color: orange; text-align: center; }
+                    #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 350px; background-color: lightblue; }
                     #footer .page:after { content: counter(page, upper-roman); }
                     .page-break {page-break-after: always;}
 
@@ -278,10 +278,7 @@ class OrderPrintTestController extends Controller
                 </div>
             </div>
             <div id="footer">
-                <p style="height:30px" > . </p>
-                <div class="row footer" style="font-size:12px; text-align: justify;">
-                    <span ><b>Info e condizioni:</b></span>
-                    <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
+                <div class="row w100" style="font-size:12px; text-align: justify;">
                     <hr style="border:1px solid #000; width:100%;">
                     <span>'.$order->company_html_footer.'</span>
                 </div>
@@ -304,6 +301,10 @@ class OrderPrintTestController extends Controller
                 </div>
                 <div class="clear" ></div>
                 '.$table.'
+                <div class="row w100" style="font-size:12px; text-align: justify;">
+                    <span ><b>Info e condizioni:</b></span>
+                    <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
+                </div>
                 '.$cont.'
             </div>
         </body>
