@@ -251,10 +251,11 @@ class OrderPrintController extends Controller
                 $output .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
-                                <td>'.$value->name.'< br/>'.$value->description.'</td>
+                                <td>'.$value->name.'<br/>'.$value->description.'</td>
                                 <td>'.$value->quantity.'</td>
                                 <td class="text-right">'.number_format((float) ($value->price_unit), 2).' '.$value->currency.'</td>
                                 <td class="text-right">';
+
                 if ($value->discount > 0) {
                     $output .= $value->discount_price.' '.$value->discount_currency;
                 } //if
@@ -274,17 +275,17 @@ class OrderPrintController extends Controller
         } //if product
 
         $output .= '<tr class="text-right tr_clear">
-                                <td colspan="5" ><hr />Totale imponibile: </td>
-                                <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
-                            </tr>
-                            <tr class="text-right tr_clear">
-                                <td colspan="5" >Totale iva: </td>
-                                <td >'.number_format($vat, 2).' '.$priceunit.'</td>
-                            </tr>
-                            <tr class="text-right title tr_clear">
-                                <td colspan="5" >Totale Ordine: </td>
-                                <td >'.number_format($total + $vat, 2).' '.$priceunit.'</td>
-                            </tr>
+                        <td colspan="6" ><hr />Totale imponibile: </td>
+                        <td ><hr />'.number_format($total, 2).' '.$priceunit.'</td>
+                    </tr>
+                    <tr class="text-right tr_clear">
+                        <td colspan="6" >Totale iva: </td>
+                        <td >'.number_format($vat, 2).' '.$priceunit.'</td>
+                    </tr>
+                    <tr class="text-right title tr_clear">
+                        <td colspan="6" >Totale Ordine: </td>
+                        <td >'.number_format($total + $vat, 2).' '.$priceunit.'</td>
+                    </tr>
                 </tbody>
             </table>
         </div>';
