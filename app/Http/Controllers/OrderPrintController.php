@@ -161,7 +161,7 @@ class OrderPrintController extends Controller
             .tr_clear{ background-color: #fff; }
             .page-break {page-break-after: always;}
 
-            .td-price { margin:20px; text-align:right;}
+            .td-price { padding:10px; text-align:right;}
         </style>';
 
         $output = '
