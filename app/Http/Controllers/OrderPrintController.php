@@ -190,16 +190,16 @@ class OrderPrintController extends Controller
         </div>
         </header>';
 
-        // $output .= '
-        // <footer>
-        //     <p style="height:30px" > . </p>
-        //     <div class="row footer" style="font-size:12px; text-align: justify;">
-        //         <span ><b>Info e condizioni:</b></span>
-        //         <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
-        //         <hr style="border:1px solid #000; width:100%;">
-        //         <span>'.$order->company_html_footer.'</span>
-        //     </div>
-        // <footer>';
+         $output .= '
+         <footer>
+             <p style="height:30px" > . </p>
+             <div class="row footer" style="font-size:12px; text-align: justify;">
+                 <span ><b>Info e condizioni:</b></span>
+                 <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
+                 <hr style="border:1px solid #000; width:100%;">
+                 <span>'.$order->company_html_footer.'</span>
+             </div>
+         <footer>';
 
         // BODY MAIN
         $output .= '<main>';
