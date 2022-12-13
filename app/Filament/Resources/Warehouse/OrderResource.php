@@ -158,8 +158,6 @@ class OrderResource extends Resource
                                         }
     
                                     }
-
-
                                     return new HtmlString('
 
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">
