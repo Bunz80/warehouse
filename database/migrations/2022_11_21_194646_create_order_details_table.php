@@ -25,17 +25,17 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             $table->string('currency')->nullable()->default('€');
-            $table->decimal('tax', 12, 2)->nullable();                  //22.00 %
-            $table->string('unit')->nullable();                         //mt, pz, lt, kg, ecc
-            $table->decimal('quantity', 5, 2)->nullable()->default(1);  //2
-            $table->decimal('price_unit', 12, 2)->nullable();           //10
-            $table->decimal('total_price', 12, 2)->nullable();          //20
-            $table->decimal('total_tax', 12, 2)->nullable();            //4,4
-            $table->decimal('total_order', 12, 2)->nullable();          //24,40
-
+            $table->string('unit')->nullable();
+            $table->decimal('tax', 12, 2)->nullable();
+            $table->decimal('quantity', 5, 2)->nullable()->default(1);
+            $table->decimal('price_unit', 12, 2)->nullable();
+            $table->decimal('price_total', 12, 2)->nullable();
+            $table->decimal('price_tax', 12, 2)->nullable();
+            $table->decimal('total', 12, 2)->nullable();
+            
             $table->string('discount_currency')->nullable()->default('€');
             $table->decimal('discount_price', 12, 2)->nullable();
-
+            
 
             $table->timestamps();
             $table->softDeletes();
