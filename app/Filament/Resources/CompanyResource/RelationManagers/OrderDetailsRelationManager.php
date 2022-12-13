@@ -44,16 +44,15 @@ class OrderDetailsRelationManager extends RelationManager
                     ->reactive()
                     ->numeric()
                     ->afterStateUpdated(function (Closure $get, Closure $set) {
-                        $unit = $get('price_unit');
+                        $originalsum = $get('price_unit') * $get('quantity');
                         if ($get('discount_currency') && $get('discount_price')) {
                             if ($get('discount_currency') == '%') {
-                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                             } else {
-                                $unit = $unit - $get('discount_price');
+                                $originalsum = $originalsum - $get('discount_price');
                             }
                         }
-                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                        $sum = $unit * $get('quantity');
+                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                         $set('total_price', round($sum,2));
                     }),
@@ -62,16 +61,15 @@ class OrderDetailsRelationManager extends RelationManager
                     ->numeric()
                     ->reactive()
                     ->afterStateUpdated(function (Closure $get, Closure $set) {
-                        $unit = $get('price_unit');
+                        $originalsum = $get('price_unit') * $get('quantity');
                         if ($get('discount_currency') && $get('discount_price')) {
                             if ($get('discount_currency') == '%') {
-                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                             } else {
-                                $unit = $unit - $get('discount_price');
+                                $originalsum = $originalsum - $get('discount_price');
                             }
                         }
-                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                        $sum = $unit * $get('quantity');
+                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                         $set('total_price', round($sum,2));
                     }),
@@ -79,36 +77,34 @@ class OrderDetailsRelationManager extends RelationManager
                     ->reactive()
                     ->numeric()
                     ->afterStateUpdated(function (Closure $get, Closure $set) {
-                        $unit = $get('price_unit');
+                        $originalsum = $get('price_unit') * $get('quantity');
                         if ($get('discount_currency') && $get('discount_price')) {
                             if ($get('discount_currency') == '%') {
-                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                             } else {
-                                $unit = $unit - $get('discount_price');
+                                $originalsum = $originalsum - $get('discount_price');
                             }
                         }
-                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                        $sum = $unit * $get('quantity');
+                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                         $set('total_price', round($sum,2));
                     }),
                 Forms\Components\Placeholder::make('Discount')->content(new HtmlString('<hr />'))->columnSpan(6),
                 Forms\Components\Select::make('discount_currency')
                     ->label('Currency')
-                    ->options(Category::where('collection_name', 'Currency')->pluck('name', 'name'))
+                    ->options(['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'])
                     ->reactive()
                     ->reactive()
                     ->afterStateUpdated(function (Closure $get, Closure $set) {
-                        $unit = $get('price_unit');
+                        $originalsum = $get('price_unit') * $get('quantity');
                         if ($get('discount_currency') && $get('discount_price')) {
                             if ($get('discount_currency') == '%') {
-                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                             } else {
-                                $unit = $unit - $get('discount_price');
+                                $originalsum = $originalsum - $get('discount_price');
                             }
                         }
-                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                        $sum = $unit * $get('quantity');
+                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                         $set('total_price', round($sum,2));
                     }),
@@ -116,16 +112,15 @@ class OrderDetailsRelationManager extends RelationManager
                     ->reactive()
                     ->numeric()
                     ->afterStateUpdated(function (Closure $get, Closure $set) {
-                        $unit = $get('price_unit');
+                        $originalsum = $get('price_unit') * $get('quantity');
                         if ($get('discount_currency') && $get('discount_price')) {
                             if ($get('discount_currency') == '%') {
-                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                             } else {
-                                $unit = $unit - $get('discount_price');
+                                $originalsum = $originalsum - $get('discount_price');
                             }
                         }
-                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                        $sum = $unit * $get('quantity');
+                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                         $set('total_price', round($sum,2));
                     }),

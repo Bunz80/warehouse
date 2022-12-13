@@ -162,14 +162,16 @@ class OrderPrintController extends Controller
                 $tax = (float) ($value->tax);
                 $qty = (float) ($value->quantity);
 
+                $originalsum = $unit * $qty;
+
                 if ($discount_currency == '%') {
-                    $unit = $unit * (1 - $discount_price / 100);
+                    $originalsum = $originalsum * (1 - $discount_price / 100);
                 } else {
-                    $unit = $unit - $discount_price;
+                    $originalsum = $originalsum - $discount_price;
                 }
 
-                $total += $unit * $qty;
-                $vat += $unit * $tax / 100 * $qty;
+                $total += $originalsum;
+                $vat += $originalsum * $tax / 100;
 
                 $table .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>

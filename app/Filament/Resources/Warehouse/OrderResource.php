@@ -106,7 +106,6 @@ class OrderResource extends Resource
                             Textarea::make('trasport_note')->label('Trasport Note'),
                         ]),
 
-                        Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
 
                         Textarea::make('notes')->label('Order notes')->columnSpan(2),
 
@@ -137,14 +136,16 @@ class OrderResource extends Resource
                                             $discount_currency = $details->pluck('discount_currency')[$i];
                                             $discount_price = $details->pluck('discount_price')[$i];
 
+                                            $originalsum = $price_unit * $qty;
+
                                             if ($discount_currency == '%') {
-                                                $price_unit = $price_unit * (1 - $discount_price / 100);
+                                                $originalsum = $originalsum * (1 - $discount_price / 100);
                                             } else {
-                                                $price_unit = $price_unit - $discount_price;
+                                                $originalsum = $originalsum - $discount_price;
                                             }
 
-                                            $prices = $price_unit * $qty;
-                                            $taxes = $price_unit * ($tax/100) * $qty;
+                                            $prices = $originalsum;
+                                            $taxes = $originalsum * ($tax/100);
                                             $total = $prices + $taxes;
 
                                             $total_prices += $prices;
