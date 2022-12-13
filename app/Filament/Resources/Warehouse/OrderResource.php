@@ -11,6 +11,7 @@ use App\Models\Contact;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
+use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
@@ -18,7 +19,9 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -62,7 +65,6 @@ class OrderResource extends Resource
                         Select::make('company_id')
                             ->label('Company')
                             ->disabled()
-                            // ->relationship('Company', 'id')
                             ->options(Company::all()->pluck('name', 'id')),
                         Select::make('supplier_id')
                             ->label('Supplier')
@@ -103,6 +105,8 @@ class OrderResource extends Resource
                             Textarea::make('trasport_note')->label('Trasport Note'),
                         ]),
 
+                        Placeholder::make('')->content(new HtmlString('<hr />'))->columnSpan(2),
+
                         Textarea::make('notes')->label('Order notes')->columnSpan(2),
 
                         Textarea::make('report')->label('Order report')->columnSpan(2),
@@ -119,40 +123,41 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Total Order')
                                 ->content(function (Closure $get, Closure $set) {
-                                    $details = OrderDetail::where('order_id', $get('id'));
+                                    $details = OrderDetail::where("order_id", $get("id"));
                                     $total_prices = 0;
                                     $total_taxes = 0;
                                     $total_order = 0;
 
                                     if ($details) {
                                         for ($i = 0; $i < count($details->pluck('id')); $i++) {
-                                            $price_unit = $details->pluck('price_unit')[$i];
+                                            $price_unit =  $details->pluck('price_unit')[$i];
                                             $qty = $details->pluck('quantity')[$i];
                                             $tax = $details->pluck('tax')[$i];
                                             $discount_currency = $details->pluck('discount_currency')[$i];
                                             $discount_price = $details->pluck('discount_price')[$i];
 
-                                            $originalsum = $price_unit * $qty;
-
                                             if ($discount_currency == '%') {
-                                                $originalsum = $originalsum * (1 - $discount_price / 100);
+                                                $price_unit = $price_unit * (1 - $discount_price / 100);
                                             } else {
-                                                $originalsum = $originalsum - $discount_price;
+                                                $price_unit = $price_unit - $discount_price;
                                             }
 
-                                            $prices = $originalsum;
-                                            $taxes = $originalsum * ($tax / 100);
+                                            $prices = $price_unit * $qty;
+                                            $taxes = $price_unit * ($tax/100) * $qty;
                                             $total = $prices + $taxes;
 
                                             $total_prices += $prices;
                                             $total_taxes += $taxes;
                                             $total_order += $total;
 
-                                            $set('total_prices', $prices);
-                                            $set('total_taxes', $taxes);
-                                            $set('total_order', $total_order);
+                                            $set("total_prices", $prices);
+                                            $set("total_taxes", $taxes);
+                                            $set("total_order", $total_order);
+
                                         }
+    
                                     }
+
 
                                     return new HtmlString('
 
