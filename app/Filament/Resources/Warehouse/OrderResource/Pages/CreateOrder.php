@@ -279,6 +279,7 @@ class CreateOrder extends CreateRecord
                                     ->reactive()
                                     ->default(0)
                                     ->label('Price'),
+
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
                                     ->options(function (Closure $get) {
@@ -324,6 +325,7 @@ class CreateOrder extends CreateRecord
                                         return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
+
                             ])
                             ->collapsible()
                             ->cloneable()
