@@ -11,7 +11,7 @@ use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
 use PDF;
 
-class OrderPrintTestController extends Controller
+class OrderPrintController extends Controller
 {
     //function pdf($id, $status)
     public function pdf($id)
@@ -130,20 +130,103 @@ class OrderPrintTestController extends Controller
         }
 
         //Initialize variables
-        $output = $style = $header = $destination = $footer_company = $table = $cont = '';
+        $output = $style = $header = $destination = $footer_company = '';
+        $style = '
+        <style>
+            body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
+            .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
+            .clear{ clear:both; }
+            .w100{ width: 100% !important; }
+            .w50{ width: 50% !important; float:left; }
+            .w33{ width: 33.33% !important; float:left; }
+            .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
+            .text-right{ text-align:right; }
+            
+            .header {
+                position: fixed;
+                top: -60px;
+                left: 0px;
+                right: 0px;
+                height: 50px;
+             }
+            .footer {
+                position: fixed;
+                bottom: 280px;
+                left: 0px;
+                right: 0px;
+                height: 50px;
+             }
+            
+             tr:nth-child(2n+1) { background-color: #ededed; }
+             .tr_clear{ background-color: #fff; }
+             .page-break {page-break-after: always;}
+             .pagenum:before { content: counter(page); }
+             
+             td { vertical-align: top; }
+             .td-price { padding-left:10px; padding-right:10px; text-align:right; width:60px; }
+        </style>';
+
+        $output = '
+        <html>
+            <head>'.
+                $style.'
+            </head>
+            <body>
+                <!-- start container-->
+                <div class="container">';
+
+        // HEADER COMPANY
+        $output .= '
+        <div class="row w100 " style="height:100px" >
+            <div class="w33">'.$logoCompany.'</div>
+            <div class="w33">
+                <b class="title">'.$order->company_name.'</b> <br />
+                '.$comapnyAddress.'<br />
+                IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
+                '.$order->companymail.' - '.$order->companypec.'
+            </div>
+            <div class="w33 text-right">
+                <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
+                <br /> Emesso il: '.$order->order_order_at.' 
+                <br /> '.$order->company_html_wh_info.' 
+                <br /> Pagina <span class="pagenum"></span>
+            </div>
+            <hr class="clear" style="margin-top:-1px" >
+        </div>';
+
+        // BODY MAIN
+        $output .= '<main>';
+        // SUPPLIER + DELIVERY
+        $output .= '
+        <div class="row w100" >
+            <div class="w50">
+                Destinazione:<br />
+                <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
+                '.$deliveryContact.'
+            </div>
+
+            <div class="text-right" >
+                Fornitore:<br />
+                <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br />
+                <div style="float:right;">
+                    '.$supplierAddress.'<br />
+                </div>
+            </div>
+        </div>
+        <div class="clear" ></div>';
 
         // Table - OrderDetails
         $products = OrderDetail::where('order_id', '=', $id)->get();
-        $table .= '
+        $output .= '
         <div class="row w100">
             <h3>Lista Prodotti</h3>
             <table class="table table-striped" style="width:100%">
                 <thead>
                     <tr class="tr_clear">
-                        <th>ID</th>
-                        <th>Cod</th>
-                        <th>Prodotto</th>
-                        <th>Qnt</th>
+                        <th class="text-left">ID</th>
+                        <th class="text-left">Cod</th>
+                        <th class="text-left">Prodotto</th>
+                        <th class="text-left">Qnt</th>
                         <th class="text-right">Prezzo</th>
                         <th class="text-right">Sconto</th>
                         <th class="text-right">Totale</th>
@@ -171,7 +254,7 @@ class OrderPrintTestController extends Controller
                 $total += $unit * $qty;
                 $vat += $unit * $tax / 100 * $qty;
 
-                $table .= '<tr class="invoicerow ">
+                $output .= '<tr class="invoicerow ">
                                 <td>'.$value->id.'</td>
                                 <td>'.$value->code.'</td>
                                 <td><b>'.$value->name.'</b><br/>'.$value->description.'</td>
@@ -180,15 +263,15 @@ class OrderPrintTestController extends Controller
                                 <td class="text-right td-price">';
 
                 if ($value->discount > 0) {
-                    $table .= ''.$value->discount_price.' '.$value->discount_currency.'';
+                    $output .= ''.$value->discount_price.' '.$value->discount_currency.'';
                 } //if
 
                 if ($value->discount_currency === "%") {
-                    $table .= '</td>
+                    $output .= '</td>
                         <td class="text-right td-price">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
                 } else {
-                    $table .= '</td>
+                    $output .= '</td>
                         <td class="text-right td-price">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
                 }
@@ -197,7 +280,7 @@ class OrderPrintTestController extends Controller
             } //foreach
         } //if product
 
-        $table .=   '<tr class="text-right tr_clear">
+        $output .= '<tr class="text-right tr_clear">
                         <td colspan="4" ><hr />Totale imponibile: </td>
                         <td colspan="3" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
@@ -213,134 +296,62 @@ class OrderPrintTestController extends Controller
             </table>
         </div>';
 
-        $table .= '
-        <br class="clear" style="margin:30px; margin-top:80px" />
-        <div class="row w100">
-            <table class="table table-bordered" style="width:100%" >
-                <tr>
-                    <td width="100">Info sulla consegna: </td>
-                    <td>'.$deliveryCategory.' <br>'.$order->note_delivery.'</td>
-                </tr>
-                <tr>
-                    <td>Info sul trasporto: </td>
-                    <td>'.$trasportCategory.' <br>'.$order->note_trasport.'</td>
-                </tr>
-                <tr>
-                    <td width="100">Info Pagemento: </td>
-                    <td>'.$paymentCategory.' <br>'.$order->note_payment.'</td>
-                </tr>
-                <tr>
-                    <td>Note sull\'ordine: </td>
-                    <td>'.$order->note.'</td>
-                </tr>
-            <table>
-        </div>
-        <br /><br /><br />
-        <div class="row w100">
-            <div class="w50">
-                <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
-                (Firma - Uff. Acquisti)
+        // Test page 2
+        // for($i=0; $i<200; $i++){
+        //     $output .= $i.'<br>';
+        // }
+
+        //NOTE
+        $output .= '
+            <br class="clear" style="margin:30px; margin-top:80px" />
+            <div class="row w100">
+                <table class="table table-bordered" style="width:100%" >
+                    <tr>
+                        <td width="100">Info sulla consegna: </td>
+                        <td>'.$deliveryCategory.' <br>'.$order->note_delivery.'</td>
+                    </tr>
+                    <tr>
+                        <td>Info sul trasporto: </td>
+                        <td>'.$trasportCategory.' <br>'.$order->note_trasport.'</td>
+                    </tr>
+                    <tr>
+                        <td width="100">Info Pagemento: </td>
+                        <td>'.$paymentCategory.' <br>'.$order->note_payment.'</td>
+                    </tr>
+                    <tr>
+                        <td>Note sull\'ordine: </td>
+                        <td>'.$order->note.'</td>
+                    </tr>
+                <table>
             </div>
-            <div class="w50">
-                <hr style="color:#000; border:1px solid #000; margin:5px; width:90%;">
-                (Firma - '.$order->company_name.')
-            </div>
+            <br /><br /><br />
+            <div class="row w100">
+                <div class="w50">
+                    <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
+                    (Firma - Uff. Acquisti)
+                </div>
+                <div class="w50">
+                    <hr style="color:#000; border:1px solid #000; margin:0; width:90%;">
+                    (Firma - '.$order->company_name.')
+                </div>
+            </div>';
+
+        //FOOTER
+        $output .= '
+        <p style="height:30px" > . </p>
+        <div class="row footer" style="font-size:12px; text-align: justify;">
+            <span ><b>Info e condizioni:</b></span>
+            <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
+            <hr style="border:1px solid #000; width:100%;">
+            <span>'.$order->company_html_footer.'</span>
         </div>';
 
-        // Test page 2
-        for ($i = 0; $i < 200; $i++) {
-            $cont .= $i.'<br>';
-        }
-
-        $output = '
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>OrderPrint</title>
-                <style>
-                    body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
-                    .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
-                    .w100{ width: 100% !important; }
-                    .w50{ width: 50% !important; float:left; }
-                    .w33{ width: 33.33% !important; float:left; }
-                    .clear{ clear:both; }
-                    .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
-                    .text-right{ text-align:right; }
-                    .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
-
-                    @page { margin: 20px; }
-                    #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; text-align: center; margin-bottom: 20px }
-                    #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; }
-                    #footer .page:after { content: counter(page, upper-roman); }
-                    #main { margin-top: 20px }
-                    
-                    .page-break {page-break-after: always;}
-					.pageNum:before { content: counter(page); }
-
-                    tr:nth-child(2n+1) { background-color: #ededed; }
-                    .tr_clear{ background-color: #fff; }
-                    
-                    td { vertical-align: top; }
-                    .td-price { padding-left:10px; padding-right:10px; text-align:right; width:80px; }
-                </style>
-            </head>
-        <body>
-            <div id="header">
-                <div class="row w100 " style="height:100px" >
-                    <div class="w33">
-                        '.$logoCompany.'
-                    </div>
-                    <div class="w33">
-                        <b class="title">'.$order->company_name.'</b> <br />
-                        '.$comapnyAddress.'<br />
-                        IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
-                        '.$order->company_mail.' - '.$order->company_pec.'
-                    </div>
-                    <div class="w33 text-right">
-                        <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
-                        <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.'
-                        <br /> Pagina <span class="pageNum"></span>
-                        
-                    </div>
-                    <hr class="clear" style="margin:2px" >
+        $output .= '
+                <!-- page-break end container-->
                 </div>
-            </div>
-            <div id="footer">
-				<div class="row w100" style="font-size:12px; text-align: justify;">
-                    <hr style="border:1px solid #000; width:100%;">
-                    <span>'.$order->company_html_footer.'</span>
-                </div>
-            </div>
-
-            <div id="main">
-                <div class="row w100" style="margin-top:90px" >
-                    <div class="w50">
-                        Destinazione:<br />
-                        <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
-                        '.$deliveryContact.'
-                    </div>
-                    <div class="text-right" >
-                        Fornitore:<br />
-                        <b style="font-size:18px; margin:1px;">'.$order->supplier_name.'</b><br />
-                        <div style="float:right;">
-                            '.$supplierAddress.'<br />
-                        </div>
-                    </div>
-                </div>
-                <div class="clear" ></div>
-                '.$table.'
-				<span class="clear" style="margin:20px" ></span>
-                <div class="row w100 footer_terms" style="font-size:12px; text-align: justify;">
-                    <span ><b>Info e condizioni:</b></span>
-                    <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
-                </div>
-                '.$cont.'
-            </div>
+            </main>
         </body>
-        </html>'; 
+    </html>';
 
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];
