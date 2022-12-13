@@ -257,10 +257,9 @@ class CreateOrder extends CreateRecord
                                         if ($get('../../Tax')) {
                                             return $get('../../Tax');
                                         }
-
                                         return 0;
                                     })
-                                    ->label('Vat %'),
+                                    ->label('Tax %'),
                                 TextInput::make('unit')
                                     ->columnSpan(2)
                                     ->default('')
@@ -279,14 +278,12 @@ class CreateOrder extends CreateRecord
                                     ->reactive()
                                     ->default(0)
                                     ->label('Price'),
-
                                 Select::make('discount_currency')
                                     ->label('Discount Currency')
                                     ->options(function (Closure $get) {
                                         if ($get('../../currency')) {
                                             return ['%' => '%', $get('../../currency') => $get('../../currency')];
                                         }
-
                                         return ['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'];
                                     })
                                     ->reactive()
@@ -325,7 +322,6 @@ class CreateOrder extends CreateRecord
                                         return new HtmlString('<b>'.$get('Total_price_item').' '.$sum.'</b>');
                                     })
                                     ->columnSpan(6),
-
                             ])
                             ->collapsible()
                             ->cloneable()
