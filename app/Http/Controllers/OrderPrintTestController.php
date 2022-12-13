@@ -272,8 +272,8 @@ class OrderPrintTestController extends Controller
                     .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
 
                     @page { margin: 20px; }
-                    #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; background-color: orange; text-align: center; margin-bottom: 20px }
-                    #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; background-color: lightblue; }
+                    #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; text-align: center; margin-bottom: 20px }
+                    #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; }
                     #footer .page:after { content: counter(page, upper-roman); }
                     #main { margin-top: 20px }
                     
