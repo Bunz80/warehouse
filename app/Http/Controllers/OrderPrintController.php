@@ -347,9 +347,11 @@ class OrderPrintController extends Controller
         </html>'; 
 
         $pdf = \App::make('dompdf.wrapper');
-        $customPaper = $pdf->setPaper('A4', 'landscape');
         //$customPaper = [0, 0, 792.00, 1224.00];
-        $pdf->loadHTML($output)->setPaper($customPaper);
+        //$pdf->loadHTML($output)->setPaper($customPaper);
+        
+        //$customPaper = $pdf->setPaper('A4', 'landscape');
+        $pdf->loadHTML($output)->setPaper('A4');
 
         return $pdf->stream();
     }
