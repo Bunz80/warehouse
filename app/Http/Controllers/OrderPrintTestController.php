@@ -183,7 +183,7 @@ class OrderPrintTestController extends Controller
                     $table .= ''.$value->discount_price.' '.$value->discount_currency.'';
                 } //if
 
-                if ($value->discount_currency === "%") {
+                if ($value->discount_currency === '%') {
                     $table .= '</td>
                         <td class="text-right td-price">'.number_format(((float) ($value->price_unit) * (1 - (float) ($value->discount_price) / 100) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
@@ -192,12 +192,10 @@ class OrderPrintTestController extends Controller
                         <td class="text-right td-price">'.number_format((((float) $value->price_unit - (float) $value->discount_price) * (float) ($value->quantity)), 2).' '.$value->currency.'</td>
                     </tr>';
                 }
-
-                
             } //foreach
         } //if product
 
-        $table .=   '<tr class="text-right tr_clear">
+        $table .= '<tr class="text-right tr_clear">
                         <td colspan="4" ><hr />Totale imponibile: </td>
                         <td colspan="3" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
@@ -340,7 +338,7 @@ class OrderPrintTestController extends Controller
                 '.$cont.'
             </div>
         </body>
-        </html>'; 
+        </html>';
 
         $pdf = \App::make('dompdf.wrapper');
         $customPaper = [0, 0, 792.00, 1224.00];

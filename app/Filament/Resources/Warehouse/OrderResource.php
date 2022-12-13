@@ -11,7 +11,6 @@ use App\Models\Contact;
 use App\Models\Supplier;
 use App\Models\Warehouse\Order;
 use App\Models\Warehouse\OrderDetail;
-use App\Models\Warehouse\Product;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
@@ -19,9 +18,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -106,7 +103,6 @@ class OrderResource extends Resource
                             Textarea::make('trasport_note')->label('Trasport Note'),
                         ]),
 
-
                         Textarea::make('notes')->label('Order notes')->columnSpan(2),
 
                         Textarea::make('report')->label('Order report')->columnSpan(2),
@@ -123,14 +119,14 @@ class OrderResource extends Resource
                     Card::make([
                         Placeholder::make('Total Order')
                                 ->content(function (Closure $get, Closure $set) {
-                                    $details = OrderDetail::where("order_id", $get("id"));
+                                    $details = OrderDetail::where('order_id', $get('id'));
                                     $total_prices = 0;
                                     $total_taxes = 0;
                                     $total_order = 0;
 
                                     if ($details) {
                                         for ($i = 0; $i < count($details->pluck('id')); $i++) {
-                                            $price_unit =  $details->pluck('price_unit')[$i];
+                                            $price_unit = $details->pluck('price_unit')[$i];
                                             $qty = $details->pluck('quantity')[$i];
                                             $tax = $details->pluck('tax')[$i];
                                             $discount_currency = $details->pluck('discount_currency')[$i];
@@ -145,20 +141,19 @@ class OrderResource extends Resource
                                             }
 
                                             $prices = $originalsum;
-                                            $taxes = $originalsum * ($tax/100);
+                                            $taxes = $originalsum * ($tax / 100);
                                             $total = $prices + $taxes;
 
                                             $total_prices += $prices;
                                             $total_taxes += $taxes;
                                             $total_order += $total;
 
-                                            $set("total_prices", $prices);
-                                            $set("total_taxes", $taxes);
-                                            $set("total_order", $total_order);
-
+                                            $set('total_prices', $prices);
+                                            $set('total_taxes', $taxes);
+                                            $set('total_order', $total_order);
                                         }
-    
                                     }
+
                                     return new HtmlString('
 
                             <div class="rounded-xl p-6 bg-white border border-gray-300" id="total">

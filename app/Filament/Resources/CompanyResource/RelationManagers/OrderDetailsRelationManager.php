@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
 use App\Models\Category;
+use Closure;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -10,7 +11,6 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
-use Closure;
 
 class OrderDetailsRelationManager extends RelationManager
 {
@@ -54,7 +54,7 @@ class OrderDetailsRelationManager extends RelationManager
                         }
                         $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
-                        $set('total_price', round($sum,2));
+                        $set('total_price', round($sum, 2));
                     }),
                 Forms\Components\TextInput::make('unit')->required(),
                 Forms\Components\TextInput::make('quantity')->required()
@@ -71,7 +71,7 @@ class OrderDetailsRelationManager extends RelationManager
                         }
                         $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
-                        $set('total_price', round($sum,2));
+                        $set('total_price', round($sum, 2));
                     }),
                 Forms\Components\TextInput::make('price_unit')->required()->columnSpan(3)
                     ->reactive()
@@ -87,7 +87,7 @@ class OrderDetailsRelationManager extends RelationManager
                         }
                         $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
-                        $set('total_price', round($sum,2));
+                        $set('total_price', round($sum, 2));
                     }),
                 Forms\Components\Placeholder::make('Discount')->content(new HtmlString('<hr />'))->columnSpan(6),
                 Forms\Components\Select::make('discount_currency')
@@ -106,7 +106,7 @@ class OrderDetailsRelationManager extends RelationManager
                         }
                         $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
-                        $set('total_price', round($sum,2));
+                        $set('total_price', round($sum, 2));
                     }),
                 Forms\Components\TextInput::make('discount_price')
                     ->reactive()
@@ -122,7 +122,7 @@ class OrderDetailsRelationManager extends RelationManager
                         }
                         $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
-                        $set('total_price', round($sum,2));
+                        $set('total_price', round($sum, 2));
                     }),
                 Forms\Components\TextInput::make('total_price')->required()->disabled()->label('Total Price')->columnSpan(4),
             ])->columns(6);

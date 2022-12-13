@@ -32,10 +32,9 @@ return new class extends Migration
             $table->decimal('price_total', 12, 2)->nullable();
             $table->decimal('price_tax', 12, 2)->nullable();
             $table->decimal('total', 12, 2)->nullable();
-            
+
             $table->string('discount_currency')->nullable()->default('€');
             $table->decimal('discount_price', 12, 2)->nullable();
-            
 
             $table->timestamps();
             $table->softDeletes();

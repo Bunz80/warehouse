@@ -257,6 +257,7 @@ class CreateOrder extends CreateRecord
                                         if ($get('../../Tax')) {
                                             return $get('../../Tax');
                                         }
+
                                         return 0;
                                     })
                                     ->label('Tax %'),
@@ -284,6 +285,7 @@ class CreateOrder extends CreateRecord
                                         if ($get('../../currency')) {
                                             return ['%' => '%', $get('../../currency') => $get('../../currency')];
                                         }
+
                                         return ['%' => '%', '€' => '€', '$' => '$', '£' => '£', '¥' => '¥'];
                                     })
                                     ->reactive()
@@ -306,15 +308,16 @@ class CreateOrder extends CreateRecord
                                 Placeholder::make('Total_price_item')
                                     ->label('Total Price Item: ')
                                     ->content(function (Closure $get, Closure $set) {
-                                        $originalsum = $get('price_unit') * $get('quantity');
+                                        $unit = $get('price_unit');
                                         if ($get('discount_currency') && $get('discount_price')) {
                                             if ($get('discount_currency') == '%') {
-                                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
+                                                $unit = $unit * (1 - $get('discount_price') / 100);
                                             } else {
-                                                $originalsum = $originalsum - $get('discount_price');
+                                                $unit = $unit - $get('discount_price');
                                             }
                                         }
-                                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
+                                        $unit = $unit * (1 + (float) $get('tax') / 100);
+                                        $sum = $unit * $get('quantity');
 
                                         $set('total_price', $sum);
 
@@ -363,16 +366,16 @@ class CreateOrder extends CreateRecord
                                         $i++;
                                     }
 
-                                    $originalsum = $price * $qty;
+                                    $unit = $price;
                                     if ($discount_currency && $discount_price) {
                                         if ($discount_currency == '%') {
-                                            $originalsum = $originalsum * (1 - $discount_price / 100);
+                                            $unit = $unit * (1 - $discount_price / 100);
                                         } else {
-                                            $originalsum = $originalsum - $discount_price;
+                                            $unit = $unit - $discount_price;
                                         }
                                     }
-                                    $priceSum += $originalsum;
-                                    $vatSum += $originalsum * ($vat / 100);
+                                    $priceSum += $unit * $qty;
+                                    $vatSum += $unit * ($vat / 100) * $qty;
                                 }
                             }
 
@@ -698,15 +701,15 @@ class CreateOrder extends CreateRecord
                                             }
                                             $i++;
                                         }
-                                        $originalsum = $price * $qty;
+                                        $punit = $price;
                                         if ($discount_currency && $discount_price) {
                                             if ($discount_currency == '%') {
-                                                $originalsum = $originalsum * (1 - $discount_price / 100);
+                                                $punit = $punit * (1 - $discount_price / 100);
                                             } else {
-                                                $originalsum = $originalsum - $discount_price;
+                                                $punit = $punit - $discount_price;
                                             }
                                         }
-                                        $total = $originalsum * (1 + $vat / 100);
+                                        $total = $punit * (1 + $vat / 100) * $qty;
 
                                         $str .= '<tr>
                                                     <td>'.$name.'</td>
