@@ -289,6 +289,7 @@ class OrderPrintController extends Controller
                 </style>
             </head>
         <body>
+
             <div id="header">
                 <div class="row w100 " style="height:100px" >
                     <div class="w33">
@@ -304,11 +305,11 @@ class OrderPrintController extends Controller
                         <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
                         <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.'
                         <br /> Pagina <span class="pageNum"></span>
-                        
                     </div>
-                    <hr class="clear" style="margin:5px" >
+                    <hr class="clear" style="margin:2px" >
                 </div>
             </div>
+
             <div id="footer">
 				<div class="row w100" style="font-size:12px; text-align: justify;">
                     <hr style="border:1px solid #000; width:100%;">
@@ -317,7 +318,7 @@ class OrderPrintController extends Controller
             </div>
 
             <div id="main">
-                <div class="row w100" style="margin-top:90px" >
+                <div class="row w100" style="margin-top:100px" >
                     <div class="w50">
                         Destinazione:<br />
                         <b style="font-size:18px; margin:1px;">'.$deliveryAddress.'</b><br />
