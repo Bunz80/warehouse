@@ -140,10 +140,10 @@ class OrderPrintTestController extends Controller
             <table class="table table-striped" style="width:100%">
                 <thead>
                     <tr class="tr_clear">
-                        <th class="text-left">ID</th>
-                        <th class="text-left">Cod</th>
-                        <th class="text-left">Prodotto</th>
-                        <th class="text-left">Qnt</th>
+                        <th>ID</th>
+                        <th>Cod</th>
+                        <th>Prodotto</th>
+                        <th>Qnt</th>
                         <th class="text-right">Prezzo</th>
                         <th class="text-right">Sconto</th>
                         <th class="text-right">Totale</th>
@@ -269,14 +269,16 @@ class OrderPrintTestController extends Controller
                     .clear{ clear:both; }
                     .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
                     .text-right{ text-align:right; }
-                    
+                    .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
+
                     @page { margin: 20px; }
                     #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; background-color: orange; text-align: center; margin-bottom: 20px }
                     #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; background-color: lightblue; }
                     #footer .page:after { content: counter(page, upper-roman); }
                     #main { margin-top: 20px }
+                    
                     .page-break {page-break-after: always;}
-					.pagenum:before { content: counter(page); }
+					.pageNum:before { content: counter(page); }
 
                     tr:nth-child(2n+1) { background-color: #ededed; }
                     .tr_clear{ background-color: #fff; }
@@ -300,7 +302,8 @@ class OrderPrintTestController extends Controller
                     <div class="w33 text-right">
                         <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
                         <br /> Emesso il: '.$order->order_order_at.' <br /> '.$order->company_html_wh_info.'
-                        <br /> Pagina <span class="pagenum"></span>
+                        <br /> Pagina <span class="pageNum"></span>
+                        
                     </div>
                     <hr class="clear" style="margin:2px" >
                 </div>
@@ -330,7 +333,7 @@ class OrderPrintTestController extends Controller
                 <div class="clear" ></div>
                 '.$table.'
 				<span class="clear" style="margin:20px" ></span>
-                <div class="row w100" style="font-size:12px; text-align: justify;">
+                <div class="row w100 footer_terms" style="font-size:12px; text-align: justify;">
                     <span ><b>Info e condizioni:</b></span>
                     <span style="font-size:11px; ">'.$order->company_html_wh_terms.'</span>
                 </div>
