@@ -272,7 +272,9 @@ class OrderPrintController extends Controller
                     .text-right{ text-align:right; }
                     .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
 
-                    @page { margin: 10px; }
+                    @page { 
+                        margin: 10px; 
+                    }
                     #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; text-align: center; margin-bottom: 20px }
                     #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; }
                     #footer .page:after { content: counter(page, upper-roman); }
@@ -345,7 +347,8 @@ class OrderPrintController extends Controller
         </html>'; 
 
         $pdf = \App::make('dompdf.wrapper');
-        $customPaper = [0, 0, 792.00, 1224.00];
+        $customPaper = $pdf->setPaper('A4', 'landscape');
+        //$customPaper = [0, 0, 792.00, 1224.00];
         $pdf->loadHTML($output)->setPaper($customPaper);
 
         return $pdf->stream();
