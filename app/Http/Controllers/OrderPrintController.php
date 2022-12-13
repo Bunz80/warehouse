@@ -261,12 +261,13 @@ class OrderPrintController extends Controller
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>OrderPrint</title>
                 <style>
-                    body { font-family: \'Nunito\', sans-serif; margin: 5px !important; }
+                    body { font-family: \'Nunito\', sans-serif; margin: 0px !important; }
                     .row{ width: 100% !important; font-family: Montserrat,Helvetica,Arial,sans-serif; font-weight: 400; font-size:14px }
                     .w100{ width: 100% !important; }
                     .w50{ width: 50% !important; float:left; }
                     .w33{ width: 33.33% !important; float:left; }
                     .clear{ clear:both; }
+                    
                     .title { font-size:18px; font: bold; color: #000000; margin: 0px; padding: 0px; }
                     .text-right{ text-align:right; }
                     .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
