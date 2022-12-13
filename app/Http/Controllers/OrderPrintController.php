@@ -306,7 +306,7 @@ class OrderPrintController extends Controller
                         <br /> Pagina <span class="pageNum"></span>
                         
                     </div>
-                    <hr class="clear" style="margin:2px" >
+                    <hr class="clear" style="margin:5px" >
                 </div>
             </div>
             <div id="footer">
