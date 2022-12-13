@@ -144,9 +144,9 @@ class OrderPrintController extends Controller
                         <th>Cod</th>
                         <th>Prodotto</th>
                         <th>Qnt</th>
-                        <th class="text-right">Prezzo</th>
+                        <th class="text-right">Prezzo Unit.</th>
                         <th class="text-right">Sconto</th>
-                        <th class="text-right">Totale</th>
+                        <th class="text-right">Totale Netto</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -202,7 +202,7 @@ class OrderPrintController extends Controller
                         <td colspan="3" class="td-price"><hr />'.number_format($total, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right tr_clear">
-                        <td colspan="4" >Totale iva: </td>
+                        <td colspan="4" >Totale Imposta: </td>
                         <td colspan="3" class="td-price">'.number_format($vat, 2).' '.$priceunit.'</td>
                     </tr>
                     <tr class="text-right title tr_clear">
@@ -271,7 +271,7 @@ class OrderPrintController extends Controller
                     .text-right{ text-align:right; }
                     .footer_terms { position: fixed; bottom: 0px; margin-bottom: 100px;}
 
-                    @page { margin: 20px; }
+                    @page { margin: 10px; }
                     #header { position: fixed; left: 0px; top: 0px; right: 0px; height: 80px; text-align: center; margin-bottom: 20px }
                     #footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 80px; }
                     #footer .page:after { content: counter(page, upper-roman); }
@@ -297,7 +297,7 @@ class OrderPrintController extends Controller
                         <b class="title">'.$order->company_name.'</b> <br />
                         '.$comapnyAddress.'<br />
                         IVA: '.$order->company_vat.' - SDI: '.$order->company_icode.' <br />
-                        '.$order->company_mail.' - '.$order->company_pec.'
+                        '.$order->company_mail.' '.$order->company_pec.'
                     </div>
                     <div class="w33 text-right">
                         <b class="title" >Ordine nr: '.$order->order_num.'/'.$order->order_year.'</b>
