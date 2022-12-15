@@ -328,7 +328,7 @@ class CreateOrder extends CreateRecord
                                     ->columnSpan(6),
 
                             ])
-                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                            //->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
                             ->collapsible()
                             ->cloneable()
                             ->defaultItems(0)
