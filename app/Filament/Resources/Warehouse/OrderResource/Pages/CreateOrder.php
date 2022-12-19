@@ -310,16 +310,15 @@ class CreateOrder extends CreateRecord
                                 Placeholder::make('Total_price_item')
                                     ->label('Total Price Item: ')
                                     ->content(function (Closure $get, Closure $set) {
-                                        $unit = $get('price_unit');
+                                        $originalsum = $get('price_unit') * $get('quantity');
                                         if ($get('discount_currency') && $get('discount_price')) {
                                             if ($get('discount_currency') == '%') {
-                                                $unit = $unit * (1 - $get('discount_price') / 100);
+                                                $originalsum = $originalsum * (1 - $get('discount_price') / 100);
                                             } else {
-                                                $unit = $unit - $get('discount_price');
+                                                $originalsum = $originalsum - $get('discount_price');
                                             }
                                         }
-                                        $unit = $unit * (1 + (float) $get('tax') / 100);
-                                        $sum = $unit * $get('quantity');
+                                        $sum = $originalsum * (1 + (float) $get('tax') / 100);
 
                                         $set('total_price', $sum);
 
@@ -370,16 +369,16 @@ class CreateOrder extends CreateRecord
                                         $i++;
                                     }
 
-                                    $unit = $price;
+                                    $originalsum = $price * $qty;
                                     if ($discount_currency && $discount_price) {
                                         if ($discount_currency == '%') {
-                                            $unit = $unit * (1 - $discount_price / 100);
+                                            $originalsum = $originalsum * (1 - $discount_price / 100);
                                         } else {
-                                            $unit = $unit - $discount_price;
+                                            $originalsum = $originalsum - $discount_price;
                                         }
                                     }
-                                    $priceSum += $unit * $qty;
-                                    $vatSum += $unit * ($vat / 100) * $qty;
+                                    $priceSum += $originalsum;
+                                    $vatSum += $originalsum * ($vat / 100);
                                 }
                             }
 
@@ -705,15 +704,15 @@ class CreateOrder extends CreateRecord
                                             }
                                             $i++;
                                         }
-                                        $punit = $price;
+                                        $originalsum = $price * $qty;
                                         if ($discount_currency && $discount_price) {
                                             if ($discount_currency == '%') {
-                                                $punit = $punit * (1 - $discount_price / 100);
+                                                $originalsum = $originalsum * (1 - $discount_price / 100);
                                             } else {
-                                                $punit = $punit - $discount_price;
+                                                $originalsum = $originalsum - $discount_price;
                                             }
                                         }
-                                        $total = $punit * (1 + $vat / 100) * $qty;
+                                        $total = $originalsum * (1 + $vat / 100);
 
                                         $str .= '<tr>
                                                     <td>'.$name.'</td>
