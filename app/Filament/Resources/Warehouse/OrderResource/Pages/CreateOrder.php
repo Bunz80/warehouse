@@ -751,4 +751,19 @@ class CreateOrder extends CreateRecord
                 ]),
         ];
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $order = Order::whereRaw('company_id = '.$data['company_id'].' and year = '.$data['year'])->orderBy('number', 'desc');
+        $number = 1;
+        if ($order) {
+            $num = $order->pluck('number');
+            if (count($num) > 0) {
+                $number = $num[0] + 1;
+            } 
+        }
+        $data['number'] = $number;
+
+        return $data;
+    }
 }
